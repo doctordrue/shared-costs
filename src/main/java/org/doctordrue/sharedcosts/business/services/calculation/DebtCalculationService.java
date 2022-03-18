@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.doctordrue.sharedcosts.business.model.CostGroupBalance;
-import org.doctordrue.sharedcosts.business.model.Debt;
+import org.doctordrue.sharedcosts.business.model.debt_calculation.CostGroupBalance;
+import org.doctordrue.sharedcosts.business.model.debt_calculation.Debt;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostGroupService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CurrencyService;
@@ -69,7 +69,7 @@ public class DebtCalculationService {
 
          List<Payment> payments = costs.stream()
                  .flatMap(cost -> this.paymentService.findAllByCostId(cost.getId()).stream())
-                 .toList();
+                 .collect(Collectors.toList());
          final double totalPayments = payments.stream().mapToDouble(Payment::getPaymentTotal).sum();
          System.out.println("Payments total: " + totalPayments);
          if (totalPayments != totalCost) {
@@ -77,14 +77,14 @@ public class DebtCalculationService {
          }
          List<Stake> stakes = costs.stream()
                  .flatMap(cost -> this.stakeService.findAllByCostId(cost.getId()).stream())
-                 .toList();
+                 .collect(Collectors.toList());
          final double totalStakes = stakes.stream().mapToDouble(Stake::getStakeTotal).sum();
          System.out.println("Stakes total: " + totalStakes);
          if (totalCost != totalStakes) {
             result.addExcessStake(totalStakes - totalCost, currency);
          }
 
-         if (!(CollectionUtils.isEmpty(result.getExcessPayments()) && CollectionUtils.isEmpty(result.getExcessStakes()))) {
+         if (!(CollectionUtils.isEmpty(result.getPaymentsBalance()) && CollectionUtils.isEmpty(result.getStakesBalance()))) {
             return;
          }
 

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shared Cost Main page</title>
+</head>
+<body>
+<h1>Cost groups:</h1>
+<div class="container">
+    <table>
+        <tr>
+            {{#costGroups}}
+                <td>{{startDate}}</td>
+                <td><a href="groups/edit/{{id}}">{{name}}</a></td>
+                <td>{{description}}</td>
+            {{/costGroups}}
+        </tr>
+    </table>
+    <a href="groups/add">Add</a>
+
+</div>
+
+</body>
+</html>

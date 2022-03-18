@@ -1,4 +1,4 @@
-package org.doctordrue.sharedcosts.business.model;
+package org.doctordrue.sharedcosts.business.model.debt_calculation;
 
 import java.util.StringJoiner;
 

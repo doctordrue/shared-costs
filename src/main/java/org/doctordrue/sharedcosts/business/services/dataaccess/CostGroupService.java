@@ -26,7 +26,7 @@ public class CostGroupService {
    }
 
    public CostGroup findById(Long id) {
-      return this.costGroupRepository.findById(id).orElseThrow(() -> new BaseException("CS003", "Costs group is not found for id = " + id));
+      return this.costGroupRepository.findById(id).orElseThrow(() -> generateNotFoundByIdException(id));
    }
 
    public List<CostGroup> findByName(String name) {
@@ -34,21 +34,28 @@ public class CostGroupService {
       return this.costGroupRepository.findAll(Example.of(probe));
    }
 
-   public CostGroup add(CostGroup costGroup) {
+   public CostGroup create(CostGroup costGroup) {
       return this.costGroupRepository.save(costGroup);
    }
 
    public CostGroup update(Long id, CostGroup costGroup) {
-      if (!this.costGroupRepository.existsById(id)) {
-         throw new BaseException("CS003", "Costs group is not found for id = " + id);
-      }
+      assumeExists(id);
       costGroup.setId(id);
       return this.costGroupRepository.save(costGroup);
    }
 
    public void delete(Long id) {
+      assumeExists(id);
       this.costGroupRepository.deleteById(id);
    }
 
+   private void assumeExists(Long id) {
+      if (!this.costGroupRepository.existsById(id)) {
+         throw generateNotFoundByIdException(id);
+      }
+   }
 
+   private BaseException generateNotFoundByIdException(Long id) {
+      return new BaseException("CS003", "Costs group is not found for id = " + id);
+   }
 }

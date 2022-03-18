@@ -47,7 +47,7 @@ public class CostController {
 
    @PostMapping
    @ResponseStatus(HttpStatus.CREATED)
-   public Cost add(@RequestBody Cost cost) {
+   public Cost create(@RequestBody Cost cost) {
       return this.costService.create(cost);
    }
 

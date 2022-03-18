@@ -33,18 +33,23 @@ public class PersonController {
       return this.personService.findAll();
    }
 
-   @PostMapping
-   @ResponseStatus(HttpStatus.CREATED)
-   public Person add(@RequestBody Person person) {
-      return this.personService.add(person);
+   @GetMapping("/{id}")
+   public Person findById(@PathVariable("id") Long id) {
+      return this.personService.findById(id);
    }
 
-   @PutMapping
-   public Person update(@RequestParam Long id, @RequestBody Person person) {
+   @PostMapping
+   @ResponseStatus(HttpStatus.CREATED)
+   public Person create(@RequestBody Person person) {
+      return this.personService.create(person);
+   }
+
+   @PutMapping("/{id}")
+   public Person update(@PathVariable("id") Long id, @RequestBody Person person) {
       return this.personService.update(id, person);
    }
 
-   @DeleteMapping
+   @DeleteMapping("/{id}")
    @ResponseStatus(HttpStatus.NO_CONTENT)
    public void delete(@PathVariable Long id) {
       this.personService.delete(id);

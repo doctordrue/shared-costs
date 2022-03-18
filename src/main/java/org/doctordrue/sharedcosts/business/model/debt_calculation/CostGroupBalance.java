@@ -1,4 +1,4 @@
-package org.doctordrue.sharedcosts.business.model;
+package org.doctordrue.sharedcosts.business.model.debt_calculation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +12,8 @@ import org.doctordrue.sharedcosts.data.entities.Currency;
  **/
 public class CostGroupBalance {
    private CostGroup costGroup;
-   private List<Money> excessPayments;
-   private List<Money> excessStakes;
+   private List<Money> paymentsBalance;
+   private List<Money> stakesBalance;
    private List<Debt> debts;
 
    public CostGroup getCostGroup() {
@@ -34,21 +34,21 @@ public class CostGroupBalance {
       return this;
    }
 
-   public List<Money> getExcessPayments() {
-      return excessPayments;
+   public List<Money> getPaymentsBalance() {
+      return paymentsBalance;
    }
 
-   public CostGroupBalance setExcessPayments(List<Money> excessPayments) {
-      this.excessPayments = excessPayments;
+   public CostGroupBalance setPaymentsBalance(List<Money> paymentsBalance) {
+      this.paymentsBalance = paymentsBalance;
       return this;
    }
 
-   public List<Money> getExcessStakes() {
-      return excessStakes;
+   public List<Money> getStakesBalance() {
+      return stakesBalance;
    }
 
-   public CostGroupBalance setExcessStakes(List<Money> excessStakes) {
-      this.excessStakes = excessStakes;
+   public CostGroupBalance setStakesBalance(List<Money> stakesBalance) {
+      this.stakesBalance = stakesBalance;
       return this;
    }
 
@@ -61,18 +61,18 @@ public class CostGroupBalance {
    }
 
    public CostGroupBalance addExcessPayment(Double amount, Currency currency) {
-      if (this.excessPayments == null) {
-         this.excessPayments = new ArrayList<>();
+      if (this.paymentsBalance == null) {
+         this.paymentsBalance = new ArrayList<>();
       }
-      this.excessPayments.add(new Money().setAmount(amount).setCurrency(currency));
+      this.paymentsBalance.add(new Money().setAmount(amount).setCurrency(currency));
       return this;
    }
 
    public CostGroupBalance addExcessStake(Double amount, Currency currency) {
-      if (this.excessStakes == null) {
-         this.excessStakes = new ArrayList<>();
+      if (this.stakesBalance == null) {
+         this.stakesBalance = new ArrayList<>();
       }
-      this.excessStakes.add(new Money().setAmount(amount).setCurrency(currency));
+      this.stakesBalance.add(new Money().setAmount(amount).setCurrency(currency));
       return this;
    }
 }
