@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Cost: ' + ${details.name}">{cost name}</title>
+</head>
+<body>
+<h2 th:text="${details.name}">{cost name}</h2>
+<div class="container">
+    <table>
+        <tr>
+            <th>Attribute</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td th:text="${details.name}">{name}</td>
+        </tr>
+        <tr>
+            <td>Amount</td>
+            <td th:text="${details.amount} + ' ' + ${details.currency.shortName}">{amount} {CUR}</td>
+        </tr>
+        <tr>
+            <td>Timestamp</td>
+            <td th:text="${details.timestamp}">{timestamp}</td>
+        </tr>
+    </table>
+    <a href="#" th:href="@{/costs/edit/{id}(id=${details.id})}">Edit</a>
+</div>
+
+<div class="container">
+    <h3>Stakes</h3>
+    <table>
+        <tr>
+            <th>Stake holder</th>
+            <th>Amount</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="stake: ${details.stakes}">
+            <td th:text="${stake.person.firstName} + ' ' + ${stake.person.lastName}">{firstName} {lastName}</td>
+            <td th:text="${stake.amount} + ' ' +${details.currency.shortName}">{amount} {CUR}</td>
+            <td>
+                <a href="#" th:href="@{/costs/{cost_id}/stakes/{id}(id=${stake.id}, cost_id=${details.id})}">View details</a>
+                <a href="#">[x]</a>
+            </td>
+        </tr>
+        <tfoot>
+        <tr>
+
+        </tr>
+        </tfoot>
+    </table>
+    <a href="#">Add new stake</a>
+</div>
+
+<div class="container">
+    <h3>Payments</h3>
+    <table>
+        <tr>
+            <th>Payer</th>
+            <th>Amount</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="payment: ${details.payments}">
+            <td th:text="${payment.person.firstName} + ' ' + ${payment.person.lastName}">{firstName} {lastName}</td>
+            <td th:text="${payment.amount} + ' ' +${details.currency.shortName}">{amount} {CUR}</td>
+            <td>
+                <a href="#">View details</a>
+                <a href="#">[x]</a>
+            </td>
+        </tr>
+        <tfoot>
+        <tr>
+
+        </tr>
+        </tfoot>
+    </table>
+    <a href="#">Add new payment</a>
+</div>
+
+<div class="container">
+    <a href="#">Back</a>
+</div>
+
+</body>
+</html>

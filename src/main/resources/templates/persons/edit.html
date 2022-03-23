@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</title>
+</head>
+<body>
+<h3 th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</h3>
+<form action="#" th:action="@{/persons/{id}/update(id=${person.id})}" th:method="post" th:object="${person}">
+    <input type="text" th:field="*{firstName}">
+    <input type="text" th:field="*{lastName}">
+    <input type="tel" th:field="*{phoneNumber}">
+    <button type="submit">Save & return</button>
+</form>
+<p class="footer">
+    <a href="#" th:href="@{/persons/{id}(id=${person.id})}">Return</a>
+</p>
+</body>
+</html>

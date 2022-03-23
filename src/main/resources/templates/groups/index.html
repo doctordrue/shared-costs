@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shared Cost Main page</title>
+</head>
+<body>
+<h2>Cost groups:</h2>
+<div class="container">
+    <table>
+        <tr>
+            <th>Group name</th>
+            <th>Start date</th>
+            <th>End date</th>
+            <th>Description</th>
+        </tr>
+        <tr th:each="group:${groups}">
+            <td><a th:href="@{/groups/{id}/details(id=${group.id})}" th:text="${group.name}">{name}</a></td>
+            <td th:text="${group.startDate}">{start date}</td>
+            <td th:text="${group.endDate}">{end date}</td>
+            <td th:text="${group.description}">{description}</td>
+        </tr>
+    </table>
+    <a href="#" th:href="@{/groups/add}">Add new cost group</a>
+
+</div>
+<a href="#" th:href="@{/persons}">Go to People</a>
+
+</body>
+</html>

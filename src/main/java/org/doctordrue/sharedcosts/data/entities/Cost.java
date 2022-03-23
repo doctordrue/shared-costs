@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 /**
  * @author Andrey_Barantsev
  * 3/16/2022
@@ -36,6 +38,7 @@ public class Cost {
    private Double costTotal;
 
    @Column(name = "cost_datetime", nullable = false)
+   @DateTimeFormat(pattern = "yyyy-MM-dd")
    private LocalDateTime costDateTime;
 
    public Long getId() {

@@ -5,6 +5,8 @@ import java.util.List;
 import org.doctordrue.sharedcosts.data.entities.Person;
 import org.doctordrue.sharedcosts.data.repositories.PersonRepository;
 import org.doctordrue.sharedcosts.exceptions.BaseException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**

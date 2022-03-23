@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.doctordrue.sharedcosts.business.model.processing.CostProcessingResult;
+import org.doctordrue.sharedcosts.business.model.processing.CostSplitProcessingInputData;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostGroupService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CurrencyService;
@@ -87,5 +88,16 @@ public class CostProcessingService {
       return new CostProcessingResult().setCost(cost)
               .setStakes(stakes)
               .setPayments(payments);
+   }
+
+   public CostProcessingResult processCost(CostSplitProcessingInputData data){
+      return this.processCost(
+              data.getName(),
+              data.getCostGroupId(),
+              data.getCurrencyShortName(),
+              data.getAmount(),
+              data.getStakeholdersIds(),
+              data.getPayersIds(),
+              data.getTimestamp());
    }
 }

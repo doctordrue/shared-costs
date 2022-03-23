@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 /**
  * @author Andrey_Barantsev
  * 3/16/2022
@@ -30,9 +32,11 @@ public class CostGroup {
    private String description;
 
    @Column(name = "start_date", nullable = false)
+   @DateTimeFormat(pattern = "yyyy-MM-dd")
    private LocalDate startDate;
 
    @Column(name = "end_date")
+   @DateTimeFormat(pattern = "yyyy-MM-dd")
    private LocalDate endDate;
 
    public Long getId() {

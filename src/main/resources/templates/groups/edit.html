@@ -1,30 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>{{costGroup.name}}</title>
-
+    <title th:text="'Cost group: ' + ${group.name}">group name</title>
 </head>
 <body>
+<h2 th:text="${group.name}">group name</h2>
 <div class="container">
-    <table>
-        <tr>
-            <td>id</td>
-            <td>{{costGroup.id}}</td>
-        </tr>
-        <tr>
-            <td>name</td>
-            <td>{{costGroup.name}}</td>
-        </tr>
-        <tr>
-            <td>description</td>
-            <td>{{costGroup.description}}</td>
-        </tr>
-        <tr>
-            <td>start date</td>
-            <td>{{costGroup.startDate}}</td>
-        </tr>
-    </table>
+    <form action="#" th:action="@{/groups/edit/{id}(id=${group.id})}" th:object="${group}" method="post">
+        <ul>
+            <li>
+                <label th:for="id">id:</label>
+                <input type="text" readonly th:field="*{id}" disabled>
+            </li>
+            <li>
+                <label th:for="name">Name:</label>
+                <input type="text" th:field="*{name}">
+            </li>
+            <li>
+                <label th:for="description">Description:</label>
+                <textarea th:field="*{description}">description</textarea>
+            </li>
+            <li>
+                <label th:for="startDate">Start date:</label>
+                <input type="date" th:field="*{startDate}">
+            </li>
+            <li>
+                <label th:for="endDate">End date:</label>
+                <input type="date" th:field="*{endDate}">
+            </li>
+        </ul>
+        <button type="submit">Save</button>
+    </form>
+    <form action="#" th:action="@{/groups/delete/{id}(id=${group.id})}" method="post">
+        <button type="submit">[x]</button>
+    </form>
+
 </div>
+<a href="#" th:href="@{/group/{id}/details(id=${group.id})}">Back</a>
+
 </body>
 </html>

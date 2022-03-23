@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Stake of ' + ${details.person.firstName} + ' ' + ${details.person.lastName} + ' for ' + ${cost.name}">Stake of {firstName} {lastName} for {cost}</title>
+</head>
+<body>
+<h2 th:text="'Stake of ' + ${details.person.firstName} + ' ' + ${details.person.lastName} + ' for ' + ${cost.name}">Stake of {firstName} {lastName} for {cost}</h2>
+<div class="container">
+    <table>
+        <tr>
+            <th>Attribute</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Who</td>
+            <td th:text="${details.person.firstName} + ' ' + ${details.person.lastName}">{firstName} {lastName}</td>
+        </tr>
+        <tr>
+            <td>Amount</td>
+            <td th:text="${details.amount} + ' ' + ${currency.shortName}">{amount} {CUR}</td>
+        </tr>
+    </table>
+    <a href="#" th:href="@{/stakes/edit/{id}(id=${details.id})}">Edit</a>
+</div>
+
+<div class="container">
+    <a href="#">Back</a>
+</div>
+
+</body>
+</html>

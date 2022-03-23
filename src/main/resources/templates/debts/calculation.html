@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Debts calculation</title>
+</head>
+<body>
+<h2 th:text="'Debts calculation for ' + ${balance.costGroup.name}">Debts calculation for </h2>
+<div class="container">
+    <h3>Payments balance:</h3>
+    <table>
+        <tr th:each="balance: ${balance.paymentsBalance}">
+            <td th:text="${balance.amount} + ' ' + ${balance.currency.shortName}">Amount</td>
+        </tr>
+    </table>
+</div>
+<div class="container">
+    <h3>Stakes balance:</h3>
+    <table>
+        <tr th:each="balance: ${balance.stakesBalance}">
+            <td th:text="${balance.amount} + ' ' + ${balance.currency.shortName}">Amount</td>
+        </tr>
+    </table>
+</div>
+<div class="container">
+    <h3>Debts calculation</h3>
+    <table>
+        <tr>
+            <th>Who</th>
+            <th>Whom</th>
+            <th>Amount</th>
+        </tr>
+        <tr th:each="debt: ${balance.debts}">
+            <td th:text="${debt.debtor.firstName} + ' ' + ${debt.debtor.lastName}">FirstName LastName</td>
+            <td th:text="${debt.creditor.firstName} + ' ' + ${debt.creditor.lastName}">FirstName LastName</td>
+            <td th:text="${debt.amount} + ' ' + ${debt.currency.shortName}">Amount</td>
+        </tr>
+    </table>
+</div>
+<a href="#" th:href="@{/groups/{id}/details(id=${balance.costGroup.id})}" th:text="'Go back to ' + ${balance.costGroup.name} + ' details'">Go back to {group name} details</a>
+</body>
+</html>

@@ -84,9 +84,9 @@ public class DebtCalculationService {
             result.addExcessStake(totalStakes - totalCost, currency);
          }
 
-         if (!(CollectionUtils.isEmpty(result.getPaymentsBalance()) && CollectionUtils.isEmpty(result.getStakesBalance()))) {
-            return;
-         }
+//         if (!(CollectionUtils.isEmpty(result.getPaymentsBalance()) && CollectionUtils.isEmpty(result.getStakesBalance()))) {
+//            return;
+//         }
 
          // find creditors credits & debtors debts
          Map<Long, Double> paymentsMap = payments.stream().collect(Collectors.toMap(Payment::getPersonId, Payment::getPaymentTotal, Double::sum));

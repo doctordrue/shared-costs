@@ -1,23 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Shared Cost Main page</title>
 </head>
 <body>
-<h1>Cost groups:</h1>
+<h2>Start page</h2>
 <div class="container">
-    <table>
-        <tr>
-            {{#costGroups}}
-                <td>{{startDate}}</td>
-                <td><a href="groups/edit/{{id}}">{{name}}</a></td>
-                <td>{{description}}</td>
-            {{/costGroups}}
-        </tr>
-    </table>
-    <a href="groups/add">Add</a>
-
+    <a href="#" th:href="@{/groups}">Go to Cost Groups...</a>
+</div>
+<div class="container">
+<a href="#" th:href="@{/persons}">Go to People...</a>
 </div>
 
 </body>
