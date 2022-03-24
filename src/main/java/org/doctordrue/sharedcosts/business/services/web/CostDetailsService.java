@@ -46,6 +46,7 @@ public class CostDetailsService {
                       .setTimestamp(payment.getPaymentDateTime()).setPerson(this.personService.findById(payment.getPersonId())))
               .collect(Collectors.toList());
       return new CostDetails()
+              .setGroupId(cost.getGroupId())
               .setId(cost.getId())
               .setName(cost.getName())
               .setAmount(cost.getCostTotal())

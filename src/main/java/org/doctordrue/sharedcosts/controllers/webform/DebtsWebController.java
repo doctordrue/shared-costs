@@ -1,4 +1,4 @@
-package org.doctordrue.sharedcosts.web;
+package org.doctordrue.sharedcosts.controllers.webform;
 
 import org.doctordrue.sharedcosts.business.model.debt_calculation.CostGroupBalance;
 import org.doctordrue.sharedcosts.business.services.calculation.DebtCalculationService;

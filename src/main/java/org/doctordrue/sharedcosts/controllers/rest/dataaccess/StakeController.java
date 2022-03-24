@@ -1,4 +1,4 @@
-package org.doctordrue.sharedcosts.webservice.dataaccess;
+package org.doctordrue.sharedcosts.controllers.rest.dataaccess;
 
 import java.util.List;
 

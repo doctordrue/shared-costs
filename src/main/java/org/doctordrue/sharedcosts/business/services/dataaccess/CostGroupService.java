@@ -1,12 +1,15 @@
 package org.doctordrue.sharedcosts.business.services.dataaccess;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.entities.CostGroup;
 import org.doctordrue.sharedcosts.data.repositories.CostGroupRepository;
 import org.doctordrue.sharedcosts.exceptions.BaseException;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Andrey_Barantsev
@@ -16,9 +19,11 @@ import org.springframework.stereotype.Service;
 public class CostGroupService {
 
    private final CostGroupRepository costGroupRepository;
+   private final CostService costService;
 
-   public CostGroupService(CostGroupRepository costGroupRepository) {
+   public CostGroupService(CostGroupRepository costGroupRepository, CostService costService) {
       this.costGroupRepository = costGroupRepository;
+      this.costService = costService;
    }
 
    public List<CostGroup> findAll() {
@@ -46,6 +51,14 @@ public class CostGroupService {
 
    public void delete(Long id) {
       assumeExists(id);
+      this.costGroupRepository.deleteById(id);
+   }
+
+   @Transactional
+   public void deleteRecursively(Long id) {
+      assumeExists(id);
+      List<Long> costIds = this.costService.findAllByGroupId(id).stream().map(Cost::getId).collect(Collectors.toList());
+      this.costService.deleteAllRecursively(costIds);
       this.costGroupRepository.deleteById(id);
    }
 

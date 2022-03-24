@@ -1,4 +1,4 @@
-package org.doctordrue.sharedcosts.web;
+package org.doctordrue.sharedcosts.controllers.webform;
 
 import java.util.List;
 
@@ -58,8 +58,10 @@ public class CostWebController {
    @GetMapping("/{id}")
    public ModelAndView view(@PathVariable("id") Long id, Model model) {
       Cost cost = this.costService.findById(id);
+      CostGroup group = this.costGroupService.findById(cost.getGroupId());
       CostDetails costDetails = this.costDetailsService.getDetails(cost);
       model.addAttribute("details", costDetails);
+      model.addAttribute("group", group);
       return new ModelAndView("/costs/view", model.asMap());
    }
 }

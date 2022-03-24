@@ -15,6 +15,7 @@ import org.doctordrue.sharedcosts.data.entities.Stake;
 public class CostDetails {
 
    private Long id;
+   private Long groupId;
    private String name;
    private Double amount;
    private Currency currency;
@@ -28,6 +29,15 @@ public class CostDetails {
 
    public CostDetails setId(Long id) {
       this.id = id;
+      return this;
+   }
+
+   public Long getGroupId() {
+      return groupId;
+   }
+
+   public CostDetails setGroupId(Long groupId) {
+      this.groupId = groupId;
       return this;
    }
 

@@ -25,7 +25,7 @@
             <td th:text="${details.timestamp}">{timestamp}</td>
         </tr>
     </table>
-    <a href="#" th:href="@{/costs/edit/{id}(id=${details.id})}">Edit</a>
+<!--    <a href="#" th:href="@{/costs/edit/{id}(id=${details.id})}">Edit</a>-->
 </div>
 
 <div class="container">
@@ -41,7 +41,7 @@
             <td th:text="${stake.amount} + ' ' +${details.currency.shortName}">{amount} {CUR}</td>
             <td>
                 <a href="#" th:href="@{/costs/{cost_id}/stakes/{id}(id=${stake.id}, cost_id=${details.id})}">View details</a>
-                <a href="#">[x]</a>
+<!--                <a href="#">[x]</a>-->
             </td>
         </tr>
         <tfoot>
@@ -50,7 +50,7 @@
         </tr>
         </tfoot>
     </table>
-    <a href="#">Add new stake</a>
+<!--    <a href="#">Add new stake</a>-->
 </div>
 
 <div class="container">
@@ -65,8 +65,8 @@
             <td th:text="${payment.person.firstName} + ' ' + ${payment.person.lastName}">{firstName} {lastName}</td>
             <td th:text="${payment.amount} + ' ' +${details.currency.shortName}">{amount} {CUR}</td>
             <td>
-                <a href="#">View details</a>
-                <a href="#">[x]</a>
+<!--                <a href="#">View details</a>-->
+<!--                <a href="#">[x]</a>-->
             </td>
         </tr>
         <tfoot>
@@ -75,11 +75,13 @@
         </tr>
         </tfoot>
     </table>
-    <a href="#">Add new payment</a>
+<!--    <a href="#">Add new payment</a>-->
 </div>
 
 <div class="container">
-    <a href="#">Back</a>
+    Back to Cost Group details: <a href="#"
+                                   th:href="@{/groups/{id}/details(id=${group.id})}"
+                                   th:text="${group.name} + '...'">{groupName}...</a>
 </div>
 
 </body>

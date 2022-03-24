@@ -9,6 +9,7 @@ import org.doctordrue.sharedcosts.exceptions.BaseException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Andrey_Barantsev
@@ -18,9 +19,13 @@ import org.springframework.stereotype.Service;
 public class CostService {
 
    private final CostRepository costRepository;
+   private final StakeService stakeService;
+   private final PaymentService paymentService;
 
-   public CostService(CostRepository costRepository) {
+   public CostService(CostRepository costRepository, StakeService stakeService, PaymentService paymentService) {
       this.costRepository = costRepository;
+      this.stakeService = stakeService;
+      this.paymentService = paymentService;
    }
 
    public List<Cost> findAll() {
@@ -50,6 +55,27 @@ public class CostService {
    public void delete(Long id) {
       assumeExists(id);
       this.costRepository.deleteById(id);
+   }
+
+   public void deleteAll(List<Long> ids) {
+      this.costRepository.deleteAllByIdInBatch(ids);
+   }
+
+   @Transactional
+   public void deleteRecursively(Long id) {
+      assumeExists(id);
+      this.stakeService.deleteAllForCost(id);
+      this.paymentService.deleteAllForCost(id);
+      this.delete(id);
+   }
+
+   @Transactional
+   public void deleteAllRecursively(List<Long> ids) {
+      this.costRepository.findAllById(ids)
+              .forEach(cost -> {
+                 this.stakeService.deleteAllForCost(cost.getId());
+                 this.paymentService.deleteAllForCost(cost.getId());});
+      this.deleteAll(ids);
    }
 
    private void assumeExists(Long id) {

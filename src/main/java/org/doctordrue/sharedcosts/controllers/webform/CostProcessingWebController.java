@@ -1,4 +1,4 @@
-package org.doctordrue.sharedcosts.web;
+package org.doctordrue.sharedcosts.controllers.webform;
 
 import java.time.LocalDateTime;
 import java.util.List;

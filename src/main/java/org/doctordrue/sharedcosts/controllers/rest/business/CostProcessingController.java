@@ -1,4 +1,4 @@
-package org.doctordrue.sharedcosts.webservice.business;
+package org.doctordrue.sharedcosts.controllers.rest.business;
 
 import org.doctordrue.sharedcosts.business.model.processing.CostProcessingResult;
 import org.doctordrue.sharedcosts.business.model.processing.CostSplitProcessingInputData;

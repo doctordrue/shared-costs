@@ -2,8 +2,10 @@ package org.doctordrue.sharedcosts.business.services.dataaccess;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.doctordrue.sharedcosts.data.entities.Payment;
+import org.doctordrue.sharedcosts.data.entities.Stake;
 import org.doctordrue.sharedcosts.data.repositories.PaymentRepository;
 import org.doctordrue.sharedcosts.exceptions.BaseException;
 import org.springframework.data.domain.Example;
@@ -55,6 +57,14 @@ public class PaymentService {
    public void delete(Long id) {
       assumeExists(id);
       this.paymentRepository.deleteById(id);
+   }
+
+   public void deleteAll(List<Long> ids) {
+      this.paymentRepository.deleteAllByIdInBatch(ids);
+   }
+
+   public void deleteAllForCost(Long costId) {
+      this.deleteAll(this.findAllByCostId(costId).stream().map(Payment::getId).collect(Collectors.toList()));
    }
 
    private void setDateTimeIfNull(Payment payment) {

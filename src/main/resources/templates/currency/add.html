@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add currency</title>
+</head>
+<body>
+<h3>Add person</h3>
+<form action="#" th:action="@{/currency/add/submit}" th:method="post" th:object="${currency}">
+    <input type="text" th:field="*{fullName}">
+    <input type="text" th:field="*{shortName}">
+    <input type="number" step="0.01" th:field="*{rate}">
+    <button type="submit">Save & return</button>
+</form>
+<p class="footer">
+    Return to <a href="#" th:href="@{/currency}">currencies...</a>
+</p>
+</body>
+</html>

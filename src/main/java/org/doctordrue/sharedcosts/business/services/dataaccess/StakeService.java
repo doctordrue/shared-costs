@@ -1,6 +1,7 @@
 package org.doctordrue.sharedcosts.business.services.dataaccess;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.doctordrue.sharedcosts.data.entities.Stake;
 import org.doctordrue.sharedcosts.data.repositories.StakeRepository;
@@ -51,6 +52,14 @@ public class StakeService {
    public void delete(Long id) {
       assumeExists(id);
       this.stakeRepository.deleteById(id);
+   }
+
+   public void deleteAll(List<Long> ids) {
+      this.stakeRepository.deleteAllByIdInBatch(ids);
+   }
+
+   public void deleteAllForCost(Long costId) {
+      this.deleteAll(this.findAllByCostId(costId).stream().map(Stake::getId).collect(Collectors.toList()));
    }
 
    private void assumeExists(Long id) {

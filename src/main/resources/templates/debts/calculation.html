@@ -37,6 +37,8 @@
         </tr>
     </table>
 </div>
-<a href="#" th:href="@{/groups/{id}/details(id=${balance.costGroup.id})}" th:text="'Go back to ' + ${balance.costGroup.name} + ' details'">Go back to {group name} details</a>
+Back to Group Details: <a href="#"
+   th:href="@{/groups/{id}/details(id=${balance.costGroup.id})}"
+   th:text="${balance.costGroup.name} + '...'">{group name}...</a>
 </body>
 </html>

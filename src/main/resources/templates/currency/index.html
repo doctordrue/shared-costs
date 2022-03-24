@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Currencies</title>
+</head>
+<body>
+<div class="container">
+    <h3>Currencies</h3>
+    <table>
+        <tr th:each="currency : ${currencies}">
+            <td><a href="#"
+                   th:text="${currency.fullName}"
+                   th:href="@{/currency/{id}/edit(id=${currency.id})}">{Currency}</a></td>
+            <td th:text="${currency.shortName}">{CUR}</a></td>
+            <td th:text="${currency.rate}">{rate}</a></td>
+        </tr>
+    </table>
+    <div class="container">
+        Add new <a href="#" th:href="@{/currency/add}">currency...</a>
+    </div>
+</div>
+<div class="footer">
+    Return to <a href="#" th:href="@{/}">start page...</a>
+</div>
+
+</body>
+</html>

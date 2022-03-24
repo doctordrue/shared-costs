@@ -12,8 +12,12 @@
     <input type="tel" th:field="*{phoneNumber}">
     <button type="submit">Save & return</button>
 </form>
-<p class="footer">
-    <a href="#" th:href="@{/persons/{id}(id=${person.id})}">Return</a>
-</p>
+<div class="footer">
+    <a href="#"
+       th:href="@{/persons/{id}(id=${person.id})}"
+       th:text="'Back to ' + ${person.firstName} + ' ' + ${person.lastName}">
+        Back to {firstName} {lastName} view
+    </a>
+</div>
 </body>
 </html>

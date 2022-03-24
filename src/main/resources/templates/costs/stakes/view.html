@@ -21,11 +21,13 @@
             <td th:text="${details.amount} + ' ' + ${currency.shortName}">{amount} {CUR}</td>
         </tr>
     </table>
-    <a href="#" th:href="@{/stakes/edit/{id}(id=${details.id})}">Edit</a>
+<!--    <a href="#" th:href="@{/stakes/edit/{id}(id=${details.id})}">Edit</a>-->
 </div>
 
-<div class="container">
-    <a href="#">Back</a>
+<div class="footer">
+    Back to Cost: <a href="#"
+       th:href="@{/costs/{id}(id=${cost.id})}"
+       th:text="${cost.name}">{costName}</a>
 </div>
 
 </body>

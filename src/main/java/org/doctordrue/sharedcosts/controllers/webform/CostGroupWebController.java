@@ -1,5 +1,6 @@
-package org.doctordrue.sharedcosts.web;
+package org.doctordrue.sharedcosts.controllers.webform;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.doctordrue.sharedcosts.business.model.widget.CostGroupDetails;
@@ -7,6 +8,7 @@ import org.doctordrue.sharedcosts.business.services.calculation.DebtCalculationS
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostGroupService;
 import org.doctordrue.sharedcosts.business.services.web.CostGroupDetailsService;
 import org.doctordrue.sharedcosts.data.entities.CostGroup;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,22 +27,24 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/groups")
 public class CostGroupWebController {
-
-   private final CostGroupService costGroupService;
-   private final DebtCalculationService debtCalculationService;
-   private final CostGroupDetailsService costGroupDetailsService;
-
-   public CostGroupWebController(CostGroupService costGroupService, DebtCalculationService debtCalculationService, CostGroupDetailsService costGroupDetailsService) {
-      this.costGroupService = costGroupService;
-      this.debtCalculationService = debtCalculationService;
-      this.costGroupDetailsService = costGroupDetailsService;
-   }
+   @Autowired
+   private CostGroupService costGroupService;
+   @Autowired
+   private DebtCalculationService debtCalculationService;
+   @Autowired
+   private CostGroupDetailsService costGroupDetailsService;
 
    @GetMapping
-   public ModelAndView getAllCostGroups(Model model){
+   public ModelAndView viewAll(Model model){
       List<CostGroup> groups = this.costGroupService.findAll();
       model.addAttribute("groups", groups);
       return new ModelAndView("/groups/index", model.asMap());
+   }
+
+   @GetMapping("/add")
+   public ModelAndView viewAdd(Model model) {
+      model.addAttribute("group", new CostGroup().setStartDate(LocalDate.now()));
+      return new ModelAndView("/groups/add", model.asMap());
    }
 
    @GetMapping("/{id}")
@@ -48,6 +52,12 @@ public class CostGroupWebController {
       CostGroup group = this.costGroupService.findById(id);
       model.addAttribute("group", group);
       return new ModelAndView("/groups/edit", model.asMap());
+   }
+
+   @PostMapping("/add")
+   public ModelAndView add(@ModelAttribute("group") CostGroup group, Model model) {
+      this.costGroupService.create(group);
+      return this.viewAll(model);
    }
 
    @GetMapping("/{id}/details")
@@ -66,10 +76,17 @@ public class CostGroupWebController {
    }
 
    @PostMapping("/delete/{id}")
-   @ResponseStatus(HttpStatus.NO_CONTENT)
+   @ResponseStatus(HttpStatus.OK)
    public ModelAndView deleteCostGroup(@PathVariable("id") Long id, Model model) {
       this.costGroupService.delete(id);
-      return this.getAllCostGroups(model);
+      return this.viewAll(model);
+   }
+
+   @PostMapping("/delete/{id}/recursively")
+   @ResponseStatus(HttpStatus.OK)
+   public ModelAndView deleteCostGroupRecursively(@PathVariable("id") Long id, Model model) {
+      this.costGroupService.deleteRecursively(id);
+      return this.viewAll(model);
    }
 
 }

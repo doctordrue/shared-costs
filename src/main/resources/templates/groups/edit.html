@@ -32,12 +32,14 @@
         </ul>
         <button type="submit">Save</button>
     </form>
-    <form action="#" th:action="@{/groups/delete/{id}(id=${group.id})}" method="post">
+    <form action="#" th:action="@{/groups/delete/{id}/recursively(id=${group.id})}" method="post">
         <button type="submit">[x]</button>
     </form>
 
 </div>
-<a href="#" th:href="@{/group/{id}/details(id=${group.id})}">Back</a>
+Back to Group details: <a href="#"
+                          th:href="@{/groups/{id}/details(id=${group.id})}"
+                          th:text="${group.name} + '...'">{group name}...</a>
 
 </body>
 </html>

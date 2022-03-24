@@ -36,7 +36,11 @@
         <button type="submit">Save</button>
     </form>
 </div>
-<a href="#" th:href="@{/group/{id}/details(id=${group.id})}">Back</a>
+<div class="footer">
+    Back to Group Details: <a href="#"
+                      th:href="@{/group/{id}/details(id=${group.id})}"
+                      th:text="${group.name}">{groupName}</a>
+</div>
 
 </body>
 </html>
