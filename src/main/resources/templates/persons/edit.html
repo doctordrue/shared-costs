@@ -7,9 +7,27 @@
 <body>
 <h3 th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</h3>
 <form action="#" th:action="@{/persons/{id}/update(id=${person.id})}" th:method="post" th:object="${person}">
-    <input type="text" th:field="*{firstName}">
-    <input type="text" th:field="*{lastName}">
-    <input type="tel" th:field="*{phoneNumber}">
+    <input type="email" th:field="*{email}" placeholder="E-mail" required>
+    <input type="text" th:field="*{firstName}" placeholder="First name">
+    <input type="text" th:field="*{lastName}" placeholder="Last name">
+    <input type="tel" th:field="*{phoneNumber}" placeholder="Phone number">
+    <p>
+        <label th:for="role">Role:</label>
+        <select th:field="*{role}">
+            <option
+                    th:each="roleStr: ${roles}"
+                    th:text="${roleStr}"
+                    th:value="${roleStr}">{ROLE}</option>
+        </select>
+    </p>
+    <p>
+        <label for="enabled">Enabled:</label>
+        <input type="checkbox" id="enabled" th:field="*{enabled}">
+    </p>
+    <p>
+        <label for="locked">Locked:</label>
+        <input type="checkbox" id="locked" th:field="*{locked}">
+    </p>
     <button type="submit">Save & return</button>
 </form>
 <div class="footer">

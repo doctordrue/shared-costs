@@ -7,9 +7,9 @@
 <body>
 <h3>Add person</h3>
 <form action="#" th:action="@{/currency/add/submit}" th:method="post" th:object="${currency}">
-    <input type="text" th:field="*{fullName}">
-    <input type="text" th:field="*{shortName}">
-    <input type="number" step="0.01" th:field="*{rate}">
+    <input type="text" th:field="*{fullName}" placeholder="Full Name">
+    <input type="text" th:field="*{shortName}" placeholder="Short Name">
+    <input type="number" step="0.01" th:field="*{rate}" placeholder="Rate">
     <button type="submit">Save & return</button>
 </form>
 <p class="footer">

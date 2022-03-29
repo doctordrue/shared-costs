@@ -1,11 +1,14 @@
 package org.doctordrue.sharedcosts.controllers.webform;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.doctordrue.sharedcosts.business.services.dataaccess.PersonService;
 import org.doctordrue.sharedcosts.business.services.web.PersonWebService;
 import org.doctordrue.sharedcosts.data.entities.CostGroup;
 import org.doctordrue.sharedcosts.data.entities.Person;
+import org.doctordrue.sharedcosts.data.entities.enums.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,6 +51,7 @@ public class PersonWebController {
    @GetMapping("/add")
    public ModelAndView viewAdd(Model model) {
       model.addAttribute("person", new Person());
+      model.addAttribute("roles", Stream.of(RoleType.values()).map(RoleType::name).collect(Collectors.toList()));
       return new ModelAndView("/persons/add", model.asMap());
    }
 

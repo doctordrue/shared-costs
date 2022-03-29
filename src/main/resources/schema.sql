@@ -9,6 +9,8 @@ create table currency(
 CREATE TABLE persons(
 -- list of people available to be included in cost groups etc.
   id BIGSERIAL PRIMARY KEY,
+  username VARCHAR UNIQUE,
+  password VARCHAR,
   first_name VARCHAR(64),
   last_name VARCHAR(64),
   phone_number VARCHAR(24)

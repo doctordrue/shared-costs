@@ -3,10 +3,17 @@ package org.doctordrue.sharedcosts.business.services.dataaccess;
 import java.util.List;
 
 import org.doctordrue.sharedcosts.data.entities.Person;
+import org.doctordrue.sharedcosts.data.entities.enums.RoleType;
 import org.doctordrue.sharedcosts.data.repositories.PersonRepository;
 import org.doctordrue.sharedcosts.exceptions.BaseException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsPasswordService;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,12 +21,14 @@ import org.springframework.stereotype.Service;
  * 3/16/2022
  **/
 @Service
-public class PersonService {
+public class PersonService implements UserDetailsService, UserDetailsPasswordService {
 
-   private final PersonRepository personRepository;
+   @Autowired
+   private PersonRepository personRepository;
 
-   public PersonService(PersonRepository personRepository) {
-      this.personRepository = personRepository;
+   @Bean
+   public PasswordEncoder encoder() {
+      return new BCryptPasswordEncoder();
    }
 
    public List<Person> findAll() {
@@ -30,12 +39,27 @@ public class PersonService {
       return this.personRepository.findAllById(ids);
    }
 
+   public Person findByEmail(String email) {
+      return this.personRepository.findByEmailAllIgnoreCase(email);
+   }
+
    public Person findById(Long id) {
       return this.personRepository.findById(id).orElseThrow(() -> generateNotFoundByIdException(id));
    }
 
    public Person create(Person person) {
       return this.personRepository.save(person);
+   }
+
+   public boolean register(Person person) {
+      Person persistedPerson = this.findByEmail(person.getEmail());
+      if (persistedPerson != null) {
+         return false;
+      }
+      person.setRole(RoleType.USER);
+      person.setPassword(encoder().encode(person.getPassword()));
+      this.create(person);
+      return true;
    }
 
    public Person update(Long id, Person person) {
@@ -57,5 +81,19 @@ public class PersonService {
       if (!this.personRepository.existsById(id)) {
          throw generateNotFoundByIdException(id);
       }
+   }
+
+   @Override
+   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+      Person person = this.findByEmail(email);
+      if (person == null) {
+         throw new UsernameNotFoundException("User not found for email = " + email);
+      }
+      return person;
+   }
+
+   @Override
+   public UserDetails updatePassword(UserDetails user, String newPassword) {
+      return null;
    }
 }

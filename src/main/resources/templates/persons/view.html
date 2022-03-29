@@ -5,20 +5,33 @@
     <title th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</title>
 </head>
 <body>
-<h3 th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</h3>
-<p th:text="'Phone number: ' + ${person.phoneNumber}">Phone number: {phoneNumber}</p>
+
 <div class="container">
-    Participated in following groups:
-    <ul>
-        <li th:each="group: ${groups}">
-            <a href="#"
-               th:href="@{/groups/{id}/details(id=${group.id})}"
-               th:text="${group.name}">
-                {groupName}
-            </a>
-        </li>
-    </ul>
-    <a href="#" th:href="@{/persons/{id}/update(id=${person.id})}">Edit</a>
+    <h4 th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</h4>
+    <p th:text="'E-mail: ' + ${person.email}">E-mail: {email}</p>
+    <p th:text="'Phone number: ' + ${person.phoneNumber}">Phone number: {phoneNumber}</p>
+    <p th:text="'Role: ' + ${person.role}">Role: {ROLE}</p>
+    <p>
+        <label for="enabled">Enabled:</label>
+        <input type="checkbox" id="enabled" disabled th:field="${person.enabled}">
+    </p>
+    <p>
+        <label for="locked">Locked:</label>
+        <input type="checkbox" id="locked" disabled th:field="${person.locked}">
+    </p>
+    <p>
+        Participated in following groups:
+        <ul>
+            <li th:each="group: ${groups}">
+                <a href="#"
+                   th:href="@{/groups/{id}/details(id=${group.id})}"
+                   th:text="${group.name}">
+                    {groupName}
+                </a>
+            </li>
+        </ul>
+        <a href="#" th:href="@{/persons/{id}/update(id=${person.id})}">Edit</a>
+    </p>
 </div>
 
 <div class="footer">
