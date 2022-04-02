@@ -3,10 +3,7 @@ package org.doctordrue.sharedcosts.business.model.widget;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.entities.Currency;
-import org.doctordrue.sharedcosts.data.entities.Payment;
-import org.doctordrue.sharedcosts.data.entities.Stake;
 
 /**
  * @author Andrey_Barantsev
@@ -20,8 +17,8 @@ public class CostDetails {
    private Double amount;
    private Currency currency;
    private LocalDateTime timestamp;
-   private List<StakeDetails> stakes;
-   private List<PaymentDetails> payments;
+   private List<StakeDto> stakes;
+   private List<PaymentDto> payments;
 
    public Long getId() {
       return id;
@@ -41,20 +38,20 @@ public class CostDetails {
       return this;
    }
 
-   public List<StakeDetails> getStakes() {
+   public List<StakeDto> getStakes() {
       return stakes;
    }
 
-   public CostDetails setStakes(List<StakeDetails> stakes) {
+   public CostDetails setStakes(List<StakeDto> stakes) {
       this.stakes = stakes;
       return this;
    }
 
-   public List<PaymentDetails> getPayments() {
+   public List<PaymentDto> getPayments() {
       return payments;
    }
 
-   public CostDetails setPayments(List<PaymentDetails> payments) {
+   public CostDetails setPayments(List<PaymentDto> payments) {
       this.payments = payments;
       return this;
    }

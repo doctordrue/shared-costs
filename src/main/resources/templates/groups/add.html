@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Cost Group</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
-<h2>Add Cost Group</h2>
+<h3>Add Cost Group</h3>
 <div class="container">
     <form action="#" th:action="@{/groups/add}" th:object="${group}" method="post">
         <ul>
@@ -30,7 +31,11 @@
     </form>
 
 </div>
-Back to <a href="#" th:href="@{/groups}">Cost Groups...</a>
+<div class="footer">
+    <p>
+        Back to <a href="#" th:href="@{/groups}">Cost Groups...</a>
+    </p>
+</div>
 
 </body>
 </html>

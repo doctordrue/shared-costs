@@ -3,21 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>People</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
-<div class="container">
 <h3>People</h3>
-<table>
-    <tr th:each="person : ${persons}">
-        <td><a href="#"
-               th:text="${person.firstName} + ' ' + ${person.lastName}"
-               th:href="@{/persons/{id}(id=${person.id})}">{firstName} {lastName}</a></td>
-    </tr>
-</table>
-<a href="#" th:href="@{/persons/add}">Add new person...</a>
+<div class="container">
+    <table>
+        <tr th:each="person : ${persons}">
+            <td><a href="#"
+                   th:text="${person.firstName} + ' ' + ${person.lastName}"
+                   th:href="@{/persons/{id}(id=${person.id})}">{firstName} {lastName}</a></td>
+        </tr>
+    </table>
+    <a href="#" th:href="@{/persons/add}">Add new person...</a>
 </div>
 <div class="footer">
-    <a href="#" th:href="@{/}">Return to start page...</a>
+    <p>
+        Return to <a href="#" th:href="@{/}">start page</a>...
+    </p>
+    <p>
+        <a href="#" th:href="@{/logout}">Logout</a>
+    </p>
 </div>
 
 </body>

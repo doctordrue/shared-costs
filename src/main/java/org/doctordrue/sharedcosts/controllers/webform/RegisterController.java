@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 /**
  * @author Andrey_Barantsev
@@ -26,7 +27,7 @@ public class RegisterController {
    @GetMapping
    public ModelAndView viewRegister(Model model) {
       model.addAttribute("person", new Person());
-      return new ModelAndView("/persons/register", model.asMap());
+      return new ModelAndView("/register", model.asMap());
    }
 
    @PostMapping
@@ -39,6 +40,6 @@ public class RegisterController {
          model.addAttribute("error", "User with e-mail " + person.getEmail() + " already exists. Please change!");
          return this.viewRegister(model);
       }
-      return new ModelAndView("/login", model.asMap());
+      return new ModelAndView(new RedirectView("/login"), model.asMap());
    }
 }

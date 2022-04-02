@@ -3,21 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Shared Cost Main page</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
-<h2>Start page</h2>
+<h3>Start page</h3>
 <div class="container">
-    Go to <a href="#" th:href="@{/groups}">Cost Groups...</a>
-</div>
-<div class="container">
-    Go to <a href="#" th:href="@{/persons}">People...</a>
-</div>
-<div class="container">
-    Go to <a href="#" th:href="@{/currency}">Currencies...</a>
+    <p>
+        Go to <a href="#" th:href="@{/groups}">Cost Groups...</a>
+    </p>
+    <p>
+        Go to <a href="#" th:href="@{/persons}">People...</a>
+    </p>
+    <p>
+        Go to <a href="#" th:href="@{/currency}">Currencies...</a>
+    </p>
 </div>
 
 <div class="footer">
-    <a href="#" th:href="@{/logout}">Logout</a>
+    <p>
+        <a href="#" th:href="@{/logout}">Logout</a>
+    </p>
 </div>
 
 </body>

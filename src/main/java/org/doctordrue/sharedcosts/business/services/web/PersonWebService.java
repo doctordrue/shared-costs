@@ -1,13 +1,12 @@
 package org.doctordrue.sharedcosts.business.services.web;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.doctordrue.sharedcosts.business.model.widget.CostGroupDetails;
-import org.doctordrue.sharedcosts.business.model.widget.PaymentDetails;
-import org.doctordrue.sharedcosts.business.model.widget.StakeDetails;
+import org.doctordrue.sharedcosts.business.model.widget.PaymentDto;
+import org.doctordrue.sharedcosts.business.model.widget.StakeDto;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostGroupService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.PersonService;
 import org.doctordrue.sharedcosts.data.entities.CostGroup;
@@ -33,8 +32,8 @@ public class PersonWebService {
       CostGroupDetails details = this.costGroupDetailsService.getDetails(group);
       List<Long> participantsIds = details.getCosts().stream()
               .flatMap(costDetails -> Stream.concat(
-                      costDetails.getPayments().stream().map(PaymentDetails::getPerson),
-                      costDetails.getStakes().stream().map(StakeDetails::getPerson)))
+                      costDetails.getPayments().stream().map(PaymentDto::getPerson),
+                      costDetails.getStakes().stream().map(StakeDto::getPerson)))
               .map(Person::getId)
               .collect(Collectors.toList());
       return this.personService.findAll().stream()

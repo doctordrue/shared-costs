@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Shared Cost Main page</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
-<h2>Cost groups:</h2>
+<h3>Cost groups</h3>
 <div class="container">
     <table>
         <tr>
@@ -24,7 +25,9 @@
     <a href="#" th:href="@{/groups/add}">Add new cost group</a>
 
 </div>
-<a href="#" th:href="@{/persons}">Go to People</a>
+<div class="footer">
+    <p>Go to <a href="#" th:href="@{/persons}">People...</a></p>
+</div>
 
 </body>
 </html>

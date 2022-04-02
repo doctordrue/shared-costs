@@ -1,7 +1,7 @@
 package org.doctordrue.sharedcosts.controllers.webform;
 
-import org.doctordrue.sharedcosts.business.services.processing.StakesProcessingService;
-import org.doctordrue.sharedcosts.data.entities.Stake;
+import org.doctordrue.sharedcosts.business.services.processing.PaymentsProcessingService;
+import org.doctordrue.sharedcosts.data.entities.Payment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,37 +13,38 @@ import org.springframework.web.servlet.view.RedirectView;
 
 /**
  * @author Andrey_Barantsev
- * 3/22/2022
+ * 3/31/2022
  **/
 @Controller
-@RequestMapping("/costs/{cost_id}/stakes")
-public class StakeWebController {
+@RequestMapping("/costs/{cost_id}/payments")
+public class PaymentWebController {
 
    @Autowired
-   private StakesProcessingService stakesProcessingService;
+   private PaymentsProcessingService paymentsProcessingService;
 
    @PostMapping("/add")
    public RedirectView add(@PathVariable("cost_id") Long costId,
-                           @RequestParam(value = "recalculate_cost", required = false, defaultValue = "false") boolean updateCost,
-                           @ModelAttribute("stake") Stake stake) {
-      this.stakesProcessingService.processNewStake(stake, updateCost);
+                           @RequestParam(value = "recalculate_cost", required = false, defaultValue = "true") Boolean updateCost,
+                           @ModelAttribute Payment payment) {
+      this.paymentsProcessingService.processNewPayment(payment, updateCost);
       return new RedirectView("/costs/" + costId);
    }
 
    @PostMapping("/{id}/edit")
    public RedirectView edit(@PathVariable("cost_id") Long costId,
                             @PathVariable("id") Long id,
-                            @RequestParam(value = "recalculate_cost", required = false, defaultValue = "false") Boolean updateCost,
-                            @ModelAttribute Stake stake) {
-      this.stakesProcessingService.processEditStake(stake, updateCost);
+                            @RequestParam(value = "recalculate_cost", required = false, defaultValue = "true") Boolean updateCost,
+                            @ModelAttribute Payment payment) {
+      this.paymentsProcessingService.processEditPayment(payment, updateCost);
       return new RedirectView("/costs/" + costId);
    }
 
    @PostMapping("/{id}/delete")
    public RedirectView delete(@PathVariable("cost_id") Long costId,
                               @PathVariable("id") Long id,
-                              @RequestParam(value = "recalculate_cost", required = false, defaultValue = "false") Boolean updateCost) {
-      this.stakesProcessingService.processDelete(id, updateCost);
+                              @RequestParam(value = "recalculate_cost", required = false, defaultValue = "true") Boolean updateCost) {
+      this.paymentsProcessingService.processDelete(id, updateCost);
       return new RedirectView("/costs/" + costId);
    }
+
 }

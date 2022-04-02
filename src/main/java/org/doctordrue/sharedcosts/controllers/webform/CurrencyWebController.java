@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 /**
  * @author Andrey_Barantsev
@@ -45,16 +46,16 @@ public class CurrencyWebController {
       return new ModelAndView("/currency/edit", model.asMap());
    }
 
-   @PostMapping("/add/submit")
-   public ModelAndView addSubmitAndReturn(@ModelAttribute Currency currency, Model model) {
+   @PostMapping("/add")
+   public RedirectView add(@ModelAttribute Currency currency, Model model) {
       this.currencyService.create(currency);
-      return this.viewAll(model);
+      return new RedirectView("/currency");
    }
 
-   @PostMapping("/{id}/edit/submit")
-   public ModelAndView addSubmitAndReturn(@PathVariable("id") Long id, @ModelAttribute Currency currency, Model model) {
+   @PostMapping("/{id}/edit")
+   public RedirectView edit(@PathVariable("id") Long id, @ModelAttribute Currency currency, Model model) {
       this.currencyService.updateById(id, currency);
-      return this.viewAll(model);
+      return new RedirectView("/currency");
    }
 
 }

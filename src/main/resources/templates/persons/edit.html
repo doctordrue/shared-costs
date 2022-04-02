@@ -3,39 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
 <h3 th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</h3>
-<form action="#" th:action="@{/persons/{id}/update(id=${person.id})}" th:method="post" th:object="${person}">
-    <input type="email" th:field="*{email}" placeholder="E-mail" required>
-    <input type="text" th:field="*{firstName}" placeholder="First name">
-    <input type="text" th:field="*{lastName}" placeholder="Last name">
-    <input type="tel" th:field="*{phoneNumber}" placeholder="Phone number">
-    <p>
-        <label th:for="role">Role:</label>
-        <select th:field="*{role}">
-            <option
-                    th:each="roleStr: ${roles}"
-                    th:text="${roleStr}"
-                    th:value="${roleStr}">{ROLE}</option>
-        </select>
-    </p>
-    <p>
-        <label for="enabled">Enabled:</label>
-        <input type="checkbox" id="enabled" th:field="*{enabled}">
-    </p>
-    <p>
-        <label for="locked">Locked:</label>
-        <input type="checkbox" id="locked" th:field="*{locked}">
-    </p>
-    <button type="submit">Save & return</button>
-</form>
+<div class="message warning" th:if="${password}">
+    <p th:text="'Password was reset. Please save: ' + ${password}">Password was reset. Please save: {password}</p>
+</div>
+<div class="container">
+    <form action="#" th:action="@{/persons/{id}/edit(id=${person.id})}" th:method="post" th:object="${person}">
+        <input type="email" th:field="*{email}" placeholder="E-mail" required>
+        <input type="password" th:field="*{password}" alt="Password is read-only" hidden>
+        <input type="text" th:field="*{firstName}" placeholder="First name">
+        <input type="text" th:field="*{lastName}" placeholder="Last name">
+        <input type="tel" th:field="*{phoneNumber}" placeholder="Phone number">
+        <p>
+            <label th:for="role">Role:</label>
+            <select th:field="*{role}">
+                <option
+                        th:each="roleStr: ${roles}"
+                        th:text="${roleStr}"
+                        th:value="${roleStr}">{ROLE}
+                </option>
+            </select>
+        </p>
+        <p>
+            <label for="enabled">Enabled:</label>
+            <input type="checkbox" id="enabled" th:field="*{enabled}">
+        </p>
+        <p>
+            <label for="locked">Locked:</label>
+            <input type="checkbox" id="locked" th:field="*{locked}">
+        </p>
+        <button type="submit">Save & return</button>
+    </form>
+    <form action="#" th:action="@{/persons/{id}/reset(id=${person.id})}" th:method="post">
+        <button type="submit">Reset Password</button>
+    </form>
+</div>
 <div class="footer">
-    <a href="#"
-       th:href="@{/persons/{id}(id=${person.id})}"
-       th:text="'Back to ' + ${person.firstName} + ' ' + ${person.lastName}">
-        Back to {firstName} {lastName} view
-    </a>
+    <p>
+        Return to <a href="#"
+                     th:href="@{/persons/{id}(id=${person.id})}"
+                     th:text="${person.firstName} + ' ' + ${person.lastName}">
+        {firstName} {lastName}</a>...
+    </p>
+    <p>
+        <a href="#" th:href="@{/logout}">Logout</a>
+    </p>
 </div>
 </body>
 </html>

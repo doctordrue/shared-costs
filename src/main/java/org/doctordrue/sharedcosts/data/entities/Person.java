@@ -48,8 +48,8 @@ public class Person implements UserDetails {
    @Column(name="enabled", nullable = false)
    private Boolean enabled = true;
 
-   @Column(name="locked", nullable = false)
-   private Boolean locked = true;
+   @Column(name = "locked", nullable = false)
+   private Boolean locked = false;
 
    @Column(name = "role", nullable = false)
    @Enumerated(EnumType.STRING)
@@ -148,7 +148,7 @@ public class Person implements UserDetails {
 
    @Override
    public boolean isAccountNonLocked() {
-      return this.locked == null ? true : this.locked;
+      return this.locked == null || !this.locked;
    }
 
    @Override
@@ -158,7 +158,7 @@ public class Person implements UserDetails {
 
    @Override
    public boolean isEnabled() {
-      return this.enabled == null ? true : this.enabled;
+      return this.enabled == null || this.enabled;
    }
 
    @Override

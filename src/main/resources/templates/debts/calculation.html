@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Debts calculation</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
-<h2 th:text="'Debts calculation for ' + ${balance.costGroup.name}">Debts calculation for </h2>
-<div class="container">
-    <h3>Payments balance:</h3>
+<h3 th:text="'Debts calculation for ' + ${balance.costGroup.name}">Debts calculation for </h3>
+<div th:if="${balance.paymentsBalance}" class="container warning">
+    <h4>Payments balance:</h4>
     <table>
         <tr th:each="balance: ${balance.paymentsBalance}">
             <td th:text="${balance.amount} + ' ' + ${balance.currency.shortName}">Amount</td>
         </tr>
     </table>
 </div>
-<div class="container">
-    <h3>Stakes balance:</h3>
+<div th:if="${balance.stakesBalance}" class="container warning">
+    <h4>Stakes balance:</h4>
     <table>
         <tr th:each="balance: ${balance.stakesBalance}">
             <td th:text="${balance.amount} + ' ' + ${balance.currency.shortName}">Amount</td>
         </tr>
     </table>
 </div>
-<div class="container">
-    <h3>Debts calculation</h3>
+<div class="container" th:if="${balance.debts}">
+    <h4>Debts calculation</h4>
     <table>
         <tr>
             <th>Who</th>
@@ -37,8 +38,11 @@
         </tr>
     </table>
 </div>
-Back to Group Details: <a href="#"
-   th:href="@{/groups/{id}/details(id=${balance.costGroup.id})}"
-   th:text="${balance.costGroup.name} + '...'">{group name}...</a>
+<div class="footer">
+    <p>Back to Group Details: <a href="#"
+                                 th:href="@{/groups/{id}/details(id=${balance.costGroup.id})}"
+                                 th:text="${balance.costGroup.name} + '...'">{group name}...</a>
+    </p>
+</div>
 </body>
 </html>

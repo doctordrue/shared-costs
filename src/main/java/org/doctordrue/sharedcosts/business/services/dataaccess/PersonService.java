@@ -56,7 +56,9 @@ public class PersonService implements UserDetailsService, UserDetailsPasswordSer
       if (persistedPerson != null) {
          return false;
       }
-      person.setRole(RoleType.USER);
+      if (person.getRole() == null) {
+         person.setRole(RoleType.USER);
+      }
       person.setPassword(encoder().encode(person.getPassword()));
       this.create(person);
       return true;
@@ -64,6 +66,10 @@ public class PersonService implements UserDetailsService, UserDetailsPasswordSer
 
    public Person update(Long id, Person person) {
       assumeExists(id);
+      if (person.getPassword() == null) {
+         Person persistedPerson = this.findById(id);
+         person.setPassword(persistedPerson.getPassword());
+      }
       person.setId(id);
       return this.personRepository.save(person);
    }
@@ -71,16 +77,6 @@ public class PersonService implements UserDetailsService, UserDetailsPasswordSer
    public void delete(Long id) {
       assumeExists(id);
       this.personRepository.deleteById(id);
-   }
-
-   private BaseException generateNotFoundByIdException(Long id) {
-      return new BaseException("SC005", "Person not found for id = " + id);
-   }
-
-   private void assumeExists(Long id) {
-      if (!this.personRepository.existsById(id)) {
-         throw generateNotFoundByIdException(id);
-      }
    }
 
    @Override
@@ -94,6 +90,18 @@ public class PersonService implements UserDetailsService, UserDetailsPasswordSer
 
    @Override
    public UserDetails updatePassword(UserDetails user, String newPassword) {
-      return null;
+      Person persistedPerson = this.findByEmail(user.getUsername());
+      persistedPerson.setPassword(encoder().encode(newPassword));
+      return this.update(persistedPerson.getId(), persistedPerson);
+   }
+
+   private BaseException generateNotFoundByIdException(Long id) {
+      return new BaseException("SC005", "Person not found for id = " + id);
+   }
+
+   private void assumeExists(Long id) {
+      if (!this.personRepository.existsById(id)) {
+         throw generateNotFoundByIdException(id);
+      }
    }
 }

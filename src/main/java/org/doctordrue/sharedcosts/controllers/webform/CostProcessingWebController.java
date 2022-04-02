@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 /**
  * @author Andrey_Barantsev
@@ -36,11 +37,9 @@ public class CostProcessingWebController {
    private CurrencyService currencyService;
    @Autowired
    private PersonService personService;
-   @Autowired
-   private CostGroupWebController costGroupWebController;
 
    @GetMapping
-   public ModelAndView view(@RequestParam("group_id") Long groupId, Model model) {
+   public ModelAndView viewProcess(@RequestParam("group_id") Long groupId, Model model) {
       CostGroup costGroup = this.costGroupService.findById(groupId);
       List<Currency> currencies = this.currencyService.findAll();
       List<Person> persons = this.personService.findAll();
@@ -55,8 +54,8 @@ public class CostProcessingWebController {
    }
 
    @PostMapping
-   public ModelAndView submitAndReturn(@ModelAttribute CostSplitProcessingInputData data, Model model) {
+   public RedirectView submitProcess(@ModelAttribute CostSplitProcessingInputData data, Model model) {
       this.costProcessingService.processCost(data);
-      return this.costGroupWebController.getCostGroupDetails(data.getCostGroupId(), model);
+      return new RedirectView("/groups/" + data.getCostGroupId() + "/details");
    }
 }

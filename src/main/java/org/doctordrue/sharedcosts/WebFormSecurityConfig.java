@@ -36,10 +36,10 @@ public class WebFormSecurityConfig extends WebSecurityConfigurerAdapter {
    protected void configure(HttpSecurity http) throws Exception {
       http.csrf().disable()
               .authorizeRequests()
+              .antMatchers("/", "/styles/**").permitAll()
               .antMatchers("/register").not().fullyAuthenticated()
               .antMatchers("/persons/**", "/currency/**").hasRole(RoleType.ADMIN.name())
               .antMatchers("/**").fullyAuthenticated()
-              .antMatchers("/", "/resources/**").permitAll()
               .anyRequest().authenticated()
               .and()
               .formLogin()

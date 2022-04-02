@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="'Cost group: ' + ${costGroupDetails.group.name}">{group name}</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
-<h2 th:text="${costGroupDetails.group.name}">{group name}</h2>
+<h3 th:text="${costGroupDetails.group.name}">{group name}</h3>
 <div class="container">
     <table>
         <tr>
@@ -29,11 +30,11 @@
             <td th:text="${costGroupDetails.group.endDate}">{end date}</td>
         </tr>
     </table>
-    <a href="#" th:href="@{/groups/{id}(id=${costGroupDetails.group.id})}">Edit</a>
+    <a href="#" th:href="@{/groups/{id}/edit(id=${costGroupDetails.group.id})}">Edit</a>
 </div>
 
 <div class="container">
-    <h3>Costs</h3>
+    <h4>Costs</h4>
     <table>
         <tr>
             <th>Cost name</th>
@@ -46,24 +47,20 @@
             <td th:text="${cost.name}">{name}</td>
             <td th:text="${cost.amount} + ' ' + ${cost.currency.shortName}">{amount} {CUR}</td>
             <td>
-                <ul>
-                    <li th:each="stake: ${cost.stakes}" th:text="${stake.person.firstName} + ' ' + ${stake.person.lastName}">{first name} {last name}</li>
-                </ul>
+                <p th:each="stake: ${cost.stakes}" th:text="${stake.person.firstName} + ' ' + ${stake.person.lastName}">{first name} {last name}</p>
             </td>
             <td>
-                <ul>
-                    <li th:each="payment: ${cost.payments}" th:text="${payment.person.firstName} + ' ' + ${payment.person.lastName}">{first name} {last name}</li>
-                </ul>
+                <p th:each="payment: ${cost.payments}" th:text="${payment.person.firstName} + ' ' + ${payment.person.lastName}">{first name} {last name}</p>
             </td>
             <td>
                 <a href="#" th:href="@{/costs/{id}(id=${cost.id})}">View details</a>
-                <a href="#">[x]</a>
+                <!--                <a href="#">[x]</a>-->
             </td>
         </tr>
     </table>
-<!--    <p>-->
-<!--        <a href="#" th:href="@{/costs/add?group_id={group_id}(group_id=${costGroupDetails.group.id})}">Add empty cost (no stakes & payments)</a>-->
-<!--    </p>-->
+    <p>
+        <a href="#" th:href="@{/costs/add?group_id={group_id}(group_id=${costGroupDetails.group.id})}">Add empty cost</a>
+    </p>
     <p>
         <a href="#" th:href="@{/costs/process?group_id={group_id}(group_id=${costGroupDetails.group.id})}">Add cost with split stakes & payment</a>
     </p>
@@ -73,7 +70,7 @@
     <a href="#" th:href="@{/debts/calculation?group_id={group_id}(group_id=${costGroupDetails.group.id})}">View calculations</a>
 </div>
 <div class="footer">
-    Back to <a href="#" th:href="@{/groups}">Groups...</a>
+    <p>Back to <a href="#" th:href="@{/groups}">Groups...</a></p>
 </div>
 
 </body>

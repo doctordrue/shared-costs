@@ -2,10 +2,11 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="'Cost: ' + ${details.name}">{cost name}</title>
+    <title th:text="'Cost: ' + ${dto.name}">{cost name}</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
-<h2 th:text="${details.name}">{cost name}</h2>
+<h3 th:text="${dto.name}">{cost name}</h3>
 <div class="container">
     <table>
         <tr>
@@ -14,74 +15,144 @@
         </tr>
         <tr>
             <td>Name</td>
-            <td th:text="${details.name}">{name}</td>
+            <td th:text="${dto.name}">
+            </td>
         </tr>
         <tr>
-            <td>Amount</td>
-            <td th:text="${details.amount} + ' ' + ${details.currency.shortName}">{amount} {CUR}</td>
+            <td>Total</td>
+            <td th:text="${dto.amount} + ' ' + ${dto.currency.shortName}">{amount} {CUR}</td>
         </tr>
         <tr>
             <td>Timestamp</td>
-            <td th:text="${details.timestamp}">{timestamp}</td>
+            <td th:text="${dto.timestamp}">{timestamp}</td>
         </tr>
     </table>
-<!--    <a href="#" th:href="@{/costs/edit/{id}(id=${details.id})}">Edit</a>-->
+    <form action="#" th:action="@{/costs/{id}/recalculate(id=${dto.id},from=payments)}" method="post">
+        <button type="submit">Update Total from payments</button>
+    </form>
+    <form action="#" th:action="@{/costs/{id}/recalculate(id=${dto.id},from=stakes)}" method="post">
+        <button type="submit">Update Total from stakes</button>
+    </form>
+    <form action="#" th:action="@{/costs/{id}/edit(id=${dto.id}}" method="get">
+        <button type="submit">Edit</button>
+    </form>
 </div>
 
 <div class="container">
-    <h3>Stakes</h3>
-    <table>
-        <tr>
-            <th>Stake holder</th>
-            <th>Amount</th>
-            <th>Actions</th>
-        </tr>
-        <tr th:each="stake: ${details.stakes}">
-            <td th:text="${stake.person.firstName} + ' ' + ${stake.person.lastName}">{firstName} {lastName}</td>
-            <td th:text="${stake.amount} + ' ' +${details.currency.shortName}">{amount} {CUR}</td>
-            <td>
-                <a href="#" th:href="@{/costs/{cost_id}/stakes/{id}(id=${stake.id}, cost_id=${details.id})}">View details</a>
-<!--                <a href="#">[x]</a>-->
-            </td>
-        </tr>
-        <tfoot>
-        <tr>
-
-        </tr>
-        </tfoot>
-    </table>
-<!--    <a href="#">Add new stake</a>-->
-</div>
-
-<div class="container">
-    <h3>Payments</h3>
+    <h4>Payments</h4>
     <table>
         <tr>
             <th>Payer</th>
             <th>Amount</th>
             <th>Actions</th>
         </tr>
-        <tr th:each="payment: ${details.payments}">
-            <td th:text="${payment.person.firstName} + ' ' + ${payment.person.lastName}">{firstName} {lastName}</td>
-            <td th:text="${payment.amount} + ' ' +${details.currency.shortName}">{amount} {CUR}</td>
-            <td>
-<!--                <a href="#">View details</a>-->
-<!--                <a href="#">[x]</a>-->
-            </td>
-        </tr>
-        <tfoot>
-        <tr>
+        <tr th:each="payment: ${dto.payments}">
+            <form th:action="@{/costs/{cost_id}/payments/{id}/edit(cost_id=${dto.id},id=${payment.id})}" method="post" th:object="${payment}">
+                <td>
+                    <input disabled readonly th:value="*{person.firstName} + ' ' + *{person.lastName}">
+                    <input hidden th:value="*{person.id}" th:name="personId">
+                </td>
+                <td>
+                    <input type="number" min="0.00" step="0.01" th:value="*{amount}" th:name="paymentTotal">
+                    <label th:for="paymentTotal" th:text="${dto.currency.shortName}">{CUR}</label>
+                    <input hidden th:value="*{id}" th:name="id">
+                    <input hidden th:value="${dto.id}" th:name="costId">
+                </td>
+                <td>
+                    <button type="submit">
+                        Save
+                    </button>
+                    <button type="submit"
+                            th:formaction="@{/costs/{cost_id}/payments/{id}/delete(cost_id=${dto.id},id=*{id})}">
+                        Delete
+                    </button>
 
+                </td>
+            </form>
+        </tr>
+        <tfoot th:unless="${dto.availableForPaymentPeople.empty}">
+        <tr>
+            <form th:action="@{/costs/{cost_id}/payments/add(cost_id=${dto.id})}" method="post" th:object="${new_payment}">
+                <td>
+                    <select th:field="*{personId}">
+                        <option th:each="person : ${dto.availableForPaymentPeople}" th:value="${person.id}" th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number" min="0.00" step="0.01" th:field="*{paymentTotal}">
+                    <label th:for="paymentTotal" th:text="${dto.currency.shortName}">{CUR}</label>
+                    <input hidden th:value="${dto.id}" th:field="*{costId}">
+                </td>
+                <td>
+                    <button type="submit">Add</button>
+                </td>
+            </form>
         </tr>
         </tfoot>
     </table>
-<!--    <a href="#">Add new payment</a>-->
 </div>
 
 <div class="container">
-    Back to Cost Group details: <a href="#"
-                                   th:href="@{/groups/{id}/details(id=${group.id})}"
-                                   th:text="${group.name} + '...'">{groupName}...</a>
+    <h4>Stakes</h4>
+    <table>
+        <tr>
+            <th>Holder</th>
+            <th>Amount</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="stake: ${dto.stakes}">
+            <form th:action="@{/costs/{cost_id}/stakes/{id}/edit(cost_id=${dto.id},id=${stake.id})}" method="post" th:object="${stake}">
+                <td>
+                    <input disabled readonly th:value="*{person.firstName} + ' ' + *{person.lastName}">
+                    <input hidden th:value="*{person.id}" th:name="personId">
+                </td>
+                <td>
+                    <input type="number" min="0.00" step="0.01" th:value="*{amount}" th:name="stakeTotal">
+                    <label th:for="stakeTotal" th:text="${dto.currency.shortName}">{CUR}</label>
+                    <input hidden th:value="*{id}" th:name="id">
+                    <input hidden th:value="${dto.id}" th:name="costId">
+                </td>
+                <td>
+                    <button type="submit">
+                        Save
+                    </button>
+                    <button type="submit"
+                            th:formaction="@{/costs/{cost_id}/stakes/{id}/delete(cost_id=${dto.id},id=*{id})}">
+                        Delete
+                    </button>
+
+                </td>
+            </form>
+        </tr>
+        <tfoot th:unless="${dto.availableForStakePeople.empty}">
+        <tr>
+            <form th:action="@{/costs/{cost_id}/stakes/add(cost_id=${dto.id})}" method="post" th:object="${new_stake}">
+                <td>
+                    <select th:field="*{personId}">
+                        <option th:each="person : ${dto.availableForStakePeople}" th:value="${person.id}" th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number" min="0.00" step="0.01" th:field="*{stakeTotal}">
+                    <label th:for="stakeTotal" th:text="${dto.currency.shortName}">{CUR}</label>
+                    <input hidden th:value="${dto.id}" th:field="*{costId}">
+                </td>
+                <td>
+                    <button type="submit">Add</button>
+                </td>
+            </form>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+
+<div class="footer">
+    <p>Back to Cost Group details: <a href="#"
+                                      th:href="@{/groups/{id}/details(id=${dto.costGroup.id})}"
+                                      th:text="${dto.costGroup.name} + '...'">{groupName}...</a></p>
+    <p>
+        <a href="#" th:href="@{/logout}">Logout</a>
+    </p>
 </div>
 
 </body>

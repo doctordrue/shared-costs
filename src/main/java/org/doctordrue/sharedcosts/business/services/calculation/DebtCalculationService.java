@@ -22,7 +22,6 @@ import org.doctordrue.sharedcosts.data.entities.Payment;
 import org.doctordrue.sharedcosts.data.entities.Person;
 import org.doctordrue.sharedcosts.data.entities.Stake;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 /**
  * @author Andrey_Barantsev
@@ -83,10 +82,6 @@ public class DebtCalculationService {
          if (totalCost != totalStakes) {
             result.addExcessStake(totalStakes - totalCost, currency);
          }
-
-//         if (!(CollectionUtils.isEmpty(result.getPaymentsBalance()) && CollectionUtils.isEmpty(result.getStakesBalance()))) {
-//            return;
-//         }
 
          // find creditors credits & debtors debts
          Map<Long, Double> paymentsMap = payments.stream().collect(Collectors.toMap(Payment::getPersonId, Payment::getPaymentTotal, Double::sum));

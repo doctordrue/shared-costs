@@ -52,7 +52,7 @@ public class CostProcessingService {
    }
 
    public List<Stake> splitCostStakes(Cost cost, List<Person> persons) {
-      double stakeAmount = cost.getCostTotal()/persons.size();
+      double stakeAmount = cost.getCostTotal() / persons.size();
       List<Stake> stakes = persons.stream()
               .map(p -> new Stake()
                       .setCostId(cost.getId())
@@ -62,19 +62,24 @@ public class CostProcessingService {
       return this.stakeService.create(stakes);
    }
 
-   public List<Payment> splitCostPayment(Cost cost, List<Person> persons, LocalDateTime timestamp) {
-      double paymentAmount = cost.getCostTotal()/persons.size();
+   public List<Payment> splitCostPayment(Cost cost,
+                                         List<Person> persons) {
+      double paymentAmount = cost.getCostTotal() / persons.size();
       List<Payment> payments = persons.stream()
               .map(person -> new Payment()
                       .setPaymentTotal(paymentAmount)
                       .setPersonId(person.getId())
-                      .setPaymentDateTime(timestamp)
                       .setCostId(cost.getId()))
               .collect(Collectors.toList());
       return this.paymentService.create(payments);
    }
 
-   public CostProcessingResult processCost(String costName, Long costGroupId, String currencyShortName, double amount, List<Long> stakeholdersIds, List<Long> payersIds, LocalDateTime timestamp){
+   public CostProcessingResult processCost(String costName,
+                                           Long costGroupId,
+                                           String currencyShortName,
+                                           double amount,
+                                           List<Long> stakeholdersIds, List<Long> payersIds,
+                                           LocalDateTime timestamp) {
       if (timestamp == null) {
          timestamp = LocalDateTime.now();
       }
@@ -84,13 +89,13 @@ public class CostProcessingService {
       List<Person> stakeholders = this.personService.findByIds(stakeholdersIds);
       List<Person> payers = this.personService.findByIds(payersIds);
       List<Stake> stakes = this.splitCostStakes(cost, stakeholders);
-      List<Payment> payments = this.splitCostPayment(cost, payers, timestamp);
+      List<Payment> payments = this.splitCostPayment(cost, payers);
       return new CostProcessingResult().setCost(cost)
               .setStakes(stakes)
               .setPayments(payments);
    }
 
-   public CostProcessingResult processCost(CostSplitProcessingInputData data){
+   public CostProcessingResult processCost(CostSplitProcessingInputData data) {
       return this.processCost(
               data.getName(),
               data.getCostGroupId(),
@@ -99,5 +104,23 @@ public class CostProcessingService {
               data.getStakeholdersIds(),
               data.getPayersIds(),
               data.getTimestamp());
+   }
+
+   public void updateCostTotalFromPayments(Long costId) {
+      Cost cost = this.costService.findById(costId);
+      Double paymentsTotal = this.paymentService.findAllByCostId(costId).stream()
+              .mapToDouble(Payment::getPaymentTotal)
+              .sum();
+      cost.setCostTotal(paymentsTotal);
+      this.costService.update(costId, cost);
+   }
+
+   public void updateCostTotalFromStakes(Long costId) {
+      Cost cost = this.costService.findById(costId);
+      Double stakesTotal = this.stakeService.findAllByCostId(costId).stream()
+              .mapToDouble(Stake::getStakeTotal)
+              .sum();
+      cost.setCostTotal(stakesTotal);
+      this.costService.update(costId, cost);
    }
 }

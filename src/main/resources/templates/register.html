@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Register new user</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
 <h3>Register new user</h3>
+<div class="message error" th:if="${error}" th:text="${error}">{error}</div>
 <div class="container">
-    <div class="error" th:text="${error}">{error}</div>
     <form action="#" th:action="@{/register}" th:method="post" th:object="${person}">
         <input type="email" th:field="*{email}" placeholder="E-mail" required>
         <input type="password" th:field="*{password}" placeholder="Password">
@@ -18,7 +19,12 @@
     </form>
 </div>
 <div class="footer">
-    Return to <a href="#" th:href="@{/login}">Login</a> page
+    <p>
+        Return to <a href="#" th:href="@{/login}">Login</a> page
+    </p>
+    <p>
+        <a href="#" th:href="@{/logout}">Logout</a>
+    </p>
 </div>
 </body>
 </html>

@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Add cost</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
-<h2>Add cost</h2>
+<h3>Add cost</h3>
 <div class="container">
-    <form action="#" th:action="@{/costs}" th:object="${cost}" method="post">
+    <form action="#" th:action="@{/costs/add}" th:object="${cost}" method="post">
         <ul>
             <li>
                 <label th:for="groupName">Cost group:</label>
@@ -20,7 +21,7 @@
             </li>
             <li>
                 <label th:for="costTotal">Amount:</label>
-                <input type="number" min="0.00" step="0.01" th:field="*{costTotal}">
+                <input type="number" min="0.00" step="0.01" th:field="*{costTotal}" disabled>
                 <select th:field="*{currencyId}">
                     <option
                             th:each="currency: ${currencies}"
@@ -37,9 +38,13 @@
     </form>
 </div>
 <div class="footer">
-    Back to Group Details: <a href="#"
-                      th:href="@{/group/{id}/details(id=${group.id})}"
-                      th:text="${group.name}">{groupName}</a>
+    <p>
+        Back to Group Details:
+        <a href="#"
+           th:href="@{/group/{id}/details(id=${group.id})}"
+           th:text="${group.name}">{groupName}
+        </a>
+    </p>
 </div>
 
 </body>

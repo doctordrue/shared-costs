@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="'Cost group: ' + ${group.name}">group name</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
-<h2 th:text="${group.name}">group name</h2>
+<h3 th:text="${group.name}">group name</h3>
 <div class="container">
-    <form action="#" th:action="@{/groups/edit/{id}(id=${group.id})}" th:object="${group}" method="post">
+    <form action="#" th:action="@{/groups/{id}/edit(id=${group.id})}" th:object="${group}" method="post">
         <ul>
             <li>
                 <label th:for="id">id:</label>
@@ -32,14 +33,18 @@
         </ul>
         <button type="submit">Save</button>
     </form>
-    <form action="#" th:action="@{/groups/delete/{id}/recursively(id=${group.id})}" method="post">
-        <button type="submit">[x]</button>
+    <form action="#" th:action="@{/groups/{id}/delete(id=${group.id},recursively=true)}" method="post">
+        <button type="submit">Delete all</button>
     </form>
 
 </div>
-Back to Group details: <a href="#"
-                          th:href="@{/groups/{id}/details(id=${group.id})}"
-                          th:text="${group.name} + '...'">{group name}...</a>
+<div class="footer">
+    <p>
+        Back to Group details: <a href="#"
+                                  th:href="@{/groups/{id}/details(id=${group.id})}"
+                                  th:text="${group.name} + '...'">{group name}...</a>
+    </p>
+</div>
 
 </body>
 </html>

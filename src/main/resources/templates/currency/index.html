@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Currencies</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
+<h3>Currencies</h3>
 <div class="container">
-    <h3>Currencies</h3>
     <table>
         <tr th:each="currency : ${currencies}">
             <td><a href="#"
@@ -16,9 +17,9 @@
             <td th:text="${currency.rate}">{rate}</a></td>
         </tr>
     </table>
-    <div class="container">
+    <p>
         Add new <a href="#" th:href="@{/currency/add}">currency...</a>
-    </div>
+    </p>
 </div>
 <div class="footer">
     Return to <a href="#" th:href="@{/}">start page...</a>

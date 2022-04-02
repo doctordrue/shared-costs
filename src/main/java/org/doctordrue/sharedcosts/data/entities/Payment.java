@@ -1,6 +1,5 @@
 package org.doctordrue.sharedcosts.data.entities;
 
-import java.time.LocalDateTime;
 import java.util.StringJoiner;
 
 import javax.persistence.Column;
@@ -31,9 +30,6 @@ public class Payment {
 
    @Column(name = "payment_total", nullable = false)
    private Double paymentTotal;
-
-   @Column(name = "payment_datetime", nullable = false)
-   private LocalDateTime paymentDateTime;
 
    public Long getId() {
       return id;
@@ -71,15 +67,6 @@ public class Payment {
       return this;
    }
 
-   public LocalDateTime getPaymentDateTime() {
-      return paymentDateTime;
-   }
-
-   public Payment setPaymentDateTime(LocalDateTime paymentDateTime) {
-      this.paymentDateTime = paymentDateTime;
-      return this;
-   }
-
    @Override
    public boolean equals(Object o) {
       if (this == o)
@@ -104,7 +91,6 @@ public class Payment {
               .add("costId=" + costId)
               .add("personId=" + personId)
               .add("paymentTotal=" + paymentTotal)
-              .add("paymentDateTime=" + paymentDateTime)
               .toString();
    }
 }

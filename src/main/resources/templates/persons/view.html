@@ -3,14 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
 
+<h3 th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</h3>
 <div class="container">
-    <h4 th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</h4>
     <p th:text="'E-mail: ' + ${person.email}">E-mail: {email}</p>
-    <p th:text="'Phone number: ' + ${person.phoneNumber}">Phone number: {phoneNumber}</p>
-    <p th:text="'Role: ' + ${person.role}">Role: {ROLE}</p>
+    <p th:if="${person.phoneNumber}" th:text="'Phone number: ' + ${person.phoneNumber}">Phone number: {phoneNumber}</p>
+    <p>
+        <label th:for="role">Role:</label>
+        <select id="role" th:field="${person.role}" disabled>
+            <option th:text="${person.role}" th:value="${person.role}">{Role}</option>
+        </select>
+    </p>
     <p>
         <label for="enabled">Enabled:</label>
         <input type="checkbox" id="enabled" disabled th:field="${person.enabled}">
@@ -30,12 +36,17 @@
                 </a>
             </li>
         </ul>
-        <a href="#" th:href="@{/persons/{id}/update(id=${person.id})}">Edit</a>
+    <a href="#" th:href="@{/persons/{id}/edit(id=${person.id})}">Edit</a>
     </p>
 </div>
 
 <div class="footer">
-    <a href="#" th:href="@{/persons}">Back to People</a>
+    <p>
+        Back to <a href="#" th:href="@{/persons}">People</a>...
+    </p>
+    <p>
+        <a href="#" th:href="@{/logout}">Logout</a>
+    </p>
 </div>
 
 </body>
