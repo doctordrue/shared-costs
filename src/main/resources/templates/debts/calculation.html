@@ -38,6 +38,14 @@
         </tr>
     </table>
 </div>
+<div class="container">
+    <table>
+        <tr th:each="total : ${totals}">
+            <td th:text="${total.person.firstName}"></td>
+            <td th:text="${total.amount}"></td>
+        </tr>
+    </table>
+</div>
 <div class="footer">
     <p>Back to Group Details: <a href="#"
                                  th:href="@{/groups/{id}/details(id=${balance.costGroup.id})}"

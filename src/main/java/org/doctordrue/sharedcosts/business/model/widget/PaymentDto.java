@@ -12,6 +12,7 @@ public class PaymentDto {
    private Long id;
    private Person person;
    private Double amount;
+   private String name;
 
    public Long getId() {
       return id;
@@ -40,8 +41,19 @@ public class PaymentDto {
       return this;
    }
 
+   public String getName() {
+      return name;
+   }
+
+   public PaymentDto setName(String name) {
+      this.name = name;
+      return this;
+   }
+
    public static PaymentDto from(Payment payment, Person person) {
-      return new PaymentDto().setId(payment.getId())
+      return new PaymentDto()
+              .setId(payment.getId())
+              .setName(payment.getName())
               .setAmount(payment.getPaymentTotal())
               .setPerson(person);
    }

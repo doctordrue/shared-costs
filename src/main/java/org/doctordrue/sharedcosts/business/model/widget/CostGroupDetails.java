@@ -1,11 +1,8 @@
 package org.doctordrue.sharedcosts.business.model.widget;
 
-import java.util.List;
-
-import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.entities.CostGroup;
-import org.doctordrue.sharedcosts.data.entities.Payment;
-import org.doctordrue.sharedcosts.data.entities.Stake;
+
+import java.util.List;
 
 /**
  * @author Andrey_Barantsev
@@ -32,5 +29,9 @@ public class CostGroupDetails {
    public CostGroupDetails setCosts(List<CostDetails> costs) {
       this.costs = costs;
       return this;
+   }
+
+   public Double getTotal() {
+      return costs.stream().mapToDouble(CostDetails::getAmount).sum();
    }
 }

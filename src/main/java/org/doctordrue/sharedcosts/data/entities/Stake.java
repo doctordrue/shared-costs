@@ -1,13 +1,6 @@
 package org.doctordrue.sharedcosts.data.entities;
 
-import java.util.StringJoiner;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @author Andrey_Barantsev
@@ -27,6 +20,9 @@ public class Stake {
 
    @Column(name = "person_id", nullable = false)
    private Long personId;
+
+   @Column(name = "name")
+   private String name;
 
    @Column(name = "stake_total", nullable = false)
    private Double stakeTotal;
@@ -67,30 +63,12 @@ public class Stake {
       return this;
    }
 
-   @Override
-   public boolean equals(Object o) {
-      if (this == o)
-         return true;
-      if (o == null || getClass() != o.getClass())
-         return false;
-
-      Stake stake = (Stake) o;
-
-      return getId().equals(stake.getId());
+   public String getName() {
+      return name;
    }
 
-   @Override
-   public int hashCode() {
-      return getId().hashCode();
-   }
-
-   @Override
-   public String toString() {
-      return new StringJoiner(", ", Stake.class.getSimpleName() + "[", "]")
-              .add("id=" + id)
-              .add("costId=" + costId)
-              .add("personId=" + personId)
-              .add("stakeTotal=" + stakeTotal)
-              .toString();
+   public Stake setName(String name) {
+      this.name = name;
+      return this;
    }
 }

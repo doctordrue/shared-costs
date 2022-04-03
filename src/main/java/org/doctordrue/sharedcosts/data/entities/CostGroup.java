@@ -1,16 +1,12 @@
 package org.doctordrue.sharedcosts.data.entities;
 
-import java.time.LocalDate;
-import java.util.StringJoiner;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.StringJoiner;
 
 /**
  * @author Andrey_Barantsev
@@ -38,6 +34,9 @@ public class CostGroup {
    @Column(name = "end_date")
    @DateTimeFormat(pattern = "yyyy-MM-dd")
    private LocalDate endDate;
+
+   @ManyToMany(mappedBy = "groups")
+   private final Set<Person> people = new LinkedHashSet<>();
 
    public Long getId() {
       return id;

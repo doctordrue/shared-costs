@@ -1,21 +1,14 @@
 package org.doctordrue.sharedcosts.data.entities;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.StringJoiner;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import org.doctordrue.sharedcosts.data.entities.enums.RoleType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.StringJoiner;
 
 /**
  * @author Andrey_Barantsev
@@ -51,9 +44,21 @@ public class Person implements UserDetails {
    @Column(name = "locked", nullable = false)
    private Boolean locked = false;
 
+
    @Column(name = "role", nullable = false)
    @Enumerated(EnumType.STRING)
    private RoleType role = RoleType.ANONYMOUS;
+
+   @ManyToMany
+   private Set<CostGroup> groups;
+
+   public Set<CostGroup> getGroups() {
+      return groups;
+   }
+
+   public void setGroups(Set<CostGroup> groups) {
+      this.groups = groups;
+   }
 
    public Long getId() {
       return id;

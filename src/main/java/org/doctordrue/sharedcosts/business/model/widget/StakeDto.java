@@ -12,6 +12,7 @@ public class StakeDto {
    private Long id;
    private Person person;
    private Double amount;
+   private String name;
 
    public Long getId() {
       return id;
@@ -40,8 +41,19 @@ public class StakeDto {
       return this;
    }
 
+   public String getName() {
+      return name;
+   }
+
+   public StakeDto setName(String name) {
+      this.name = name;
+      return this;
+   }
+
    public static StakeDto from(Stake stake, Person person) {
-      return new StakeDto().setId(stake.getId())
+      return new StakeDto()
+              .setId(stake.getId())
+              .setName(stake.getName())
               .setAmount(stake.getStakeTotal())
               .setPerson(person);
    }

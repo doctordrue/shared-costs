@@ -1,16 +1,10 @@
 package org.doctordrue.sharedcosts.data.entities;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.StringJoiner;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * @author Andrey_Barantsev
@@ -38,7 +32,7 @@ public class Cost {
    private Double costTotal;
 
    @Column(name = "cost_datetime", nullable = false)
-   @DateTimeFormat(pattern = "yyyy-MM-dd")
+   @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
    private LocalDateTime costDateTime;
 
    public Long getId() {

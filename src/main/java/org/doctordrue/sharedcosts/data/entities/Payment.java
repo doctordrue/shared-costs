@@ -1,13 +1,6 @@
 package org.doctordrue.sharedcosts.data.entities;
 
-import java.util.StringJoiner;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @author Andrey_Barantsev
@@ -27,6 +20,9 @@ public class Payment {
 
    @Column(name = "person_id", nullable = false)
    private Long personId;
+
+   @Column(name = "name")
+   private String name;
 
    @Column(name = "payment_total", nullable = false)
    private Double paymentTotal;
@@ -67,30 +63,12 @@ public class Payment {
       return this;
    }
 
-   @Override
-   public boolean equals(Object o) {
-      if (this == o)
-         return true;
-      if (o == null || getClass() != o.getClass())
-         return false;
-
-      Payment payment = (Payment) o;
-
-      return getId().equals(payment.getId());
+   public String getName() {
+      return name;
    }
 
-   @Override
-   public int hashCode() {
-      return getId().hashCode();
-   }
-
-   @Override
-   public String toString() {
-      return new StringJoiner(", ", Payment.class.getSimpleName() + "[", "]")
-              .add("id=" + id)
-              .add("costId=" + costId)
-              .add("personId=" + personId)
-              .add("paymentTotal=" + paymentTotal)
-              .toString();
+   public Payment setName(String name) {
+      this.name = name;
+      return this;
    }
 }

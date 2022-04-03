@@ -29,6 +29,10 @@
             <td>Ended</td>
             <td th:text="${costGroupDetails.group.endDate}">{end date}</td>
         </tr>
+        <tr>
+            <td>Total</td>
+            <td th:text="${costGroupDetails.total}"></td>
+        </tr>
     </table>
     <a href="#" th:href="@{/groups/{id}/edit(id=${costGroupDetails.group.id})}">Edit</a>
 </div>

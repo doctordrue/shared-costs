@@ -1,27 +1,17 @@
 package org.doctordrue.sharedcosts.business.services.calculation;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.doctordrue.sharedcosts.business.model.debt_calculation.CostGroupBalance;
 import org.doctordrue.sharedcosts.business.model.debt_calculation.Debt;
-import org.doctordrue.sharedcosts.business.services.dataaccess.CostGroupService;
-import org.doctordrue.sharedcosts.business.services.dataaccess.CostService;
-import org.doctordrue.sharedcosts.business.services.dataaccess.CurrencyService;
-import org.doctordrue.sharedcosts.business.services.dataaccess.PaymentService;
-import org.doctordrue.sharedcosts.business.services.dataaccess.PersonService;
-import org.doctordrue.sharedcosts.business.services.dataaccess.StakeService;
-import org.doctordrue.sharedcosts.data.entities.Cost;
-import org.doctordrue.sharedcosts.data.entities.CostGroup;
+import org.doctordrue.sharedcosts.business.model.debt_calculation.Total;
+import org.doctordrue.sharedcosts.business.model.widget.StakeDto;
+import org.doctordrue.sharedcosts.business.services.dataaccess.*;
+import org.doctordrue.sharedcosts.business.services.web.CostGroupDetailsService;
 import org.doctordrue.sharedcosts.data.entities.Currency;
-import org.doctordrue.sharedcosts.data.entities.Payment;
-import org.doctordrue.sharedcosts.data.entities.Person;
-import org.doctordrue.sharedcosts.data.entities.Stake;
+import org.doctordrue.sharedcosts.data.entities.*;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Andrey_Barantsev
@@ -36,19 +26,32 @@ public class DebtCalculationService {
    private final StakeService stakeService;
    private final CurrencyService currencyService;
    private final PersonService personService;
+   private final CostGroupDetailsService costGroupDetailsService;
 
    public DebtCalculationService(CostGroupService costGroupService,
                                  CostService costService,
                                  PaymentService paymentService,
                                  StakeService stakeService,
                                  CurrencyService currencyService,
-                                 PersonService personService) {
+                                 PersonService personService, CostGroupDetailsService costGroupDetailsService) {
       this.costGroupService = costGroupService;
       this.costService = costService;
       this.paymentService = paymentService;
       this.stakeService = stakeService;
       this.currencyService = currencyService;
       this.personService = personService;
+      this.costGroupDetailsService = costGroupDetailsService;
+   }
+
+   public List<Total> findStakesTotal(Long groupId) {
+      final CostGroup costGroup = this.costGroupService.findById(groupId);
+      final Currency currency = this.currencyService.findById(1L);
+      return this.costGroupDetailsService.getDetails(costGroup).getCosts()
+              .stream()
+              .flatMap(costDetails -> costDetails.getStakes().stream())
+              .collect(Collectors.toMap(StakeDto::getPerson, StakeDto::getAmount, Double::sum))
+              .entrySet().stream().map(entry -> new Total().setPerson(entry.getKey()).setAmount(entry.getValue()).setCurrency(currency))
+              .collect(Collectors.toList());
    }
 
    public CostGroupBalance findAllForCostGroup(Long groupId) {

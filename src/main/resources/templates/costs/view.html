@@ -7,6 +7,17 @@
 </head>
 <body>
 <h3 th:text="${dto.name}">{cost name}</h3>
+
+<div class="dashboard">
+    <form action="#" th:action="@{costs/{id}/edit(id = ${dto.id})}" th:method="post" th:object="${cost}">
+        <input hidden th:value="${dto.id}" th:name="id">
+        <input type="text" th:value="${dto.name}" th:name="name" placeholder="Cost name">
+        <input type="datetime-local" th:value="${dto.timestamp}" th:name="costDateTime">
+        <input hidden th:value="${dto.currency.id}" th:name="currencyId">
+        <input hidden th:value="${dto.costGroup.id}" th:name="groupId">
+        <input hidden th:value="${dto.amount}" th:name="costTotal">
+    </form>
+</div>
 <div class="container">
     <table>
         <tr>
@@ -42,12 +53,17 @@
     <h4>Payments</h4>
     <table>
         <tr>
+            <th>Name</th>
             <th>Payer</th>
             <th>Amount</th>
             <th>Actions</th>
         </tr>
         <tr th:each="payment: ${dto.payments}">
-            <form th:action="@{/costs/{cost_id}/payments/{id}/edit(cost_id=${dto.id},id=${payment.id})}" method="post" th:object="${payment}">
+            <form th:action="@{/costs/{cost_id}/payments/{id}/edit(cost_id=${dto.id},id=${payment.id})}" method="post"
+                  th:object="${payment}">
+                <td>
+                    <input type="text" th:value="*{name}" th:name="name">
+                </td>
                 <td>
                     <input disabled readonly th:value="*{person.firstName} + ' ' + *{person.lastName}">
                     <input hidden th:value="*{person.id}" th:name="personId">
@@ -72,10 +88,16 @@
         </tr>
         <tfoot th:unless="${dto.availableForPaymentPeople.empty}">
         <tr>
-            <form th:action="@{/costs/{cost_id}/payments/add(cost_id=${dto.id})}" method="post" th:object="${new_payment}">
+            <form th:action="@{/costs/{cost_id}/payments/add(cost_id=${dto.id})}" method="post"
+                  th:object="${new_payment}">
+                <td>
+                    <input type="text" th:field="*{name}" placeholder="Payment name">
+                </td>
                 <td>
                     <select th:field="*{personId}">
-                        <option th:each="person : ${dto.availableForPaymentPeople}" th:value="${person.id}" th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</option>
+                        <option th:each="person : ${dto.availableForPaymentPeople}" th:value="${person.id}"
+                                th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}
+                        </option>
                     </select>
                 </td>
                 <td>
@@ -96,12 +118,17 @@
     <h4>Stakes</h4>
     <table>
         <tr>
+            <th>Name</th>
             <th>Holder</th>
             <th>Amount</th>
             <th>Actions</th>
         </tr>
         <tr th:each="stake: ${dto.stakes}">
-            <form th:action="@{/costs/{cost_id}/stakes/{id}/edit(cost_id=${dto.id},id=${stake.id})}" method="post" th:object="${stake}">
+            <form th:action="@{/costs/{cost_id}/stakes/{id}/edit(cost_id=${dto.id},id=${stake.id})}" method="post"
+                  th:object="${stake}">
+                <td>
+                    <input type="text" th:value="*{name}" th:name="name">
+                </td>
                 <td>
                     <input disabled readonly th:value="*{person.firstName} + ' ' + *{person.lastName}">
                     <input hidden th:value="*{person.id}" th:name="personId">
@@ -128,8 +155,13 @@
         <tr>
             <form th:action="@{/costs/{cost_id}/stakes/add(cost_id=${dto.id})}" method="post" th:object="${new_stake}">
                 <td>
+                    <input type="text" th:field="*{name}" placeholder="Paid item name">
+                </td>
+                <td>
                     <select th:field="*{personId}">
-                        <option th:each="person : ${dto.availableForStakePeople}" th:value="${person.id}" th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</option>
+                        <option th:each="person : ${dto.availableForStakePeople}" th:value="${person.id}"
+                                th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}
+                        </option>
                     </select>
                 </td>
                 <td>
