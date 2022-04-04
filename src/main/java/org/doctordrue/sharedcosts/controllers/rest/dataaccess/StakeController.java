@@ -2,8 +2,8 @@ package org.doctordrue.sharedcosts.controllers.rest.dataaccess;
 
 import java.util.List;
 
-import org.doctordrue.sharedcosts.business.services.dataaccess.StakeService;
-import org.doctordrue.sharedcosts.data.entities.Stake;
+import org.doctordrue.sharedcosts.business.services.dataaccess.ParticipationService;
+import org.doctordrue.sharedcosts.data.entities.Participation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,41 +24,41 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/stakes")
 public class StakeController {
 
-   private final StakeService stakeService;
+   private final ParticipationService participationService;
 
-   public StakeController(StakeService stakeService) {
-      this.stakeService = stakeService;
+   public StakeController(ParticipationService participationService) {
+      this.participationService = participationService;
    }
 
    @GetMapping
-   public List<Stake> findAll() {
-      return this.stakeService.findAll();
+   public List<Participation> findAll() {
+      return this.participationService.findAll();
    }
 
    @GetMapping("/{id}")
-   public Stake findById(@PathVariable("id") Long id) {
-      return this.stakeService.findById(id);
+   public Participation findById(@PathVariable("id") Long id) {
+      return this.participationService.findById(id);
    }
 
    @GetMapping(params = "cost_id")
-   public List<Stake> findByCostId(@RequestParam("cost_id") Long costId) {
-      return this.stakeService.findAllByCostId(costId);
+   public List<Participation> findByCostId(@RequestParam("cost_id") Long costId) {
+      return this.participationService.findAllByCostId(costId);
    }
 
    @PostMapping
    @ResponseStatus(HttpStatus.CREATED)
-   public Stake create(@RequestBody Stake stake) {
-      return this.stakeService.create(stake);
+   public Participation create(@RequestBody Participation participation) {
+      return this.participationService.create(participation);
    }
 
    @PutMapping("/{id}")
-   public Stake update(@PathVariable("id") Long id, @RequestBody Stake stake) {
-      return this.stakeService.update(id, stake);
+   public Participation update(@PathVariable("id") Long id, @RequestBody Participation participation) {
+      return this.participationService.update(id, participation);
    }
 
    @DeleteMapping("/{id}")
    @ResponseStatus(HttpStatus.NO_CONTENT)
    public void delete(@PathVariable("id") Long id) {
-      this.stakeService.delete(id);
+      this.participationService.delete(id);
    }
 }

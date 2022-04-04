@@ -16,7 +16,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "currency")
 public class Currency {
-
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    @Column(name = "id", nullable = false)

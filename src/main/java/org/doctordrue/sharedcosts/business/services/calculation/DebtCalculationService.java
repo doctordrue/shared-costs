@@ -1,17 +1,24 @@
 package org.doctordrue.sharedcosts.business.services.calculation;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.doctordrue.sharedcosts.business.model.debt_calculation.CostGroupBalance;
 import org.doctordrue.sharedcosts.business.model.debt_calculation.Debt;
 import org.doctordrue.sharedcosts.business.model.debt_calculation.Total;
-import org.doctordrue.sharedcosts.business.model.widget.StakeDto;
-import org.doctordrue.sharedcosts.business.services.dataaccess.*;
-import org.doctordrue.sharedcosts.business.services.web.CostGroupDetailsService;
+import org.doctordrue.sharedcosts.business.services.dataaccess.GroupService;
+import org.doctordrue.sharedcosts.business.services.dataaccess.PersonService;
+import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.entities.Currency;
-import org.doctordrue.sharedcosts.data.entities.*;
+import org.doctordrue.sharedcosts.data.entities.Group;
+import org.doctordrue.sharedcosts.data.entities.Participation;
+import org.doctordrue.sharedcosts.data.entities.Payment;
+import org.doctordrue.sharedcosts.data.entities.Person;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author Andrey_Barantsev
@@ -20,89 +27,73 @@ import java.util.stream.Collectors;
 @Service
 public class DebtCalculationService {
 
-   private final CostGroupService costGroupService;
-   private final CostService costService;
-   private final PaymentService paymentService;
-   private final StakeService stakeService;
-   private final CurrencyService currencyService;
-   private final PersonService personService;
-   private final CostGroupDetailsService costGroupDetailsService;
+   @Autowired
+   private GroupService groupService;
+   @Autowired
+   private PersonService personService;
 
-   public DebtCalculationService(CostGroupService costGroupService,
-                                 CostService costService,
-                                 PaymentService paymentService,
-                                 StakeService stakeService,
-                                 CurrencyService currencyService,
-                                 PersonService personService, CostGroupDetailsService costGroupDetailsService) {
-      this.costGroupService = costGroupService;
-      this.costService = costService;
-      this.paymentService = paymentService;
-      this.stakeService = stakeService;
-      this.currencyService = currencyService;
-      this.personService = personService;
-      this.costGroupDetailsService = costGroupDetailsService;
-   }
-
-   public List<Total> findStakesTotal(Long groupId) {
-      final CostGroup costGroup = this.costGroupService.findById(groupId);
-      final Currency currency = this.currencyService.findById(1L);
-      return this.costGroupDetailsService.getDetails(costGroup).getCosts()
+   public List<Total> findParticipationTotal(Long groupId) {
+      return this.groupService.findById(groupId)
+              .getCosts()
               .stream()
-              .flatMap(costDetails -> costDetails.getStakes().stream())
-              .collect(Collectors.toMap(StakeDto::getPerson, StakeDto::getAmount, Double::sum))
-              .entrySet().stream().map(entry -> new Total().setPerson(entry.getKey()).setAmount(entry.getValue()).setCurrency(currency))
+              .flatMap(cost -> cost.getParticipations().stream())
+              .map(participation -> new Total()
+                      .setAmount(participation.getAmount())
+                      .setCurrency(participation.getCost().getCurrency())
+                      .setPerson(participation.getPerson()))
               .collect(Collectors.toList());
    }
 
    public CostGroupBalance findAllForCostGroup(Long groupId) {
-      final Map<Long, Currency> currencyMap = this.currencyService.findAll().stream().collect(Collectors.toMap(Currency::getId, v -> v));
-      final CostGroup costGroup = this.costGroupService.findById(groupId);
-      final List<Cost> allCosts = this.costService.findAllByGroupId(groupId);
+      final Group group = this.groupService.findById(groupId);
+      final List<Cost> allCosts = group.getCosts();
 
       CostGroupBalance result = new CostGroupBalance();
-      result.setCostGroup(costGroup);
+      result.setCostGroup(group);
 
-      Map<Currency, List<Cost>> costsByCurrency = allCosts.stream().collect(Collectors.groupingBy(c -> currencyMap.get(c.getCurrencyId())));
+      Map<Currency, List<Cost>> costsByCurrency = allCosts.stream().collect(Collectors.groupingBy(cost -> cost.getCurrency()));
       System.out.println("Costs:");
       costsByCurrency.forEach((currency, costs) -> {
          // calculate debts for each currency separately
-         double totalCost = costs.stream().mapToDouble(Cost::getCostTotal).sum();
+         double totalCost = costs.stream().mapToDouble(Cost::getTotal).sum();
          System.out.println(currency.getShortName() + ": " + totalCost);
 
          List<Payment> payments = costs.stream()
-                 .flatMap(cost -> this.paymentService.findAllByCostId(cost.getId()).stream())
+                 .flatMap(cost -> cost.getPayments().stream())
                  .collect(Collectors.toList());
-         final double totalPayments = payments.stream().mapToDouble(Payment::getPaymentTotal).sum();
-         System.out.println("Payments total: " + totalPayments);
+         final double totalPayments = payments.stream().mapToDouble(Payment::getAmount).sum();
+         System.out.println("Payment total: " + totalPayments);
          if (totalPayments != totalCost) {
             result.addExcessPayment(totalPayments - totalCost, currency);
          }
-         List<Stake> stakes = costs.stream()
-                 .flatMap(cost -> this.stakeService.findAllByCostId(cost.getId()).stream())
+         List<Participation> participations = costs.stream()
+                 .flatMap(cost -> cost.getParticipations().stream())
                  .collect(Collectors.toList());
-         final double totalStakes = stakes.stream().mapToDouble(Stake::getStakeTotal).sum();
-         System.out.println("Stakes total: " + totalStakes);
-         if (totalCost != totalStakes) {
-            result.addExcessStake(totalStakes - totalCost, currency);
+         final double totalParticipation = participations.stream().mapToDouble(Participation::getAmount).sum();
+         System.out.println("Participation total: " + totalParticipation);
+         if (totalCost != totalParticipation) {
+            result.addExcessStake(totalParticipation - totalCost, currency);
          }
 
          // find creditors credits & debtors debts
-         Map<Long, Double> paymentsMap = payments.stream().collect(Collectors.toMap(Payment::getPersonId, Payment::getPaymentTotal, Double::sum));
-         Map<Long, Double> stakesMap = stakes.stream().collect(Collectors.toMap(Stake::getPersonId, Stake::getStakeTotal, Double::sum));
-         Set<Long> personIds = new HashSet<>(paymentsMap.keySet());
-         personIds.addAll(stakesMap.keySet());
-         final List<Person> persons = this.personService.findByIds(personIds);
+         Map<Person, Double> paymentsMap = payments.stream().collect(Collectors.toMap(Payment::getPerson, Payment::getAmount, Double::sum));
+         Map<Person, Double> participationMap = participations.stream().collect(Collectors.toMap(Participation::getPerson, Participation::getAmount, Double::sum));
+
+         final List<Person> participants = costs.stream()
+                 .flatMap(cost -> Stream.concat(cost.getParticipations().stream().map(Participation::getPerson), cost.getPayments().stream().map(Payment::getPerson)))
+                 .collect(Collectors.toList());
 
          Map<Person, Double> creditorsMap = new HashMap<>();
          Map<Person, Double> debtorsMap = new HashMap<>();
-         for (Person person : persons) {
-            final double credit = paymentsMap.getOrDefault(person.getId(), 0d);
-            final double debt = stakesMap.getOrDefault(person.getId(), 0d);
+
+         for (Person participant : participants) {
+            final double credit = paymentsMap.getOrDefault(participant, 0d);
+            final double debt = participationMap.getOrDefault(participant, 0d);
             final double balance = credit - debt;
             if (balance > 0) {
-               creditorsMap.put(person, balance);
+               creditorsMap.put(participant, balance);
             } else {
-               debtorsMap.put(person, balance);
+               debtorsMap.put(participant, balance);
             }
          }
 

@@ -3,10 +3,11 @@ package org.doctordrue.sharedcosts.business.model.widget;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.doctordrue.sharedcosts.data.entities.Cost;
-import org.doctordrue.sharedcosts.data.entities.CostGroup;
 import org.doctordrue.sharedcosts.data.entities.Currency;
+import org.doctordrue.sharedcosts.data.entities.Group;
 import org.doctordrue.sharedcosts.data.entities.Person;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -23,10 +24,9 @@ public class CostViewDto implements Serializable {
    private LocalDateTime timestamp;
    private Currency currency;
    private List<PaymentDto> payments;
-   private List<StakeDto> stakes;
-   private List<Person> availableForPaymentPeople;
-   private List<Person> availableForStakePeople;
-   private CostGroup costGroup;
+   private List<ParticipationDto> participations;
+   private Set<Person> participants;
+   private Group group;
 
    public static class Builder {
 
@@ -36,8 +36,8 @@ public class CostViewDto implements Serializable {
          this.dto = new CostViewDto();
          this.dto.id = cost.getId();
          this.dto.name = cost.getName();
-         this.dto.amount = cost.getCostTotal();
-         this.dto.timestamp = cost.getCostDateTime();
+         this.dto.amount = cost.getTotal();
+         this.dto.timestamp = cost.getDatetime();
       }
 
       public Builder setCurrency(Currency currency) {
@@ -50,23 +50,18 @@ public class CostViewDto implements Serializable {
          return this;
       }
 
-      public Builder setStakes(List<StakeDto> stakes) {
-         this.dto.stakes = stakes;
+      public Builder setParticipations(List<ParticipationDto> stakes) {
+         this.dto.participations = stakes;
          return this;
       }
 
-      public Builder setAvailableForPaymentPeople(List<Person> people) {
-         this.dto.availableForPaymentPeople = people;
+      public Builder setParticipants(Set<Person> people) {
+         this.dto.participants = people;
          return this;
       }
 
-      public Builder setAvailableForStakePeople(List<Person> people) {
-         this.dto.availableForStakePeople = people;
-         return this;
-      }
-
-      public Builder setCostGroup(CostGroup group) {
-         this.dto.costGroup = group;
+      public Builder setCostGroup(Group group) {
+         this.dto.group = group;
          return this;
       }
 
@@ -102,19 +97,15 @@ public class CostViewDto implements Serializable {
       return payments;
    }
 
-   public List<StakeDto> getStakes() {
-      return stakes;
+   public List<ParticipationDto> getParticipations() {
+      return participations;
    }
 
-   public List<Person> getAvailableForPaymentPeople() {
-      return availableForPaymentPeople;
+   public Set<Person> getParticipants() {
+      return participants;
    }
 
-   public List<Person> getAvailableForStakePeople() {
-      return availableForStakePeople;
-   }
-
-   public CostGroup getCostGroup() {
-      return costGroup;
+   public Group getCostGroup() {
+      return group;
    }
 }

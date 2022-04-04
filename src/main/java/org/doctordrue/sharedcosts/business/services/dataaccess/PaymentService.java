@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.doctordrue.sharedcosts.data.entities.Payment;
 import org.doctordrue.sharedcosts.data.repositories.PaymentRepository;
 import org.doctordrue.sharedcosts.exceptions.BaseException;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 /**
@@ -31,8 +30,7 @@ public class PaymentService {
    }
 
    public List<Payment> findAllByCostId(Long costId) {
-      Payment probe = new Payment().setCostId(costId);
-      return this.paymentRepository.findAll(Example.of(probe));
+      return this.paymentRepository.findByCostId(costId);
    }
 
    public Payment create(Payment payment) {

@@ -2,11 +2,11 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="'Cost group: ' + ${costGroupDetails.group.name}">{group name}</title>
+    <title th:text="'Froup: ' + ${group.name}">{group name}</title>
     <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
-<h3 th:text="${costGroupDetails.group.name}">{group name}</h3>
+<h3 th:text="${group.name}">{group name}</h3>
 <div class="container">
     <table>
         <tr>
@@ -15,26 +15,25 @@
         </tr>
         <tr>
             <td>Name</td>
-            <td th:text="${costGroupDetails.group.name}">{name}</td>
+            <td th:text="${group.name}">{name}</td>
         </tr>
         <tr>
             <td>Description</td>
-            <td th:text="${costGroupDetails.group.description}">{description}</td>
+            <td th:text="${group.description}">{description}</td>
         </tr>
         <tr>
             <td>Started</td>
-            <td th:text="${costGroupDetails.group.startDate}">{start date}</td>
+            <td th:text="${group.startDate}">{start date}</td>
         </tr>
         <tr>
             <td>Ended</td>
-            <td th:text="${costGroupDetails.group.endDate}">{end date}</td>
+            <td th:text="${group.endDate}">{end date}</td>
         </tr>
         <tr>
             <td>Total</td>
-            <td th:text="${costGroupDetails.total}"></td>
+            <td th:text="${#aggregates.sum(group.costs.![total])}"></td>
         </tr>
     </table>
-    <a href="#" th:href="@{/groups/{id}/edit(id=${costGroupDetails.group.id})}">Edit</a>
 </div>
 
 <div class="container">
@@ -47,7 +46,7 @@
             <th>Payers</th>
             <th>Actions</th>
         </tr>
-        <tr th:each="cost: ${costGroupDetails.costs}">
+        <tr th:each="cost: ${group.costs}">
             <td th:text="${cost.name}">{name}</td>
             <td th:text="${cost.amount} + ' ' + ${cost.currency.shortName}">{amount} {CUR}</td>
             <td>
@@ -63,15 +62,15 @@
         </tr>
     </table>
     <p>
-        <a href="#" th:href="@{/costs/add?group_id={group_id}(group_id=${costGroupDetails.group.id})}">Add empty cost</a>
+        <a href="#" th:href="@{/costs/add?group_id={group_id}(group_id=${group.id})}">Add empty cost</a>
     </p>
     <p>
-        <a href="#" th:href="@{/costs/process?group_id={group_id}(group_id=${costGroupDetails.group.id})}">Add cost with split stakes & payment</a>
+        <a href="#" th:href="@{/costs/process?group_id={group_id}(group_id=${group.id})}">Add cost with split stakes & payment</a>
     </p>
 </div>
 
 <div class="container">
-    <a href="#" th:href="@{/debts/calculation?group_id={group_id}(group_id=${costGroupDetails.group.id})}">View calculations</a>
+    <a href="#" th:href="@{/debts/calculation?group_id={group_id}(group_id=${group.id})}">View calculations</a>
 </div>
 <div class="footer">
     <p>Back to <a href="#" th:href="@{/groups}">Groups...</a></p>

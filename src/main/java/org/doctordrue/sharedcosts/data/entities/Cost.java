@@ -1,10 +1,21 @@
 package org.doctordrue.sharedcosts.data.entities;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.StringJoiner;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * @author Andrey_Barantsev
@@ -22,18 +33,26 @@ public class Cost {
    @Column(name = "name", nullable = false)
    private String name;
 
-   @Column(name = "group_id", nullable = false)
-   private Long groupId;
+   @Column(name = "total", nullable = false)
+   private Double total;
 
-   @Column(name = "currency_id", nullable = false)
-   private Long currencyId;
-
-   @Column(name = "cost_total", nullable = false)
-   private Double costTotal;
-
-   @Column(name = "cost_datetime", nullable = false)
+   @Column(name = "datetime", nullable = false)
    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-   private LocalDateTime costDateTime;
+   private LocalDateTime datetime;
+
+   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   private Group group;
+
+   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   private Currency currency;
+
+   @OneToMany(mappedBy = "cost")
+   @OrderBy("id")
+   private List<Payment> payments;
+
+   @OneToMany(mappedBy = "cost")
+   @OrderBy("id")
+   private List<Participation> participations;
 
    public Long getId() {
       return id;
@@ -53,39 +72,57 @@ public class Cost {
       return this;
    }
 
-   public Long getGroupId() {
-      return groupId;
+   public Group getGroup() {
+      return group;
    }
 
-   public Cost setGroupId(Long groupId) {
-      this.groupId = groupId;
+   public Cost setGroup(Group group) {
+      this.group = group;
       return this;
    }
 
-   public Long getCurrencyId() {
-      return currencyId;
+   public Currency getCurrency() {
+      return currency;
    }
 
-   public Cost setCurrencyId(Long currencyId) {
-      this.currencyId = currencyId;
+   public Cost setCurrency(Currency currency) {
+      this.currency = currency;
       return this;
    }
 
-   public Double getCostTotal() {
-      return costTotal;
+   public Double getTotal() {
+      return total;
    }
 
-   public Cost setCostTotal(Double costTotal) {
-      this.costTotal = costTotal;
+   public Cost setTotal(Double total) {
+      this.total = total;
       return this;
    }
 
-   public LocalDateTime getCostDateTime() {
-      return costDateTime;
+   public LocalDateTime getDatetime() {
+      return datetime;
    }
 
-   public Cost setCostDateTime(LocalDateTime costDateTime) {
-      this.costDateTime = costDateTime;
+   public Cost setDatetime(LocalDateTime datetime) {
+      this.datetime = datetime;
+      return this;
+   }
+
+   public List<Payment> getPayments() {
+      return payments;
+   }
+
+   public Cost setPayments(List<Payment> payments) {
+      this.payments = payments;
+      return this;
+   }
+
+   public List<Participation> getParticipations() {
+      return participations;
+   }
+
+   public Cost setParticipations(List<Participation> participations) {
+      this.participations = participations;
       return this;
    }
 
@@ -111,10 +148,7 @@ public class Cost {
       return new StringJoiner(", ", Cost.class.getSimpleName() + "[", "]")
               .add("id=" + id)
               .add("name='" + name + "'")
-              .add("groupId=" + groupId)
-              .add("currencyId=" + currencyId)
-              .add("costTotal=" + costTotal)
-              .add("costDateTime=" + costDateTime)
+              .add("datetime=" + datetime)
               .toString();
    }
 }

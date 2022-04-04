@@ -1,14 +1,23 @@
 package org.doctordrue.sharedcosts.data.entities;
 
-import org.doctordrue.sharedcosts.data.entities.enums.RoleType;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 import java.util.StringJoiner;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+import org.doctordrue.sharedcosts.data.entities.enums.RoleType;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * @author Andrey_Barantsev
@@ -17,7 +26,6 @@ import java.util.StringJoiner;
 @Entity
 @Table(name = "persons")
 public class Person implements UserDetails {
-
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    @Column(name = "id", nullable = false)
@@ -38,25 +46,24 @@ public class Person implements UserDetails {
    @Column(name = "phone_number")
    private String phoneNumber;
 
-   @Column(name="enabled", nullable = false)
+   @Column(name = "enabled", nullable = false)
    private Boolean enabled = true;
 
    @Column(name = "locked", nullable = false)
    private Boolean locked = false;
 
-
    @Column(name = "role", nullable = false)
    @Enumerated(EnumType.STRING)
    private RoleType role = RoleType.ANONYMOUS;
 
-   @ManyToMany
-   private Set<CostGroup> groups;
+   @ManyToMany(mappedBy = "participants")
+   private Set<Group> groups = new java.util.LinkedHashSet<>();
 
-   public Set<CostGroup> getGroups() {
+   public Set<Group> getGroups() {
       return groups;
    }
 
-   public void setGroups(Set<CostGroup> groups) {
+   public void setGroups(Set<Group> groups) {
       this.groups = groups;
    }
 
@@ -169,6 +176,27 @@ public class Person implements UserDetails {
    @Override
    public Collection<? extends GrantedAuthority> getAuthorities() {
       return Collections.singletonList(role);
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
+      if (o == null || getClass() != o.getClass())
+         return false;
+
+      Person person = (Person) o;
+
+      if (!getId().equals(person.getId()))
+         return false;
+      return getEmail().equals(person.getEmail());
+   }
+
+   @Override
+   public int hashCode() {
+      int result = getId().hashCode();
+      result = 31 * result + getEmail().hashCode();
+      return result;
    }
 
    @Override

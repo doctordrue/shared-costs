@@ -1,6 +1,7 @@
 package org.doctordrue.sharedcosts.business.services.dataaccess;
 
 import java.util.List;
+import java.util.Set;
 
 import org.doctordrue.sharedcosts.data.entities.Person;
 import org.doctordrue.sharedcosts.data.entities.enums.RoleType;
@@ -45,6 +46,10 @@ public class PersonService implements UserDetailsService, UserDetailsPasswordSer
 
    public Person findById(Long id) {
       return this.personRepository.findById(id).orElseThrow(() -> generateNotFoundByIdException(id));
+   }
+
+   public Set<Person> findByGroupId(Long id) {
+      return this.personRepository.findByGroupsId(id);
    }
 
    public Person create(Person person) {

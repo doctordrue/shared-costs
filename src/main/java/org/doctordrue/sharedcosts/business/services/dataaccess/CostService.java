@@ -6,7 +6,6 @@ import java.util.List;
 import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.repositories.CostRepository;
 import org.doctordrue.sharedcosts.exceptions.BaseException;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class CostService {
 
    private final CostRepository costRepository;
-   private final StakeService stakeService;
+   private final ParticipationService participationService;
    private final PaymentService paymentService;
 
-   public CostService(CostRepository costRepository, StakeService stakeService, PaymentService paymentService) {
+   public CostService(CostRepository costRepository, ParticipationService participationService, PaymentService paymentService) {
       this.costRepository = costRepository;
-      this.stakeService = stakeService;
+      this.participationService = participationService;
       this.paymentService = paymentService;
    }
 
@@ -37,12 +36,12 @@ public class CostService {
    }
 
    public List<Cost> findAllByGroupId(Long groupId) {
-      Cost probe = new Cost().setGroupId(groupId);
-      return this.costRepository.findAll(Example.of(probe));
+      return this.costRepository.findByGroupId(groupId);
    }
 
    public Cost create(Cost cost) {
       setDateTimeIfNull(cost);
+      setTotalIfNull(cost);
       return this.costRepository.save(cost);
    }
 
@@ -64,7 +63,7 @@ public class CostService {
    @Transactional
    public void deleteRecursively(Long id) {
       assumeExists(id);
-      this.stakeService.deleteAllForCost(id);
+      this.participationService.deleteAllForCost(id);
       this.paymentService.deleteAllForCost(id);
       this.delete(id);
    }
@@ -73,7 +72,7 @@ public class CostService {
    public void deleteAllRecursively(List<Long> ids) {
       this.costRepository.findAllById(ids)
               .forEach(cost -> {
-                 this.stakeService.deleteAllForCost(cost.getId());
+                 this.participationService.deleteAllForCost(cost.getId());
                  this.paymentService.deleteAllForCost(cost.getId());});
       this.deleteAll(ids);
    }
@@ -89,8 +88,14 @@ public class CostService {
    }
 
    private void setDateTimeIfNull(Cost cost) {
-      if (cost.getCostDateTime() == null) {
-         cost.setCostDateTime(LocalDateTime.now());
+      if (cost.getDatetime() == null) {
+         cost.setDatetime(LocalDateTime.now());
+      }
+   }
+
+   private void setTotalIfNull(Cost cost) {
+      if (cost.getTotal() == null) {
+         cost.setTotal(0d);
       }
    }
 }

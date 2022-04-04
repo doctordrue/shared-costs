@@ -1,13 +1,13 @@
 package org.doctordrue.sharedcosts.business.model.widget;
 
+import org.doctordrue.sharedcosts.data.entities.Participation;
 import org.doctordrue.sharedcosts.data.entities.Person;
-import org.doctordrue.sharedcosts.data.entities.Stake;
 
 /**
  * @author Andrey_Barantsev
  * 3/22/2022
  **/
-public class StakeDto {
+public class ParticipationDto {
 
    private Long id;
    private Person person;
@@ -18,7 +18,7 @@ public class StakeDto {
       return id;
    }
 
-   public StakeDto setId(Long id) {
+   public ParticipationDto setId(Long id) {
       this.id = id;
       return this;
    }
@@ -27,7 +27,7 @@ public class StakeDto {
       return person;
    }
 
-   public StakeDto setPerson(Person person) {
+   public ParticipationDto setPerson(Person person) {
       this.person = person;
       return this;
    }
@@ -36,7 +36,7 @@ public class StakeDto {
       return amount;
    }
 
-   public StakeDto setAmount(Double amount) {
+   public ParticipationDto setAmount(Double amount) {
       this.amount = amount;
       return this;
    }
@@ -45,16 +45,16 @@ public class StakeDto {
       return name;
    }
 
-   public StakeDto setName(String name) {
+   public ParticipationDto setName(String name) {
       this.name = name;
       return this;
    }
 
-   public static StakeDto from(Stake stake, Person person) {
-      return new StakeDto()
-              .setId(stake.getId())
-              .setName(stake.getName())
-              .setAmount(stake.getStakeTotal())
+   public static ParticipationDto from(Participation participation, Person person) {
+      return new ParticipationDto()
+              .setId(participation.getId())
+              .setName(participation.getName())
+              .setAmount(participation.getAmount())
               .setPerson(person);
    }
 }

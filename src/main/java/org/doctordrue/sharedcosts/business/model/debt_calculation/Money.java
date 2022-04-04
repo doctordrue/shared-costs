@@ -1,5 +1,6 @@
 package org.doctordrue.sharedcosts.business.model.debt_calculation;
 
+import java.io.Serializable;
 import java.util.StringJoiner;
 
 import org.doctordrue.sharedcosts.data.entities.Currency;
@@ -8,7 +9,7 @@ import org.doctordrue.sharedcosts.data.entities.Currency;
  * @author Andrey_Barantsev
  * 3/17/2022
  **/
-public class Money {
+public class Money implements Serializable {
 
    private Currency currency;
    private Double amount;

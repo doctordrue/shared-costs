@@ -1,7 +1,7 @@
 package org.doctordrue.sharedcosts.controllers.webform;
 
 import org.doctordrue.sharedcosts.business.services.processing.StakesProcessingService;
-import org.doctordrue.sharedcosts.data.entities.Stake;
+import org.doctordrue.sharedcosts.data.entities.Participation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,8 +16,8 @@ import org.springframework.web.servlet.view.RedirectView;
  * 3/22/2022
  **/
 @Controller
-@RequestMapping("/costs/{cost_id}/stakes")
-public class StakeWebController {
+@RequestMapping("/costs/{cost_id}/participation")
+public class ParticipationWebController {
 
    @Autowired
    private StakesProcessingService stakesProcessingService;
@@ -25,8 +25,8 @@ public class StakeWebController {
    @PostMapping("/add")
    public RedirectView add(@PathVariable("cost_id") Long costId,
                            @RequestParam(value = "recalculate_cost", required = false, defaultValue = "false") boolean updateCost,
-                           @ModelAttribute("stake") Stake stake) {
-      this.stakesProcessingService.processNewStake(stake, updateCost);
+                           @ModelAttribute("participation") Participation participation) {
+      this.stakesProcessingService.processNew(participation, updateCost);
       return new RedirectView("/costs/" + costId);
    }
 
@@ -34,8 +34,8 @@ public class StakeWebController {
    public RedirectView edit(@PathVariable("cost_id") Long costId,
                             @PathVariable("id") Long id,
                             @RequestParam(value = "recalculate_cost", required = false, defaultValue = "false") Boolean updateCost,
-                            @ModelAttribute Stake stake) {
-      this.stakesProcessingService.processEditStake(stake, updateCost);
+                            @ModelAttribute("participation") Participation participation) {
+      this.stakesProcessingService.processEdit(participation, updateCost);
       return new RedirectView("/costs/" + costId);
    }
 

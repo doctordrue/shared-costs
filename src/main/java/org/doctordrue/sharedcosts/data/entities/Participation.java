@@ -14,8 +14,8 @@ import javax.persistence.Table;
  * 3/16/2022
  **/
 @Entity
-@Table(name = "payments")
-public class Payment {
+@Table(name = "participation")
+public class Participation {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class Payment {
       return id;
    }
 
-   public Payment setId(Long id) {
+   public Participation setId(Long id) {
       this.id = id;
       return this;
    }
@@ -47,7 +47,7 @@ public class Payment {
       return amount;
    }
 
-   public Payment setAmount(Double amount) {
+   public Participation setAmount(Double amount) {
       this.amount = amount;
       return this;
    }
@@ -56,7 +56,7 @@ public class Payment {
       return name;
    }
 
-   public Payment setName(String name) {
+   public Participation setName(String name) {
       this.name = name;
       return this;
    }
@@ -65,7 +65,7 @@ public class Payment {
       return cost;
    }
 
-   public Payment setCost(Cost cost) {
+   public Participation setCost(Cost cost) {
       this.cost = cost;
       return this;
    }
@@ -74,7 +74,7 @@ public class Payment {
       return person;
    }
 
-   public Payment setPerson(Person person) {
+   public Participation setPerson(Person person) {
       this.person = person;
       return this;
    }

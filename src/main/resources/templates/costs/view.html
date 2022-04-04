@@ -41,8 +41,8 @@
     <form action="#" th:action="@{/costs/{id}/recalculate(id=${dto.id},from=payments)}" method="post">
         <button type="submit">Update Total from payments</button>
     </form>
-    <form action="#" th:action="@{/costs/{id}/recalculate(id=${dto.id},from=stakes)}" method="post">
-        <button type="submit">Update Total from stakes</button>
+    <form action="#" th:action="@{/costs/{id}/recalculate(id=${dto.id},from=participation)}" method="post">
+        <button type="submit">Update Total from participation</button>
     </form>
     <form action="#" th:action="@{/costs/{id}/edit(id=${dto.id}}" method="get">
         <button type="submit">Edit</button>
@@ -69,8 +69,8 @@
                     <input hidden th:value="*{person.id}" th:name="personId">
                 </td>
                 <td>
-                    <input type="number" min="0.00" step="0.01" th:value="*{amount}" th:name="paymentTotal">
-                    <label th:for="paymentTotal" th:text="${dto.currency.shortName}">{CUR}</label>
+                    <input type="number" min="0.00" step="0.01" th:value="*{amount}" th:name="amount">
+                    <label th:for="amount" th:text="${dto.currency.shortName}">{CUR}</label>
                     <input hidden th:value="*{id}" th:name="id">
                     <input hidden th:value="${dto.id}" th:name="costId">
                 </td>
@@ -101,8 +101,8 @@
                     </select>
                 </td>
                 <td>
-                    <input type="number" min="0.00" step="0.01" th:field="*{paymentTotal}">
-                    <label th:for="paymentTotal" th:text="${dto.currency.shortName}">{CUR}</label>
+                    <input type="number" min="0.00" step="0.01" th:field="*{amount}">
+                    <label th:for="amount" th:text="${dto.currency.shortName}">{CUR}</label>
                     <input hidden th:value="${dto.id}" th:field="*{costId}">
                 </td>
                 <td>
@@ -115,17 +115,17 @@
 </div>
 
 <div class="container">
-    <h4>Stakes</h4>
+    <h4>Participation</h4>
     <table>
         <tr>
-            <th>Name</th>
-            <th>Holder</th>
+            <th>Item name</th>
+            <th>Participant</th>
             <th>Amount</th>
             <th>Actions</th>
         </tr>
-        <tr th:each="stake: ${dto.stakes}">
-            <form th:action="@{/costs/{cost_id}/stakes/{id}/edit(cost_id=${dto.id},id=${stake.id})}" method="post"
-                  th:object="${stake}">
+        <tr th:each="participation: ${dto.participations}">
+            <form th:action="@{/costs/{cost_id}/participation/{id}/edit(cost_id=${dto.id},id=${participation.id})}" method="post"
+                  th:object="${participation}">
                 <td>
                     <input type="text" th:value="*{name}" th:name="name">
                 </td>
@@ -134,8 +134,8 @@
                     <input hidden th:value="*{person.id}" th:name="personId">
                 </td>
                 <td>
-                    <input type="number" min="0.00" step="0.01" th:value="*{amount}" th:name="stakeTotal">
-                    <label th:for="stakeTotal" th:text="${dto.currency.shortName}">{CUR}</label>
+                    <input type="number" min="0.00" step="0.01" th:value="*{amount}" th:name="amount">
+                    <label th:for="amount" th:text="${dto.currency.shortName}">{CUR}</label>
                     <input hidden th:value="*{id}" th:name="id">
                     <input hidden th:value="${dto.id}" th:name="costId">
                 </td>
@@ -144,7 +144,7 @@
                         Save
                     </button>
                     <button type="submit"
-                            th:formaction="@{/costs/{cost_id}/stakes/{id}/delete(cost_id=${dto.id},id=*{id})}">
+                            th:formaction="@{/costs/{cost_id}/participation/{id}/delete(cost_id=${dto.id},id=*{id})}">
                         Delete
                     </button>
 
@@ -153,7 +153,7 @@
         </tr>
         <tfoot th:unless="${dto.availableForStakePeople.empty}">
         <tr>
-            <form th:action="@{/costs/{cost_id}/stakes/add(cost_id=${dto.id})}" method="post" th:object="${new_stake}">
+            <form th:action="@{/costs/{cost_id}/participation/add(cost_id=${dto.id})}" method="post" th:object="${new_participation}">
                 <td>
                     <input type="text" th:field="*{name}" placeholder="Paid item name">
                 </td>
@@ -165,8 +165,8 @@
                     </select>
                 </td>
                 <td>
-                    <input type="number" min="0.00" step="0.01" th:field="*{stakeTotal}">
-                    <label th:for="stakeTotal" th:text="${dto.currency.shortName}">{CUR}</label>
+                    <input type="number" min="0.00" step="0.01" th:field="*{amount}">
+                    <label th:for="amount" th:text="${dto.currency.shortName}">{CUR}</label>
                     <input hidden th:value="${dto.id}" th:field="*{costId}">
                 </td>
                 <td>

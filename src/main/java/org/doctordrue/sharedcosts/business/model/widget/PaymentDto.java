@@ -54,7 +54,7 @@ public class PaymentDto {
       return new PaymentDto()
               .setId(payment.getId())
               .setName(payment.getName())
-              .setAmount(payment.getPaymentTotal())
+              .setAmount(payment.getAmount())
               .setPerson(person);
    }
 

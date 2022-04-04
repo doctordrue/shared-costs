@@ -3,8 +3,8 @@ package org.doctordrue.sharedcosts.business.model.processing;
 import java.util.List;
 
 import org.doctordrue.sharedcosts.data.entities.Cost;
+import org.doctordrue.sharedcosts.data.entities.Participation;
 import org.doctordrue.sharedcosts.data.entities.Payment;
-import org.doctordrue.sharedcosts.data.entities.Stake;
 
 /**
  * @author Andrey_Barantsev
@@ -14,7 +14,7 @@ public class CostProcessingResult {
 
    private Cost cost;
    private List<Payment> payments;
-   private List<Stake> stakes;
+   private List<Participation> participations;
 
    public Cost getCost() {
       return cost;
@@ -34,12 +34,12 @@ public class CostProcessingResult {
       return this;
    }
 
-   public List<Stake> getStakes() {
-      return stakes;
+   public List<Participation> getStakes() {
+      return participations;
    }
 
-   public CostProcessingResult setStakes(List<Stake> stakes) {
-      this.stakes = stakes;
+   public CostProcessingResult setStakes(List<Participation> participations) {
+      this.participations = participations;
       return this;
    }
 }

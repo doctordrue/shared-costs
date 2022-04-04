@@ -5,8 +5,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.doctordrue.sharedcosts.business.services.dataaccess.PersonService;
-import org.doctordrue.sharedcosts.business.services.web.PersonWebService;
-import org.doctordrue.sharedcosts.data.entities.CostGroup;
 import org.doctordrue.sharedcosts.data.entities.Person;
 import org.doctordrue.sharedcosts.data.entities.enums.RoleType;
 import org.doctordrue.sharedcosts.utils.PasswordGeneratorUtil;
@@ -30,11 +28,8 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 @RequestMapping("/persons")
 public class PersonWebController {
-   // TODO: use only PersonWebService
    @Autowired
    private PersonService personService;
-   @Autowired
-   private PersonWebService personWebService;
 
    @GetMapping
    public ModelAndView viewAll(Model model) {
@@ -46,9 +41,7 @@ public class PersonWebController {
    @GetMapping("/{id}")
    public ModelAndView view(@PathVariable("id") Long id, Model model) {
       Person person = this.personService.findById(id);
-      List<CostGroup> groups = this.personWebService.findParticipatedGroups(id);
       model.addAttribute("person", person);
-      model.addAttribute("groups", groups);
       return new ModelAndView("/persons/view", model.asMap());
    }
 

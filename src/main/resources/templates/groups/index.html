@@ -2,31 +2,68 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Shared Cost Main page</title>
+    <title>Groups</title>
     <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
-<h3>Cost groups</h3>
+<h3>Groups</h3>
 <div class="container">
     <table>
         <tr>
-            <th>Group name</th>
+            <th>Name</th>
+            <th>Description</th>
             <th>Start date</th>
             <th>End date</th>
-            <th>Description</th>
+            <th>Actions</th>
         </tr>
-        <tr th:each="group:${groups}">
-            <td><a th:href="@{/groups/{id}/details(id=${group.id})}" th:text="${group.name}">{name}</a></td>
-            <td th:text="${group.startDate}">{start date}</td>
-            <td th:text="${group.endDate}">{end date}</td>
-            <td th:text="${group.description}">{description}</td>
+        <tr th:each="group : ${groups}">
+            <form action="#" th:method="post" th:object="${group}">
+                <td>
+                    <input hidden th:value="*{id}" th:name="id">
+                    <input type="text" th:value="*{name}" th:name="name">
+                </td>
+                <td>
+                    <textarea th:text="*{description}" th:name="description">{description}</textarea>
+                </td>
+                <td>
+                    <input type="date" th:value="*{startDate}" th:name="startDate">
+                </td>
+                <td>
+                    <input type="date" th:value="*{endDate}" th:name="endDate">
+                </td>
+                <td>
+                    <button th:formaction="@{/groups/{id}/edit(id=${group.id})}" type="submit">Save</button>
+                    <button th:formaction="@{/groups/{id}(id=${group.id})}" th:formmethod="get" type="submit">View</button>
+                    <button th:formaction="@{/groups/{id}/delete(id=${group.id})}" th:formmethod="post" type="submit">Delete</button>
+                </td>
+            </form>
         </tr>
+        <tfoot>
+        <tr>
+            <form action="#" th:action="@{/groups/add}" th:method="post" th:object="${new_group}">
+                <td>
+                    <input type="text" th:field="*{name}" placeholder="name">
+                </td>
+                <td>
+                    <textarea th:field="*{description}" placeholder="description"></textarea>
+                </td>
+                <td>
+                    <input type="date" th:field="*{startDate}">
+                </td>
+                <td>
+                    <input type="date" th:field="*{endDate}">
+                </td>
+                <td>
+                    <button type="submit">Add</button>
+                </td>
+            </form>
+        </tr>
+        </tfoot>
     </table>
-    <a href="#" th:href="@{/groups/add}">Add new cost group</a>
-
 </div>
+
 <div class="footer">
-    <p>Go to <a href="#" th:href="@{/persons}">People...</a></p>
+    <p>Go to <a href="#" th:href="@{/}">main page...</a></p>
 </div>
 
 </body>

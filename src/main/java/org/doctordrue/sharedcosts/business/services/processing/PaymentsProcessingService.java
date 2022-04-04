@@ -19,19 +19,19 @@ public class PaymentsProcessingService {
    private CostProcessingService costProcessingService;
 
    @Transactional
-   public Payment processNewPayment(Payment payment, boolean isUpdateCost) {
+   public Payment processNew(Payment payment, boolean isUpdateCost) {
       Payment persistedPayment = this.paymentService.create(payment);
       if (isUpdateCost) {
-         this.costProcessingService.updateCostTotalFromPayments(persistedPayment.getCostId());
+         this.costProcessingService.updateCostTotalFromPayments(persistedPayment.getCost().getId());
       }
       return persistedPayment;
    }
 
    @Transactional
-   public Payment processEditPayment(Payment payment, boolean isUpdateCost) {
+   public Payment processEdit(Payment payment, boolean isUpdateCost) {
       Payment persistedPayment = this.paymentService.update(payment.getId(), payment);
       if (isUpdateCost) {
-         this.costProcessingService.updateCostTotalFromPayments(persistedPayment.getCostId());
+         this.costProcessingService.updateCostTotalFromPayments(persistedPayment.getCost().getId());
       }
       return persistedPayment;
    }
@@ -41,7 +41,7 @@ public class PaymentsProcessingService {
       Payment persistedPayment = this.paymentService.findById(id);
       this.paymentService.delete(id);
       if (isUpdateCost) {
-         this.costProcessingService.updateCostTotalFromPayments(persistedPayment.getCostId());
+         this.costProcessingService.updateCostTotalFromPayments(persistedPayment.getCost().getId());
       }
    }
 }

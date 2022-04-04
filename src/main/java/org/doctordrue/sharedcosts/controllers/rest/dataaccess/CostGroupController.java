@@ -2,8 +2,8 @@ package org.doctordrue.sharedcosts.controllers.rest.dataaccess;
 
 import java.util.List;
 
-import org.doctordrue.sharedcosts.business.services.dataaccess.CostGroupService;
-import org.doctordrue.sharedcosts.data.entities.CostGroup;
+import org.doctordrue.sharedcosts.business.services.dataaccess.GroupService;
+import org.doctordrue.sharedcosts.data.entities.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,32 +25,32 @@ import org.springframework.web.bind.annotation.RestController;
 public class CostGroupController {
 
    @Autowired
-   private CostGroupService costGroupService;
+   private GroupService groupService;
 
    @GetMapping
-   public List<CostGroup> findAll() {
-      return this.costGroupService.findAll();
+   public List<Group> findAll() {
+      return this.groupService.findAll();
    }
 
    @GetMapping("/{id}")
-   public CostGroup findById(@PathVariable("id") Long id) {
-      return this.costGroupService.findById(id);
+   public Group findById(@PathVariable("id") Long id) {
+      return this.groupService.findById(id);
    }
 
    @PostMapping
    @ResponseStatus(HttpStatus.CREATED)
-   public CostGroup create(@RequestBody CostGroup costGroup) {
-      return this.costGroupService.create(costGroup);
+   public Group create(@RequestBody Group group) {
+      return this.groupService.create(group);
    }
 
    @PutMapping("/{id}")
-   public CostGroup update(@PathVariable("id") Long id, @RequestBody CostGroup costGroup) {
-      return this.costGroupService.update(id, costGroup);
+   public Group update(@PathVariable("id") Long id, @RequestBody Group group) {
+      return this.groupService.update(id, group);
    }
 
    @DeleteMapping("/{id}")
    @ResponseStatus(HttpStatus.NO_CONTENT)
    public void delete(@PathVariable("id") Long id) {
-      this.costGroupService.delete(id);
+      this.groupService.delete(id);
    }
 }

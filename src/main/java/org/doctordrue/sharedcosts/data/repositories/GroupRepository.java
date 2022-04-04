@@ -1,6 +1,8 @@
 package org.doctordrue.sharedcosts.data.repositories;
 
-import org.doctordrue.sharedcosts.data.entities.CostGroup;
+import java.util.List;
+
+import org.doctordrue.sharedcosts.data.entities.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Repository;
  * 3/16/2022
  **/
 @Repository
-public interface CostGroupRepository extends JpaRepository<CostGroup, Long> {
+public interface GroupRepository extends JpaRepository<Group, Long> {
 
+   List<Group> findByParticipantsId(Long id);
 }

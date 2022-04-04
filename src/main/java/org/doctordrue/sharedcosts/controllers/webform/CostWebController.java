@@ -1,24 +1,10 @@
 package org.doctordrue.sharedcosts.controllers.webform;
 
-import java.util.List;
-
-import org.doctordrue.sharedcosts.business.model.widget.CostViewDto;
-import org.doctordrue.sharedcosts.business.model.widget.StakeDto;
-import org.doctordrue.sharedcosts.business.services.dataaccess.CostGroupService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostService;
-import org.doctordrue.sharedcosts.business.services.dataaccess.CurrencyService;
-import org.doctordrue.sharedcosts.business.services.dataaccess.PaymentService;
-import org.doctordrue.sharedcosts.business.services.dataaccess.PersonService;
-import org.doctordrue.sharedcosts.business.services.dataaccess.StakeService;
 import org.doctordrue.sharedcosts.business.services.processing.CostProcessingService;
-import org.doctordrue.sharedcosts.business.services.web.CostDetailsService;
-import org.doctordrue.sharedcosts.business.services.web.CostViewService;
-import org.doctordrue.sharedcosts.business.services.web.PersonWebService;
 import org.doctordrue.sharedcosts.data.entities.Cost;
-import org.doctordrue.sharedcosts.data.entities.CostGroup;
-import org.doctordrue.sharedcosts.data.entities.Currency;
+import org.doctordrue.sharedcosts.data.entities.Participation;
 import org.doctordrue.sharedcosts.data.entities.Payment;
-import org.doctordrue.sharedcosts.data.entities.Stake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,67 +24,57 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 @RequestMapping("/costs")
 public class CostWebController {
-
-   @Autowired
-   private CostViewService costViewService;
    @Autowired
    private CostService costService;
    @Autowired
-   private PaymentService paymentService;
-   @Autowired
-   private StakeService stakeService;
-   @Autowired
-   private PersonService personService;
-   @Autowired
-   private PersonWebService personWebService;
-
-   @Autowired
    private CostProcessingService costProcessingService;
-   @Autowired
-   private CurrencyService currencyService;
-   @Autowired
-   private CostGroupService costGroupService;
-   @Autowired
-   private CostDetailsService costDetailsService;
 
    @GetMapping("/{id}")
    public ModelAndView view(@PathVariable("id") Long id, Model model) {
-      CostViewDto dto = this.costViewService.retrieve(id);
-      double stakesLeft = dto.getAmount() - dto.getStakes().stream().mapToDouble(StakeDto::getAmount).sum();
+      Cost cost = this.costService.findById(id);
+      double participationLeft = cost.getTotal() - cost.getParticipations().stream()
+              .mapToDouble(Participation::getAmount)
+              .sum();
+      double paymentLeft = cost.getParticipations().stream()
+              .mapToDouble(Participation::getAmount)
+              .sum() - cost.getTotal();
 
-      Payment newPayment = new Payment().setCostId(id);
-      Stake newStake = new Stake().setCostId(id).setStakeTotal(stakesLeft);
+      Payment newPayment = new Payment().setCost(cost).setAmount(paymentLeft);
+      Participation newParticipation = new Participation().setCost(cost).setAmount(participationLeft);
 
-      model.addAttribute("dto", dto);
+      model.addAttribute("cost", cost);
       model.addAttribute("new_payment", newPayment);
-      model.addAttribute("new_stake", newStake);
+      model.addAttribute("new_participation", newParticipation);
       return new ModelAndView("/costs/view", model.asMap());
    }
 
-   @GetMapping("/add")
-   public ModelAndView viewAdd(@RequestParam("group_id") Long groupId, Model model) {
-      CostGroup group = this.costGroupService.findById(groupId);
-      List<Currency> currencies = this.currencyService.findAll();
-      model.addAttribute("group", group);
-      model.addAttribute("currencies", currencies);
-      model.addAttribute("cost", new Cost().setCostTotal(0d));
-      return new ModelAndView("/costs/add", model.asMap());
-   }
-
    @PostMapping("/add")
-   public RedirectView add(@ModelAttribute("cost") Cost cost, Model model) {
-      //TODO: move logic with 0 total to service layer
-      if (cost.getCostTotal() == null) {
-         cost.setCostTotal(0d);
-      }
+   public RedirectView add(@ModelAttribute("cost") Cost cost) {
       Cost persistedCost = this.costService.create(cost);
       return new RedirectView("/costs/" + persistedCost.getId());
+   }
+
+   @PostMapping("/{id}/edit")
+   public RedirectView edit(@PathVariable("id") Long id,
+                            @ModelAttribute("cost") Cost cost,
+                            Model model) {
+      Cost persistedCost = this.costService.findById(id);
+      cost.setId(id).setGroup(persistedCost.getGroup());
+      this.costService.update(id, cost);
+      return new RedirectView("/groups/" + cost.getGroup().getId());
+   }
+
+   @PostMapping("/{id}/delete")
+   public RedirectView edit(@PathVariable("id") Long id) {
+      Cost persistedCost = this.costService.findById(id);
+      this.costService.delete(id);
+      return new RedirectView("/groups/" + persistedCost.getGroup().getId());
    }
 
    @PostMapping("/{id}/recalculate")
    public RedirectView recalculate(@PathVariable("id") Long id, @RequestParam("from") String from) {
       switch (from) {
-         case "stakes":
+         case "participation":
             this.costProcessingService.updateCostTotalFromStakes(id);
             break;
          case "payments":

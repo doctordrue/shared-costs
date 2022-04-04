@@ -26,7 +26,7 @@ public class PaymentWebController {
    public RedirectView add(@PathVariable("cost_id") Long costId,
                            @RequestParam(value = "recalculate_cost", required = false, defaultValue = "true") Boolean updateCost,
                            @ModelAttribute Payment payment) {
-      this.paymentsProcessingService.processNewPayment(payment, updateCost);
+      this.paymentsProcessingService.processNew(payment, updateCost);
       return new RedirectView("/costs/" + costId);
    }
 
@@ -35,7 +35,7 @@ public class PaymentWebController {
                             @PathVariable("id") Long id,
                             @RequestParam(value = "recalculate_cost", required = false, defaultValue = "true") Boolean updateCost,
                             @ModelAttribute Payment payment) {
-      this.paymentsProcessingService.processEditPayment(payment, updateCost);
+      this.paymentsProcessingService.processEdit(payment, updateCost);
       return new RedirectView("/costs/" + costId);
    }
 
