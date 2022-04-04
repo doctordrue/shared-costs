@@ -1,21 +1,20 @@
 package org.doctordrue.sharedcosts.controllers.webform;
 
-import java.time.LocalDate;
-import java.util.List;
-
+import org.doctordrue.sharedcosts.business.services.dataaccess.CurrencyService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.GroupService;
+import org.doctordrue.sharedcosts.data.entities.Cost;
+import org.doctordrue.sharedcosts.data.entities.Currency;
 import org.doctordrue.sharedcosts.data.entities.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author Andrey_Barantsev
@@ -24,9 +23,10 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 @RequestMapping("/groups")
 public class GroupWebController {
-
    @Autowired
    private GroupService groupService;
+   @Autowired
+   private CurrencyService currencyService;
 
    @GetMapping
    public ModelAndView viewAll(Model model) {
@@ -40,7 +40,11 @@ public class GroupWebController {
    @GetMapping("/{id}")
    public ModelAndView view(@PathVariable("id") Long groupId, Model model) {
       Group group = this.groupService.findById(groupId);
+      Cost newCost = new Cost().setGroup(group).setDatetime(LocalDateTime.now());
+      List<Currency> currencies = this.currencyService.findAll();
       model.addAttribute("group", group);
+      model.addAttribute("new_cost", newCost);
+      model.addAttribute("currencies", currencies);
       return new ModelAndView("/groups/view", model.asMap());
    }
 
