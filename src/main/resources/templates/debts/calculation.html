@@ -7,21 +7,17 @@
 </head>
 <body>
 <h3 th:text="'Debts calculation for ' + ${balance.costGroup.name}">Debts calculation for </h3>
-<div th:if="${balance.paymentsBalance}" class="container warning">
-    <h4>Payments balance:</h4>
-    <table>
-        <tr th:each="balance: ${balance.paymentsBalance}">
-            <td th:text="${balance.amount} + ' ' + ${balance.currency.shortName}">Amount</td>
-        </tr>
-    </table>
+<div th:unless="${balance.paymentsBalance.empty}" class="container dashboard">
+    <h4>Payments balances</h4>
+    <div class="panel error" th:each="balance: ${balance.paymentsBalance}">
+        <span class="metric" th:text="|${balance.amount} ${balance.currency.shortName}|">{Amount}</span>
+    </div>
 </div>
-<div th:if="${balance.stakesBalance}" class="container warning">
-    <h4>Stakes balance:</h4>
-    <table>
-        <tr th:each="balance: ${balance.stakesBalance}">
-            <td th:text="${balance.amount} + ' ' + ${balance.currency.shortName}">Amount</td>
-        </tr>
-    </table>
+<div th:unless="${balance.participationBalance.empty}" class="container dashboard">
+    <h4>Participation balances</h4>
+    <div class="panel error" th:each="balance: ${balance.participationBalance}">
+        <span class="metric" th:text="|${balance.amount} ${balance.currency.shortName}|">{Amount}</span>
+    </div>
 </div>
 <div class="container" th:if="${balance.debts}">
     <h4>Debts calculation</h4>
@@ -32,23 +28,43 @@
             <th>Amount</th>
         </tr>
         <tr th:each="debt: ${balance.debts}">
-            <td th:text="${debt.debtor.firstName} + ' ' + ${debt.debtor.lastName}">FirstName LastName</td>
-            <td th:text="${debt.creditor.firstName} + ' ' + ${debt.creditor.lastName}">FirstName LastName</td>
-            <td th:text="${debt.amount} + ' ' + ${debt.currency.shortName}">Amount</td>
+            <td th:text="${debt.debtor.fullName}">FirstName LastName</td>
+            <td th:text="${debt.creditor.fullName}">FirstName LastName</td>
+            <td th:text="|${debt.amount} ${debt.currency.shortName}|">Amount</td>
         </tr>
     </table>
 </div>
-<div class="container">
-    <table>
-        <tr th:each="total : ${totals}">
-            <td th:text="${total.person.firstName}"></td>
-            <td th:text="${total.amount}"></td>
-        </tr>
-    </table>
+<div class="container center">
+    <div class="table">
+        <h4>Participation total</h4>
+        <table>
+            <tr>
+                <th>Person</th>
+                <th>Amount</th>
+            </tr>
+            <tr th:each="total : ${participation_totals}">
+                <td th:text="${total.person.fullName}"></td>
+                <td th:text="|${total.amount} ${total.currency.shortName}|"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="table">
+        <h4>Payment total</h4>
+        <table>
+            <tr>
+                <th>Person</th>
+                <th>Amount</th>
+            </tr>
+            <tr th:each="total : ${payment_totals}">
+                <td th:text="${total.person.fullName}"></td>
+                <td th:text="|${total.amount} ${total.currency.shortName}|"></td>
+            </tr>
+        </table>
+    </div>
 </div>
 <div class="footer">
     <p>Back to Group Details: <a href="#"
-                                 th:href="@{/groups/{id}/details(id=${balance.costGroup.id})}"
+                                 th:href="@{/groups/{id}(id=${balance.costGroup.id})}"
                                  th:text="${balance.costGroup.name} + '...'">{group name}...</a>
     </p>
 </div>

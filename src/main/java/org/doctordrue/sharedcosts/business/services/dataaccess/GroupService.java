@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.entities.Group;
+import org.doctordrue.sharedcosts.data.entities.Person;
 import org.doctordrue.sharedcosts.data.repositories.GroupRepository;
 import org.doctordrue.sharedcosts.exceptions.BaseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class GroupService {
    private GroupRepository groupRepository;
    @Autowired
    private CostService costService;
+   @Autowired
+   private PersonService personService;
 
    public List<Group> findAll() {
       return this.groupRepository.findAll();
@@ -53,6 +56,28 @@ public class GroupService {
 //         group.setCosts(persistedGroup.getCosts());
 //      }
       return this.groupRepository.save(group);
+   }
+
+   public Group addParticipant(Long id, Long personId) {
+      Group persistedGroup = this.findById(id);
+      Person person = this.personService.findById(personId);
+      persistedGroup.getParticipants().add(person);
+      return this.groupRepository.save(persistedGroup);
+   }
+
+   public Group deleteParticipant(Long id, Long personId) {
+      Group persistedGroup = this.findById(id);
+      persistedGroup.getParticipants().removeIf(p -> p.getId().equals(personId));
+      return this.groupRepository.save(persistedGroup);
+   }
+
+   public List<Person> findPeopleToParticipateIn(Group group) {
+      return this.personService.findAll()
+              .stream()
+              .filter(p -> group.getParticipants()
+                      .stream()
+                      .noneMatch(e -> e.equals(p)))
+              .collect(Collectors.toList());
    }
 
    public void delete(Long id) {

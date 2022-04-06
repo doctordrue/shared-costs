@@ -9,17 +9,48 @@
 <h3>Currencies</h3>
 <div class="container">
     <table>
+        <tr>
+            <th>Name</th>
+            <th>Code</th>
+            <th>Rate</th>
+            <th>Actions</th>
+        </tr>
         <tr th:each="currency : ${currencies}">
-            <td><a href="#"
-                   th:text="${currency.fullName}"
-                   th:href="@{/currency/{id}/edit(id=${currency.id})}">{Currency}</a></td>
-            <td th:text="${currency.shortName}">{CUR}</a></td>
-            <td th:text="${currency.rate}">{rate}</a></td>
+            <form action="#" th:action="@{/currency/{id}/edit(id=${currency.id})}" th:method="post">
+                <td>
+                    <input hidden th:value="${currency.id}" th:name="id">
+                    <input type="text" th:value="${currency.fullName}" th:name="fullName">
+                </td>
+                <td>
+                    <input required type="text" maxlength="3" th:value="${currency.shortName}" th:name="shortName">
+                </td>
+                <td th="${currency.rate}">
+                    <input required type="number" min="0.0" max="999.99" step="0.01" th:value="${currency.rate}" th:name="rate">
+                </td>
+                <td>
+                    <button type="submit">Save</button>
+                </td>
+            </form>
+            <tfoot>
+            <tr>
+                <form action="#" th:action="@{/currency/add}" th:method="post" th:object="${new_currency}">
+                    <td>
+                        <input type="text" th:field="*{fullName}" placeholder="Full name">
+                    </td>
+                    <td>
+                        <input required type="text" maxlength="3" th:field="*{shortName}" placeholder="CUR">
+                    </td>
+                    <td>
+                        <input required type="number" min="0.0" max="999.99" step="0.01" th:field="*{rate}">
+                    </td>
+                    <td>
+                        <button type="submit">Add</button>
+                    </td>
+                </form>
+            </tr>
+            </tfoot>
         </tr>
     </table>
-    <p>
-        Add new <a href="#" th:href="@{/currency/add}">currency...</a>
-    </p>
 </div>
 <div class="footer">
     Return to <a href="#" th:href="@{/}">start page...</a>

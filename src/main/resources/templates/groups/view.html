@@ -2,41 +2,90 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="'Froup: ' + ${group.name}">{group name}</title>
+    <title th:text="'Group: ' + ${group.name}">{group name}</title>
     <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
 <h3 th:text="${group.name}">{group name}</h3>
 <div class="container">
+    <form id="formcalculate" action="#" th:action="@{/debts/calculation(group_id=${group.id})}" th:method="get">
+        <input form="formcalculate" hidden th:name="group_id" th:value="${group.id}">
+    </form>
+    <form id="formsave" action="#" th:action="@{/groups/{id}/edit(id=${group.id})}" th:method="post" th:object="${group}">
+        <table>
+            <tr>
+                <th>Attribute</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>
+                    <input form="formsave" hidden th:field="*{id}">
+                    <input form="formsave" required type="text" th:field="*{name}">
+                </td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>
+                    <textarea form="formsave" th:text="*{description}" th:name="description" placeholder="description">{description}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>Started</td>
+                <td>
+                    <input form="formsave" required type="date" th:field="${group.startDate}">
+                </td>
+            </tr>
+            <tr>
+                <td>Ended</td>
+                <td>
+                    <input form="formsave" type="date" th:field="${group.endDate}">
+                </td>
+            </tr>
+            <tfoot>
+            <tr>
+                <td>Total</td>
+                <!-- TODO: group by currency-->
+                <td th:text="${#aggregates.sum(group.costs.![total])}"></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+    <button form="formsave" type="submit">Save</button>
+    <button form="formcalculate" type="submit">Calculate</button>
+</div>
+<div class="container">
+    <h4>Participants</h4>
     <table>
         <tr>
-            <th>Attribute</th>
-            <th>Value</th>
+            <th>Name</th>
+            <th>Actions</th>
         </tr>
+        <tr th:each="participant : ${group.participants}">
+            <form th:action="@{/groups/{id}/participants/delete(id=${group.id})}" th:method="post" th:object="${participant}">
+                <td>
+                    <input disabled readonly th:value="*{fullName}">
+                    <input hidden th:value="*{id}" th:name="id">
+                </td>
+                <td>
+                    <button type="submit">Delete</button>
+                </td>
+            </form>
+        </tr>
+        <tfoot>
         <tr>
-            <td>Name</td>
-            <td th:text="${group.name}">{name}</td>
+            <form th:unless="${candidates.empty}" th:action="@{/groups/{id}/participants/add(id=${group.id})}" th:method="post" th:object="${participant}">
+                <td>
+                    <select th:field="*{id}">
+                        <option th:each="candidate : ${candidates}" th:text="${candidate.fullName}" th:value="${candidate.id}">{firstName} {lastName}</option>
+                    </select>
+                </td>
+                <td>
+                    <button type="submit">Add</button>
+                </td>
+            </form>
         </tr>
-        <tr>
-            <td>Description</td>
-            <td th:text="${group.description}">{description}</td>
-        </tr>
-        <tr>
-            <td>Started</td>
-            <td>
-                <input type="date" disabled th:value="${group.startDate}">
-            </td>
-        </tr>
-        <tr>
-            <td>Ended</td>
-            <td>
-                <input type="date" disabled th:value="${group.endDate}">
-            </td>
-        </tr>
-        <tr>
-            <td>Total</td>
-            <td th:text="${#aggregates.sum(group.costs.![total])}"></td>
-        </tr>
+        </tfoot>
     </table>
 </div>
 
@@ -45,26 +94,25 @@
     <table>
         <tr>
             <th>Name</th>
-            <th>Timestamp</th>
             <th>Total</th>
             <th>Participation</th>
             <th>Payment</th>
             <th>Actions</th>
         </tr>
         <tr th:each="cost: ${group.costs}">
+            <form th:id="'viewcost_' + ${cost.id}" action="#" th:action="@{/costs/{id}(id=${cost.id})}" th:method="get"></form>
+            <form th:id="'del_cost_' + ${cost.id}" action="#" th:action="@{/costs/{id}/delete(id=${cost.id})}" th:method="post"></form>
             <form action="#" th:object="${cost}">
                 <td>
                     <input hidden th:value="*{id}" th:name="id">
                     <input hidden th:value="*{group.id}" th:name="group.id">
+                    <input hidden type="datetime-local" th:value="*{datetime}" th:name="datetime">
                     <input type="text" th:value="*{name}" th:name="name">
                 </td>
                 <td>
-                    <input type="datetime-local" th:value="*{datetime}" th:name="datetime">
-                </td>
-                <td>
-                    <input type="number" min="0.00" step="0.01" th:value="*{total}" th:name="total">
-                    <input hidden th:value="*{currency.id}" th:name="currency.id">
+                    <input disabled type="number" min="0.00" max="9999.99" step="0.01" th:value="*{total}" th:name="total">
                     <label th:for="total" th:text="*{currency.shortName}">{CUR}</label>
+                    <input hidden th:value="*{currency.id}" th:name="currency.id">
                 </td>
                 <td>
                     <th:block th:text="*{#aggregates.sum(participations.![amount])}">
@@ -77,10 +125,9 @@
                     </th:block>
                 </td>
                 <td>
-                    <button type="submit" th:formaction="@{/costs/{id}/edit(id=*{id})}" th:formmethod="post">Save
-                    </button>
-                    <button type="submit" th:formaction="@{/costs/{id}(id=*{id})}" th:formmethod="get">View</button>
-                    <button type="submit" th:formaction="@{/costs/{id}/delete(id=*{id})}" th:formmethod="post">Delete
+                    <button type="submit" th:formaction="@{/costs/{id}/edit(id=*{id})}" th:formmethod="post">Save</button>
+                    <button th:form="'viewcost_' + ${cost.id}" type="submit">View</button>
+                    <button th:from="'del_cost_' + ${cost.id}" type="submit">Delete
                     </button>
                 </td>
             </form>
@@ -93,10 +140,7 @@
                     <input type="text" th:field="*{name}" placeholder="name">
                 </td>
                 <td>
-                    <input type="datetime-local" th:field="*{datetime}">
-                </td>
-                <td>
-                    <input type="number" min="0.00" step="0.01" th:field="*{total}" placeholder="0.00">
+                    <input type="number" min="0.00" max="9999.99" step="0.01" th:field="*{total}" placeholder="0.00">
                     <select th:name="currency.id">
                         <option
                                 th:each="currency: ${currencies}"
@@ -116,19 +160,12 @@
         </form>
         </tfoot>
     </table>
-    <p>
-        <a href="#" th:href="@{/costs/add?group_id={group_id}(group_id=${group.id})}">Add empty cost</a>
-    </p>
-    <p>
-        <a href="#" th:href="@{/costs/process?group_id={group_id}(group_id=${group.id})}">Add cost with split stakes & payment</a>
-    </p>
-</div>
-
-<div class="container">
-    <a href="#" th:href="@{/debts/calculation?group_id={group_id}(group_id=${group.id})}">View calculations</a>
+    <!--    <p>-->
+    <!--        <a href="#" th:href="@{/costs/process?group_id={group_id}(group_id=${group.id})}">Add cost with split stakes & payment</a>-->
+    <!--    </p>-->
 </div>
 <div class="footer">
-    <p>Back to <a href="#" th:href="@{/groups}">Groups...</a></p>
+    <p>Return to <a href="#" th:href="@{/groups}">Groups...</a></p>
 </div>
 
 </body>

@@ -29,31 +29,18 @@ public class CurrencyWebController {
    public ModelAndView viewAll(Model model) {
       List<Currency> currencies = this.currencyService.findAll();
       model.addAttribute("currencies", currencies);
+      model.addAttribute("new_currency", new Currency());
       return new ModelAndView("/currency/index", model.asMap());
    }
 
-   @GetMapping("/add")
-   public ModelAndView viewAdd(Model model) {
-      Currency currency = new Currency().setRate(1d);
-      model.addAttribute("currency", currency);
-      return new ModelAndView("/currency/add", model.asMap());
-   }
-
-   @GetMapping("/{id}/edit")
-   public ModelAndView viewEdit(@PathVariable("id") Long id, Model model) {
-      Currency currency = this.currencyService.findById(id);
-      model.addAttribute("currency", currency);
-      return new ModelAndView("/currency/edit", model.asMap());
-   }
-
    @PostMapping("/add")
-   public RedirectView add(@ModelAttribute Currency currency, Model model) {
+   public RedirectView add(@ModelAttribute Currency currency) {
       this.currencyService.create(currency);
       return new RedirectView("/currency");
    }
 
    @PostMapping("/{id}/edit")
-   public RedirectView edit(@PathVariable("id") Long id, @ModelAttribute Currency currency, Model model) {
+   public RedirectView edit(@PathVariable("id") Long id, @ModelAttribute Currency currency) {
       this.currencyService.updateById(id, currency);
       return new RedirectView("/currency");
    }

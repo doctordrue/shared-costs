@@ -12,6 +12,10 @@ div {
     margin:auto;
 }
 
+form {
+    display: inline;
+}
+
 p, h2, h3, h4, div {
     margin-top: 3px;
     margin-bottom: 3px;
@@ -22,11 +26,31 @@ div.centered {
     transform: translate(0%, -50%);
 }
 
-div.container {
+.container {
     background-color: #ffe8e045;
 	border: 1px solid lightgrey;
 	border-radius: 4px;
 	padding: 5px;
+}
+
+.dashboard {
+    text-align: center;
+    background-color: cornflowerblue;
+}
+
+.panel {
+    text-align: center;
+    display: inline-block;
+    margin: 10px;
+    width: 120px;
+    color: darkslategrey;
+    padding: 10px;
+    border: 1px solid lightgrey;
+    background-color: white;
+}
+
+div.table {
+    display: inline-table;
 }
 
 div.login-container {

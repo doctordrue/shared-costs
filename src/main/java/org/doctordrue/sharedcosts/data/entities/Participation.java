@@ -15,7 +15,7 @@ import javax.persistence.Table;
  **/
 @Entity
 @Table(name = "participation")
-public class Participation {
+public class Participation implements IOwnedAmount {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,6 +72,11 @@ public class Participation {
 
    public Person getPerson() {
       return person;
+   }
+
+   @Override
+   public Currency getCurrency() {
+      return this.getCost().getCurrency();
    }
 
    public Participation setPerson(Person person) {

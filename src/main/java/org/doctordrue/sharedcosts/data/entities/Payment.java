@@ -15,7 +15,7 @@ import javax.persistence.Table;
  **/
 @Entity
 @Table(name = "payments")
-public class Payment {
+public class Payment implements IOwnedAmount {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +43,7 @@ public class Payment {
       return this;
    }
 
+   @Override
    public Double getAmount() {
       return amount;
    }
@@ -70,8 +71,14 @@ public class Payment {
       return this;
    }
 
+   @Override
    public Person getPerson() {
       return person;
+   }
+
+   @Override
+   public Currency getCurrency() {
+      return this.getCost().getCurrency();
    }
 
    public Payment setPerson(Person person) {

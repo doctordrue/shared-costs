@@ -11,30 +11,44 @@
     <table>
         <tr>
             <th>Name</th>
-            <th>Description</th>
             <th>Start date</th>
             <th>End date</th>
             <th>Actions</th>
         </tr>
         <tr th:each="group : ${groups}">
-            <form action="#" th:method="post" th:object="${group}">
+            <form th:id="'del_group_' + ${group.id}" th:action="@{/groups/{id}/delete(id=${group.id})}" th:method="post"></form>
+            <form th:id="'viewgroup_' + ${group.id}" th:action="@{/groups/{id}(id=${group.id})}" th:method="get"></form>
+            <form th:id="'savegroup_' + ${group.id}" th:action="@{/groups/{id}/edit(id=${group.id})}" th:method="post" th:object="${group}">
                 <td>
-                    <input hidden th:value="*{id}" th:name="id">
-                    <input type="text" th:value="*{name}" th:name="name">
+                    <input hidden
+                           th:form="'savegroup_' + ${group.id}"
+                           th:value="*{id}"
+                           th:name="id">
+                    <input required type="text"
+                           th:form="'savegroup_' + ${group.id}"
+                           th:value="*{name}"
+                           th:name="name">
+                    <input hidden
+                           th:form="'savegroup_' + ${group.id}"
+                           th:value="*{description}"
+                           th:name="description">
                 </td>
                 <td>
-                    <textarea th:text="*{description}" th:name="description">{description}</textarea>
+                    <input required type="date"
+                           th:form="'savegroup_' + ${group.id}"
+                           th:value="*{startDate}"
+                           th:name="startDate">
                 </td>
                 <td>
-                    <input type="date" th:value="*{startDate}" th:name="startDate">
+                    <input type="date"
+                           th:form="'savegroup_' + ${group.id}"
+                           th:value="*{endDate}"
+                           th:name="endDate">
                 </td>
                 <td>
-                    <input type="date" th:value="*{endDate}" th:name="endDate">
-                </td>
-                <td>
-                    <button th:formaction="@{/groups/{id}/edit(id=${group.id})}" type="submit">Save</button>
-                    <button th:formaction="@{/groups/{id}(id=${group.id})}" th:formmethod="get" type="submit">View</button>
-                    <button th:formaction="@{/groups/{id}/delete(id=${group.id})}" th:formmethod="post" type="submit">Delete</button>
+                    <button th:form="'savegroup_' + ${group.id}" type="submit">Save</button>
+                    <button th:form="'viewgroup_' + ${group.id}" type="submit">View</button>
+                    <button th:form="'del_group_' + ${group.id}" type="submit">Delete</button>
                 </td>
             </form>
         </tr>
@@ -42,13 +56,10 @@
         <tr>
             <form action="#" th:action="@{/groups/add}" th:method="post" th:object="${new_group}">
                 <td>
-                    <input type="text" th:field="*{name}" placeholder="name">
+                    <input required type="text" th:field="*{name}" placeholder="name">
                 </td>
                 <td>
-                    <textarea th:field="*{description}" placeholder="description"></textarea>
-                </td>
-                <td>
-                    <input type="date" th:field="*{startDate}">
+                    <input required type="date" th:field="*{startDate}">
                 </td>
                 <td>
                     <input type="date" th:field="*{endDate}">

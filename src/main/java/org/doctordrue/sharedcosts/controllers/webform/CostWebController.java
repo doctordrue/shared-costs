@@ -1,11 +1,14 @@
 package org.doctordrue.sharedcosts.controllers.webform;
 
+import java.util.Objects;
+
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostService;
 import org.doctordrue.sharedcosts.business.services.processing.CostProcessingService;
 import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.entities.Participation;
 import org.doctordrue.sharedcosts.data.entities.Payment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -35,9 +39,9 @@ public class CostWebController {
       double participationLeft = cost.getTotal() - cost.getParticipations().stream()
               .mapToDouble(Participation::getAmount)
               .sum();
-      double paymentLeft = cost.getParticipations().stream()
-              .mapToDouble(Participation::getAmount)
-              .sum() - cost.getTotal();
+      double paymentLeft = cost.getTotal() - cost.getPayments().stream()
+              .mapToDouble(Payment::getAmount)
+              .sum();
 
       Payment newPayment = new Payment().setCost(cost).setAmount(paymentLeft);
       Participation newParticipation = new Participation().setCost(cost).setAmount(participationLeft);
@@ -57,10 +61,14 @@ public class CostWebController {
    @PostMapping("/{id}/edit")
    public RedirectView edit(@PathVariable("id") Long id,
                             @ModelAttribute("cost") Cost cost,
-                            Model model) {
+                            WebRequest request) {
       Cost persistedCost = this.costService.findById(id);
       cost.setId(id).setGroup(persistedCost.getGroup());
       this.costService.update(id, cost);
+      String referrerUrl = Objects.requireNonNull(request.getHeader(HttpHeaders.REFERER)).toLowerCase();
+      if (referrerUrl.contains("/costs/" + id)) {
+         return new RedirectView("/costs/" + id);
+      }
       return new RedirectView("/groups/" + cost.getGroup().getId());
    }
 

@@ -153,6 +153,10 @@ public class Person implements UserDetails {
       return this;
    }
 
+   public String getFullName() {
+      return String.format("%s %s", this.getFirstName(), this.getLastName());
+   }
+
    @Override
    public boolean isAccountNonExpired() {
       return true;

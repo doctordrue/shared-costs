@@ -35,6 +35,8 @@ public class PersonWebController {
    public ModelAndView viewAll(Model model) {
       List<Person> persons = this.personService.findAll();
       model.addAttribute("persons", persons);
+      model.addAttribute("new_person", new Person().setEnabled(true).setLocked(false));
+      model.addAttribute("roles", Stream.of(RoleType.values()).map(RoleType::name).collect(Collectors.toList()));
       return new ModelAndView("/persons/index", model.asMap());
    }
 

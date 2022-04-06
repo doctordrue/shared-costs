@@ -11,7 +11,7 @@
 <div class="container">
     <form action="#" th:action="@{/persons/add}" th:method="post" th:object="${person}">
         <input type="email" th:field="*{email}" placeholder="E-mail" required>
-        <input type="text" th:field="*{password}" placeholder="Password" alt="Password is auto-generated" disabled>
+        <input type="text" th:field="*{password}" alt="Password is auto-generated" disabled>
         <input type="text" th:field="*{firstName}" placeholder="First name">
         <input type="text" th:field="*{lastName}" placeholder="Last name">
         <input type="tel" th:field="*{phoneNumber}" placeholder="Phone number">

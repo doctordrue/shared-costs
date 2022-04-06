@@ -9,13 +9,83 @@
 <h3>People</h3>
 <div class="container">
     <table>
-        <tr th:each="person : ${persons}">
-            <td><a href="#"
-                   th:text="${person.firstName} + ' ' + ${person.lastName}"
-                   th:href="@{/persons/{id}(id=${person.id})}">{firstName} {lastName}</a></td>
+        <tr>
+            <th>E-mail</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Role</th>
+            <th>E</th>
+            <th>L</th>
+            <th>Actions</th>
         </tr>
+        <tr th:each="person : ${persons}">
+            <form action="#" th:action="@{/persons/{id}/edit(id=${person.id})}" th:method="post">
+                <td>
+                    <input hidden th:value="${person.id}" th:name="id">
+                    <input readonly th:value="${person.email}" th:name="email">
+                </td>
+                <td>
+                    <input type="text" th:value="${person.firstName}" th:name="firstName">
+                </td>
+                <td>
+                    <input type="text" th:value="${person.lastName}" th:name="lastName">
+                </td>
+                <td>
+                    <select th:name="role">
+                        <option
+                                th:each="roleStr: ${roles}"
+                                th:text="${roleStr}"
+                                th:value="${roleStr}"
+                                th:selected="${roleStr == person.role.name}">{ROLE}
+                        </option>
+                    </select>
+                </td>
+                <td>
+                    <input type="checkbox" th:checked="${person.enabled}" th:name="enabled">
+                </td>
+                <td>
+                    <input type="checkbox" th:checked="${person.locked}" th:name="locked">
+                </td>
+                <td>
+                    <button type="submit">Save</button>
+                    <button type="submit" formmethod="get">View</button>
+                </td>
+            </form>
+        </tr>
+        <tfoot>
+        <tr>
+            <form action="#" th:action="@{/persons/add}" th:method="post" th:object="${new_person}">
+                <td>
+                    <input required type="email" th:field="*{email}" placeholder="e-mail">
+                </td>
+                <td>
+                    <input type="text" th:field="*{firstName}" placeholder="Name">
+                </td>
+                <td>
+                    <input type="text" th:field="*{lastName}" placeholder="Last name">
+                </td>
+                <td>
+                    <select th:field="*{role}">
+                        <option
+                                th:each="roleStr: ${roles}"
+                                th:text="${roleStr}"
+                                th:value="${roleStr}">{ROLE}
+                        </option>
+                    </select>
+                </td>
+                <td>
+                    <input type="checkbox" th:field="*{enabled}" checked>
+                </td>
+                <td>
+                    <input type="checkbox" th:field="*{locked}">
+                </td>
+                <td>
+                    <button type="submit">Add</button>
+                </td>
+            </form>
+        </tr>
+        </tfoot>
     </table>
-    <a href="#" th:href="@{/persons/add}">Add new person...</a>
 </div>
 <div class="footer">
     <p>

@@ -3,6 +3,7 @@ package org.doctordrue.sharedcosts.business.services.calculation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -14,6 +15,7 @@ import org.doctordrue.sharedcosts.business.services.dataaccess.PersonService;
 import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.entities.Currency;
 import org.doctordrue.sharedcosts.data.entities.Group;
+import org.doctordrue.sharedcosts.data.entities.IOwnedAmount;
 import org.doctordrue.sharedcosts.data.entities.Participation;
 import org.doctordrue.sharedcosts.data.entities.Payment;
 import org.doctordrue.sharedcosts.data.entities.Person;
@@ -32,15 +34,24 @@ public class DebtCalculationService {
    @Autowired
    private PersonService personService;
 
-   public List<Total> findParticipationTotal(Long groupId) {
-      return this.groupService.findById(groupId)
-              .getCosts()
+   public List<IOwnedAmount> findParticipationTotal(Long groupId) {
+      return this.findTotals(this.groupService.findById(groupId), Cost::getParticipations);
+   }
+
+   public List<IOwnedAmount> findPaymentTotal(Long groupId) {
+      return this.findTotals(this.groupService.findById(groupId), Cost::getPayments);
+   }
+
+   private List<IOwnedAmount> findTotals(Group group, Function<Cost, List<? extends IOwnedAmount>> function) {
+      return group.getCosts().stream()
+              .flatMap(c -> function.apply(c).stream())
+              .map(Total::of)
+              .collect(
+                      Collectors.groupingBy(Total::getCurrency,
+                              Collectors.toMap(Total::getPerson, v -> v, (a, b) -> a.increase(b.getAmount()))))
+              .values()
               .stream()
-              .flatMap(cost -> cost.getParticipations().stream())
-              .map(participation -> new Total()
-                      .setAmount(participation.getAmount())
-                      .setCurrency(participation.getCost().getCurrency())
-                      .setPerson(participation.getPerson()))
+              .flatMap(m -> m.values().stream())
               .collect(Collectors.toList());
    }
 
@@ -51,7 +62,7 @@ public class DebtCalculationService {
       CostGroupBalance result = new CostGroupBalance();
       result.setCostGroup(group);
 
-      Map<Currency, List<Cost>> costsByCurrency = allCosts.stream().collect(Collectors.groupingBy(cost -> cost.getCurrency()));
+      Map<Currency, List<Cost>> costsByCurrency = allCosts.stream().collect(Collectors.groupingBy(Cost::getCurrency));
       System.out.println("Costs:");
       costsByCurrency.forEach((currency, costs) -> {
          // calculate debts for each currency separately

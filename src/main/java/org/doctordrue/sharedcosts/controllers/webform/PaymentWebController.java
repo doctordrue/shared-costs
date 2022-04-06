@@ -18,7 +18,6 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 @RequestMapping("/costs/{cost_id}/payments")
 public class PaymentWebController {
-
    @Autowired
    private PaymentsProcessingService paymentsProcessingService;
 
@@ -42,7 +41,7 @@ public class PaymentWebController {
    @PostMapping("/{id}/delete")
    public RedirectView delete(@PathVariable("cost_id") Long costId,
                               @PathVariable("id") Long id,
-                              @RequestParam(value = "recalculate_cost", required = false, defaultValue = "true") Boolean updateCost) {
+                              @RequestParam(value = "recalculate_cost", required = false, defaultValue = "false") Boolean updateCost) {
       this.paymentsProcessingService.processDelete(id, updateCost);
       return new RedirectView("/costs/" + costId);
    }
