@@ -2,11 +2,11 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</title>
+    <title th:text="${person.fullName}">{firstName} {lastName}</title>
     <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
-<h3 th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}</h3>
+<h3 th:text="${person.fullName}">{firstName} {lastName}</h3>
 <div class="message warning" th:if="${password}">
     <p th:text="'Password was reset. Please save: ' + ${password}">Password was reset. Please save: {password}</p>
 </div>
@@ -43,10 +43,7 @@
 </div>
 <div class="footer">
     <p>
-        Return to <a href="#"
-                     th:href="@{/persons/{id}(id=${person.id})}"
-                     th:text="${person.firstName} + ' ' + ${person.lastName}">
-        {firstName} {lastName}</a>...
+        Return to <a href="#" th:href="@{/persons}">people...</a>
     </p>
     <p>
         <a href="#" th:href="@{/logout}">Logout</a>

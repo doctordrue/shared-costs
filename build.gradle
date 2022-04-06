@@ -5,8 +5,8 @@ plugins {
 }
 
 group = 'org.doctordrue'
-version = '0.1'
-sourceCompatibility = '9'
+version = '1.0-alpha'
+sourceCompatibility = '8'
 
 repositories {
     mavenCentral()

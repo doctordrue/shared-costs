@@ -100,9 +100,12 @@
             <th>Actions</th>
         </tr>
         <tr th:each="cost: ${group.costs}">
-            <form th:id="'viewcost_' + ${cost.id}" action="#" th:action="@{/costs/{id}(id=${cost.id})}" th:method="get"></form>
-            <form th:id="'del_cost_' + ${cost.id}" action="#" th:action="@{/costs/{id}/delete(id=${cost.id})}" th:method="post"></form>
-            <form action="#" th:object="${cost}">
+            <form th:id="|viewcost_${cost.id}|" action="#" th:action="@{/costs/{id}(id=${cost.id})}"
+                  th:method="get"></form>
+            <form th:id="|del_cost_${cost.id}|" action="#" th:action="@{/costs/{id}/delete(id=${cost.id})}"
+                  th:method="post"></form>
+            <form th:id="|savecost_${cost.id}|" action="#" th:action="@{/costs/{id}/edit(id=*{id})}" th:method="post"
+                  th:object="${cost}">
                 <td>
                     <input hidden th:value="*{id}" th:name="id">
                     <input hidden th:value="*{group.id}" th:name="group.id">
@@ -110,7 +113,8 @@
                     <input type="text" th:value="*{name}" th:name="name">
                 </td>
                 <td>
-                    <input disabled type="number" min="0.00" max="9999.99" step="0.01" th:value="*{total}" th:name="total">
+                    <input readonly type="number" min="0.00" max="9999.99" step="0.01" th:value="*{total}"
+                           th:name="total">
                     <label th:for="total" th:text="*{currency.shortName}">{CUR}</label>
                     <input hidden th:value="*{currency.id}" th:name="currency.id">
                 </td>
@@ -125,10 +129,9 @@
                     </th:block>
                 </td>
                 <td>
-                    <button type="submit" th:formaction="@{/costs/{id}/edit(id=*{id})}" th:formmethod="post">Save</button>
+                    <button type="submit">Save</button>
                     <button th:form="'viewcost_' + ${cost.id}" type="submit">View</button>
-                    <button th:from="'del_cost_' + ${cost.id}" type="submit">Delete
-                    </button>
+                    <button th:form="'del_cost_' + ${cost.id}" type="submit">Delete</button>
                 </td>
             </form>
         </tr>

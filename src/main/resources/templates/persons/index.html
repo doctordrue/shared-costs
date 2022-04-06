@@ -19,6 +19,10 @@
             <th>Actions</th>
         </tr>
         <tr th:each="person : ${persons}">
+            <form th:id="|viewperson_${person.id}|" action="#" th:action="@{/persons/{id}/edit(id=${person.id})}"
+                  th:method="get"></form>
+            <form th:id="|del_person_${person.id}|" action="#" th:action="@{/persons/{id}/delete(id=${person.id})}"
+                  th:method="post"></form>
             <form action="#" th:action="@{/persons/{id}/edit(id=${person.id})}" th:method="post">
                 <td>
                     <input hidden th:value="${person.id}" th:name="id">
@@ -31,7 +35,7 @@
                     <input type="text" th:value="${person.lastName}" th:name="lastName">
                 </td>
                 <td>
-                    <select th:name="role">
+                    <select class="user_role" th:name="role">
                         <option
                                 th:each="roleStr: ${roles}"
                                 th:text="${roleStr}"
@@ -48,7 +52,8 @@
                 </td>
                 <td>
                     <button type="submit">Save</button>
-                    <button type="submit" formmethod="get">View</button>
+                    <button th:form="|viewperson_${person.id}|" type="submit">View</button>
+                    <button th:form="|del_person_${person.id}|" type="submit">[x]</button>
                 </td>
             </form>
         </tr>
@@ -65,7 +70,7 @@
                     <input type="text" th:field="*{lastName}" placeholder="Last name">
                 </td>
                 <td>
-                    <select th:field="*{role}">
+                    <select class="user_role" th:field="*{role}">
                         <option
                                 th:each="roleStr: ${roles}"
                                 th:text="${roleStr}"
@@ -86,6 +91,8 @@
         </tr>
         </tfoot>
     </table>
+    <div class="message error" th:if="${error}" th:text="${error}">{error}</div>
+    <div class="message warning" th:if="${message}" th:text="${message}">{message}</div>
 </div>
 <div class="footer">
     <p>
