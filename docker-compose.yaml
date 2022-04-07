@@ -2,7 +2,7 @@ services:
   shared-costs:
     image: doctordrue/shared-costs:latest
     ports:
-      - "8080:8080"
+      - "80:8080"
     volumes:
       - ./data:/workspace/data
     restart: always
