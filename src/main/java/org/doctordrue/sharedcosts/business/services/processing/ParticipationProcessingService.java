@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
  * 4/2/2022
  **/
 @Service
-public class StakesProcessingService {
+public class ParticipationProcessingService {
 
    @Autowired
    private ParticipationService participationService;
@@ -22,7 +22,7 @@ public class StakesProcessingService {
    public Participation processNew(Participation participation, boolean isUpdateCost) {
       Participation persistedParticipation = this.participationService.create(participation);
       if (isUpdateCost) {
-         this.costProcessingService.updateCostTotalFromStakes(persistedParticipation.getCost().getId());
+         this.costProcessingService.updateCostTotalFromParticipation(persistedParticipation.getCost().getId());
       }
       return persistedParticipation;
    }
@@ -31,7 +31,7 @@ public class StakesProcessingService {
    public Participation processEdit(Participation participation, boolean isUpdateCost) {
       Participation persistedParticipation = this.participationService.update(participation.getId(), participation);
       if (isUpdateCost) {
-         this.costProcessingService.updateCostTotalFromStakes(persistedParticipation.getCost().getId());
+         this.costProcessingService.updateCostTotalFromParticipation(persistedParticipation.getCost().getId());
       }
       return persistedParticipation;
    }
@@ -41,7 +41,7 @@ public class StakesProcessingService {
       Participation persistedParticipation = this.participationService.findById(id);
       this.participationService.delete(id);
       if (isUpdateCost) {
-         this.costProcessingService.updateCostTotalFromStakes(persistedParticipation.getCost().getId());
+         this.costProcessingService.updateCostTotalFromParticipation(persistedParticipation.getCost().getId());
       }
    }
 }

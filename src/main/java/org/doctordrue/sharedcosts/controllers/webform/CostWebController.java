@@ -1,5 +1,8 @@
 package org.doctordrue.sharedcosts.controllers.webform;
 
+import java.time.LocalDateTime;
+import java.util.Objects;
+
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostService;
 import org.doctordrue.sharedcosts.business.services.processing.CostProcessingService;
 import org.doctordrue.sharedcosts.data.entities.Cost;
@@ -9,13 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * @author Andrey_Barantsev
@@ -80,7 +85,7 @@ public class CostWebController {
    public RedirectView recalculate(@PathVariable("id") Long id, @RequestParam("from") String from) {
       switch (from) {
          case "participation":
-            this.costProcessingService.updateCostTotalFromStakes(id);
+            this.costProcessingService.updateCostTotalFromParticipation(id);
             break;
          case "payments":
          default:

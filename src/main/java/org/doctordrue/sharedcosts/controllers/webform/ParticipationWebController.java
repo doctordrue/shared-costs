@@ -1,6 +1,6 @@
 package org.doctordrue.sharedcosts.controllers.webform;
 
-import org.doctordrue.sharedcosts.business.services.processing.StakesProcessingService;
+import org.doctordrue.sharedcosts.business.services.processing.ParticipationProcessingService;
 import org.doctordrue.sharedcosts.data.entities.Participation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,13 +20,13 @@ import org.springframework.web.servlet.view.RedirectView;
 public class ParticipationWebController {
 
    @Autowired
-   private StakesProcessingService stakesProcessingService;
+   private ParticipationProcessingService participationProcessingService;
 
    @PostMapping("/add")
    public RedirectView add(@PathVariable("cost_id") Long costId,
                            @RequestParam(value = "recalculate_cost", required = false, defaultValue = "false") boolean updateCost,
                            @ModelAttribute("participation") Participation participation) {
-      this.stakesProcessingService.processNew(participation, updateCost);
+      this.participationProcessingService.processNew(participation, updateCost);
       return new RedirectView("/costs/" + costId);
    }
 
@@ -35,7 +35,7 @@ public class ParticipationWebController {
                             @PathVariable("id") Long id,
                             @RequestParam(value = "recalculate_cost", required = false, defaultValue = "false") Boolean updateCost,
                             @ModelAttribute("participation") Participation participation) {
-      this.stakesProcessingService.processEdit(participation, updateCost);
+      this.participationProcessingService.processEdit(participation, updateCost);
       return new RedirectView("/costs/" + costId);
    }
 
@@ -43,7 +43,7 @@ public class ParticipationWebController {
    public RedirectView delete(@PathVariable("cost_id") Long costId,
                               @PathVariable("id") Long id,
                               @RequestParam(value = "recalculate_cost", required = false, defaultValue = "false") Boolean updateCost) {
-      this.stakesProcessingService.processDelete(id, updateCost);
+      this.participationProcessingService.processDelete(id, updateCost);
       return new RedirectView("/costs/" + costId);
    }
 }

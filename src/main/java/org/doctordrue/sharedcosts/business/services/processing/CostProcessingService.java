@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.doctordrue.sharedcosts.business.model.processing.CostProcessingResult;
-import org.doctordrue.sharedcosts.business.model.processing.CostSplitProcessingInputData;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CurrencyService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.GroupService;
@@ -55,7 +54,7 @@ public class CostProcessingService {
       double participationAmount = cost.getTotal() / persons.size();
       List<Participation> participations = persons.stream()
               .map(person -> new Participation()
-                      .setName(String.format("1/%s of %s", persons.size(), cost.getName()))
+                      .setName(String.format("%s, 1/%s", cost.getName(), persons.size()))
                       .setCost(cost)
                       .setPerson(person)
                       .setAmount(participationAmount))
@@ -97,17 +96,6 @@ public class CostProcessingService {
               .setPayments(payments);
    }
 
-   public CostProcessingResult processCost(CostSplitProcessingInputData data) {
-      return this.processCost(
-              data.getName(),
-              data.getCostGroupId(),
-              data.getCurrencyShortName(),
-              data.getAmount(),
-              data.getStakeholdersIds(),
-              data.getPayersIds(),
-              data.getTimestamp());
-   }
-
    public void updateCostTotalFromPayments(Long costId) {
       Cost cost = this.costService.findById(costId);
       Double paymentsTotal = this.paymentService.findAllByCostId(costId).stream()
@@ -117,7 +105,7 @@ public class CostProcessingService {
       this.costService.update(costId, cost);
    }
 
-   public void updateCostTotalFromStakes(Long costId) {
+   public void updateCostTotalFromParticipation(Long costId) {
       Cost cost = this.costService.findById(costId);
       Double stakesTotal = this.participationService.findAllByCostId(costId).stream()
               .mapToDouble(Participation::getAmount)
