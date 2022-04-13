@@ -44,8 +44,13 @@ public class CostWebController {
               .mapToDouble(Payment::getAmount)
               .sum();
 
-      Payment newPayment = new Payment().setCost(cost).setAmount(paymentLeft);
-      Participation newParticipation = new Participation().setCost(cost).setAmount(participationLeft);
+      Payment newPayment = new Payment()
+              .setName(String.format("%s payment", cost.getName()))
+              .setCost(cost)
+              .setAmount(paymentLeft);
+      Participation newParticipation = new Participation()
+              .setCost(cost)
+              .setAmount(participationLeft);
 
       model.addAttribute("cost", cost);
       model.addAttribute("new_payment", newPayment);

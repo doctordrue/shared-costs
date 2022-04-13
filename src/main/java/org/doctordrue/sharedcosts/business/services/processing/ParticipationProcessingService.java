@@ -44,4 +44,8 @@ public class ParticipationProcessingService {
          this.costProcessingService.updateCostTotalFromParticipation(persistedParticipation.getCost().getId());
       }
    }
+
+   public void split() {
+
+   }
 }

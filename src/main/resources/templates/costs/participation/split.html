@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="|Split item for: ${cost.name}|">{cost name}</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
+</head>
+<body>
+<h3>
+    Split item participation
+</h3>
+<div class="container">
+    <form action="#" th:action="@{/costs/{cost_id}/participation/split(cost_id=${cost.id})}" th:method="post" th:object="${split}">
+        <input th:field="*{name}" required placeholder="Item name">
+        <input type="number" min="0.00" max="9999.99" step="0.01" th:field="*{amount}" required>
+        <label th:for="amount" th:text="${cost.currency.shortName}">{CUR}</label>
+        <select th:field="*{people}" multiple required>
+            <option th:each="person : ${cost.group.participants}"
+                    th:text="${person.fullName}"
+                    th:value="${person.id}">{full name}
+            </option>
+        </select>
+        <button type="submit">Add</button>
+    </form>
+</div>
+
+</body>
+</html>

@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.6.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'org.flywaydb.flyway' version '8.5.7'
 }
 
 group = 'org.doctordrue'
@@ -37,4 +38,11 @@ tasks.named("bootBuildImage") {
 task bootBuildImageAndRun {
     group 'application'
     description 'Build Spring Boot docker image & run using docker-compose file'
+}
+
+flyway {
+    driver = 'org.postgresql.Driver'
+    url = "jdbc:postgresql://localhost:5432/postgres"
+    user = 'postgres'
+    password = 'root'
 }

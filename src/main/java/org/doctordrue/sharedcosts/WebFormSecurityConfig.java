@@ -35,6 +35,10 @@ public class WebFormSecurityConfig extends WebSecurityConfigurerAdapter {
    @Override
    protected void configure(HttpSecurity http) throws Exception {
       http.csrf().disable()
+              .headers().frameOptions().disable().and()
+              .authorizeRequests()
+              .antMatchers("/h2-console/**").permitAll()
+              .and()
               .authorizeRequests()
               .antMatchers("/api/**").permitAll()
               .antMatchers("/", "/styles/**").permitAll()
