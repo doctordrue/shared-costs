@@ -105,7 +105,7 @@
                 <td>
                     <select th:field="*{person.id}">
                         <option th:each="person : ${cost.group.participants}" th:value="${person.id}"
-                                th:text="${person.firstName} + ' ' + ${person.lastName}">{firstName} {lastName}
+                                th:text="${person.fullName}">{firstName} {lastName}
                         </option>
                     </select>
                 </td>
@@ -179,6 +179,14 @@
                 </td>
                 <td>
                     <button type="submit">Add</button>
+                </td>
+            </form>
+        </tr>
+        <tr>
+            <form th:action="@{/costs/{cost_id}/participation/split(cost_id=${cost.id})}" th:method="get">
+                <td>
+                    <input hidden th:name="amount" th:value="${new_participation.amount}">
+                    <button type="submit">Split</button>
                 </td>
             </form>
         </tr>

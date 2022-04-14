@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.6.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'org.flywaydb.flyway' version '8.5.7'
 }
 
 group = 'org.doctordrue'
@@ -20,6 +21,7 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     implementation 'org.passay:passay:1.6.1'
     runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
@@ -31,4 +33,16 @@ tasks.named('test') {
 tasks.named("bootBuildImage") {
     imageName = "doctordrue/${project.name}"
     verboseLogging = true
+}
+
+task bootBuildImageAndRun {
+    group 'application'
+    description 'Build Spring Boot docker image & run using docker-compose file'
+}
+
+flyway {
+    driver = 'org.postgresql.Driver'
+    url = "jdbc:postgresql://localhost:5432/postgres"
+    user = 'postgres'
+    password = 'root'
 }
