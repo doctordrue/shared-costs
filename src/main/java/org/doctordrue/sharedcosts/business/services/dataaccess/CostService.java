@@ -6,6 +6,7 @@ import java.util.List;
 import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.repositories.CostRepository;
 import org.doctordrue.sharedcosts.exceptions.BaseException;
+import org.doctordrue.sharedcosts.exceptions.cost.CostNotFoundException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,7 +85,7 @@ public class CostService {
    }
 
    private BaseException generateNotFoundByIdException(Long id) {
-      return new BaseException("CS002", "Cost not found for id = " + id);
+      return new CostNotFoundException(id);
    }
 
    private void setDateTimeIfNull(Cost cost) {

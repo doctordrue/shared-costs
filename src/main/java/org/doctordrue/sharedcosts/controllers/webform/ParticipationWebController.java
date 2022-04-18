@@ -1,6 +1,6 @@
 package org.doctordrue.sharedcosts.controllers.webform;
 
-import org.doctordrue.sharedcosts.business.model.webform.Split;
+import org.doctordrue.sharedcosts.business.model.webform.processing.SplitInputData;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostService;
 import org.doctordrue.sharedcosts.business.services.processing.ParticipationProcessingService;
 import org.doctordrue.sharedcosts.data.entities.Cost;
@@ -37,14 +37,14 @@ public class ParticipationWebController {
                                  Model model) {
       Cost cost = this.costService.findById(costId);
       model.addAttribute("cost", cost);
-      model.addAttribute("split", new Split().setAmount(amount));
+      model.addAttribute("split", new SplitInputData().setAmount(amount));
       return new ModelAndView("/costs/participation/split", model.asMap());
    }
 
    @PostMapping("/split")
    public RedirectView addSplit(@PathVariable("cost_id") Long costId,
                                 @RequestParam(value = "recalculate_cost", required = false, defaultValue = "false") boolean updateCost,
-                                @ModelAttribute("split") Split split) {
+                                @ModelAttribute("split") SplitInputData split) {
       Cost cost = this.costService.findById(costId);
       int size = split.getPeople().size();
       String name = split.getName();

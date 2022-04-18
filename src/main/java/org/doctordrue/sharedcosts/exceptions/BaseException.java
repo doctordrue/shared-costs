@@ -1,29 +1,42 @@
 package org.doctordrue.sharedcosts.exceptions;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.text.StringSubstitutor;
+
 /**
  * @author Andrey_Barantsev
  * 3/16/2022
  **/
-public class BaseException extends RuntimeException {
+public abstract class BaseException extends RuntimeException {
 
-   private String code;
+   private final String code;
+   private final String template;
+   private final Map<String, Object> parameters = new HashMap<>();
 
-   public BaseException(String code){
-      this.code = code;
+   public BaseException(IErrorMessage errorMessage) {
+      this.code = errorMessage.getCode();
+      this.template = errorMessage.getTemplate();
    }
 
-   public BaseException(String code, String message) {
-      super(message);
-      this.code = code;
+   public BaseException(IErrorMessage errorMessage, Throwable cause) {
+      super(cause);
+      this.code = errorMessage.getCode();
+      this.template = errorMessage.getTemplate();
    }
 
-   public BaseException(String code, String message, Throwable cause) {
-      super(message, cause);
-      this.code = code;
+   public void setParameter(String name, Object value) {
+      parameters.put(name, value);
    }
 
    @Override
    public String getMessage() {
-      return code + ":" + super.getMessage();
+      StringSubstitutor sub = new StringSubstitutor(this.parameters);
+      String message = this.code + ": " + sub.replace(this.template);
+      if (this.getCause() != null) {
+         message += " caused by " + this.getCause().toString();
+      }
+      return message;
    }
 }

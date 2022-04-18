@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.doctordrue.sharedcosts.data.entities.Payment;
 import org.doctordrue.sharedcosts.data.repositories.PaymentRepository;
 import org.doctordrue.sharedcosts.exceptions.BaseException;
+import org.doctordrue.sharedcosts.exceptions.payment.PaymentNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -67,6 +68,6 @@ public class PaymentService {
    }
 
    private BaseException generateNotFoundByIdException(Long id) {
-      return new BaseException("CS004", "Payment not found for id = " + id);
+      return new PaymentNotFoundException(id);
    }
 }

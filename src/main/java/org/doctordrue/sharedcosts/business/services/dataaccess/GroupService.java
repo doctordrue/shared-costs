@@ -8,6 +8,7 @@ import org.doctordrue.sharedcosts.data.entities.Group;
 import org.doctordrue.sharedcosts.data.entities.Person;
 import org.doctordrue.sharedcosts.data.repositories.GroupRepository;
 import org.doctordrue.sharedcosts.exceptions.BaseException;
+import org.doctordrue.sharedcosts.exceptions.group.GroupNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -100,6 +101,6 @@ public class GroupService {
    }
 
    private BaseException generateNotFoundByIdException(Long id) {
-      return new BaseException("CS003", "Costs group is not found for id = " + id);
+      return new GroupNotFoundException(id);
    }
 }
