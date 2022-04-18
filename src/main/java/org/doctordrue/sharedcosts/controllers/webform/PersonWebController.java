@@ -1,6 +1,11 @@
 package org.doctordrue.sharedcosts.controllers.webform;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.doctordrue.sharedcosts.business.services.dataaccess.PersonService;
+import org.doctordrue.sharedcosts.business.services.people.PeopleSelfService;
 import org.doctordrue.sharedcosts.data.entities.Person;
 import org.doctordrue.sharedcosts.data.entities.enums.RoleType;
 import org.doctordrue.sharedcosts.utils.PasswordGeneratorUtil;
@@ -9,14 +14,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Andrey_Barantsev
@@ -25,8 +30,11 @@ import java.util.stream.Stream;
 @Controller
 @RequestMapping("/persons")
 public class PersonWebController {
+
    @Autowired
    private PersonService personService;
+   @Autowired
+   private PeopleSelfService peopleSelfService;
 
    @GetMapping
    @PostMapping
@@ -58,7 +66,7 @@ public class PersonWebController {
       //TODO: move logic to service layer
       String tempPassword = PasswordGeneratorUtil.generate();
       person.setPassword(tempPassword);
-      if (!personService.register(person)) {
+      if (!this.peopleSelfService.register(person)) {
          model.addFlashAttribute("error", "User with e-mail " + person.getEmail() + " already exists. Please change!");
          return new RedirectView("/persons");
       }

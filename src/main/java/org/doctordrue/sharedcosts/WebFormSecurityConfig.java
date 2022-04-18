@@ -20,13 +20,10 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 @Configuration
 @EnableWebSecurity
 public class WebFormSecurityConfig extends WebSecurityConfigurerAdapter {
-
    @Autowired
    private PasswordEncoder encoder;
-
    @Autowired
    private PersonService personService;
-
    @Bean
    public PersistentTokenRepository persistentTokenRepository(){
       return new InMemoryTokenRepositoryImpl();
@@ -44,6 +41,7 @@ public class WebFormSecurityConfig extends WebSecurityConfigurerAdapter {
               .antMatchers("/", "/styles/**").permitAll()
               .antMatchers("/register").not().fullyAuthenticated()
               .antMatchers("/persons/**", "/currency/**").hasRole(RoleType.ADMIN.name())
+              .antMatchers("/self").hasAnyRole(RoleType.ADMIN.name(), RoleType.USER.name())
               .antMatchers("/**").fullyAuthenticated()
               .anyRequest().authenticated()
               .and()

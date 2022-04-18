@@ -20,8 +20,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     implementation 'org.passay:passay:1.6.1'
+    implementation 'org.apache.commons:commons-text:1.9'
     runtimeOnly 'com.h2database:h2'
-    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'org.postgresql:postgresql:42.3.3'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
@@ -31,8 +32,12 @@ tasks.named('test') {
 }
 
 tasks.named("bootBuildImage") {
-    imageName = "doctordrue/${project.name}"
-    verboseLogging = true
+    imageName = "docker.io/doctordrue/${project.name}:${project.version}"
+    builder = 'paketobuildpacks/builder:tiny'
+    buildpacks = ["gcr.io/paketo-buildpacks/azul-zulu", "gcr.io/paketo-buildpacks/java"]
+    environment = [
+            "BPE_APPEND_JAVA_TOOL_OPTIONS": " -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"]
+    verboseLogging = false
 }
 
 task bootBuildImageAndRun {

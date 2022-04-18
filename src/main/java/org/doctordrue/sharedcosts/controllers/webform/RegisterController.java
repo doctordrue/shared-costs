@@ -1,6 +1,6 @@
 package org.doctordrue.sharedcosts.controllers.webform;
 
-import org.doctordrue.sharedcosts.business.services.dataaccess.PersonService;
+import org.doctordrue.sharedcosts.business.services.people.PeopleSelfService;
 import org.doctordrue.sharedcosts.data.entities.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,8 +21,9 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 @RequestMapping("/register")
 public class RegisterController {
+
    @Autowired
-   private PersonService personService;
+   private PeopleSelfService peopleSelfService;
 
    @GetMapping
    public ModelAndView viewRegister(Model model) {
@@ -36,7 +37,7 @@ public class RegisterController {
          model.addAttribute("error", "There are some errors in form, please validate.");
          return this.viewRegister(model);
       }
-      if (!personService.register(person)){
+      if (!this.peopleSelfService.register(person)) {
          model.addAttribute("error", "User with e-mail " + person.getEmail() + " already exists. Please change!");
          return this.viewRegister(model);
       }

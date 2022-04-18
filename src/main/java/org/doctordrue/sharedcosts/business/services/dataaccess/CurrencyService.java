@@ -4,12 +4,10 @@ import java.util.List;
 
 import org.doctordrue.sharedcosts.data.entities.Currency;
 import org.doctordrue.sharedcosts.data.repositories.CurrencyRepository;
-import org.doctordrue.sharedcosts.exceptions.BaseException;
+import org.doctordrue.sharedcosts.exceptions.currency.CurrencyNotFoundException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import com.sun.istack.NotNull;
 
 /**
  * @author Andrey_Barantsev
@@ -34,7 +32,7 @@ public class CurrencyService {
    public Currency findByShortName(String currencyType) {
       Currency probe = new Currency();
       probe.setShortName(currencyType);
-      return this.currencyRepository.findOne(Example.of(probe)).orElseThrow(() -> new BaseException("CS001", "Currency not found for short_name = " + currencyType));
+      return this.currencyRepository.findOne(Example.of(probe)).orElseThrow(() -> new CurrencyNotFoundException(currencyType));
    }
 
    public Currency create(Currency currency) {
@@ -43,7 +41,7 @@ public class CurrencyService {
 
    public Currency updateById(Long id, Currency newData) {
       if (!this.currencyRepository.existsById(id)) {
-         throw new BaseException("CS001", "Currency not found for id = " + id);
+         throw new CurrencyNotFoundException(id);
       }
       return this.currencyRepository.save(newData);
    }
@@ -51,7 +49,7 @@ public class CurrencyService {
    public Currency updateByShortName(String shortName, Currency newData) {
       Currency probe = new Currency().setShortName(shortName);
       Currency existingData = this.currencyRepository.findOne(Example.of(probe))
-              .orElseThrow(() -> new BaseException("CS001", "Currency not found for short_name = " + shortName));
+              .orElseThrow(() -> new CurrencyNotFoundException(shortName));
       newData.setId(existingData.getId());
       if (newData.getShortName() == null) {
          newData.setShortName(shortName);

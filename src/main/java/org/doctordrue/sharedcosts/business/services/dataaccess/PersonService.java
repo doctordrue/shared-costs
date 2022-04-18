@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.doctordrue.sharedcosts.data.entities.Person;
-import org.doctordrue.sharedcosts.data.entities.enums.RoleType;
 import org.doctordrue.sharedcosts.data.repositories.PersonRepository;
 import org.doctordrue.sharedcosts.exceptions.BaseException;
+import org.doctordrue.sharedcosts.exceptions.people.PersonAlreadyExistsException;
+import org.doctordrue.sharedcosts.exceptions.people.PersonNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsPasswordService;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
  * 3/16/2022
  **/
 @Service
+@Secured("ROLE_ADMIN")
 public class PersonService implements UserDetailsService, UserDetailsPasswordService {
 
    @Autowired
@@ -56,27 +59,17 @@ public class PersonService implements UserDetailsService, UserDetailsPasswordSer
       return this.personRepository.save(person);
    }
 
-   public boolean register(Person person) {
-      Person persistedPerson = this.findByEmail(person.getEmail());
-      if (persistedPerson != null) {
-         return false;
-      }
-      if (person.getRole() == null) {
-         person.setRole(RoleType.USER);
-      }
-      person.setPassword(encoder().encode(person.getPassword()));
-      this.create(person);
-      return true;
-   }
-
-   public Person update(Long id, Person person) {
+   public Person update(Long id, Person updatePerson) {
       assumeExists(id);
-      if (person.getPassword() == null) {
-         Person persistedPerson = this.findById(id);
-         person.setPassword(persistedPerson.getPassword());
+      Person persistedPerson = this.findById(id);
+      if (updatePerson.getPassword() == null) {
+         updatePerson.setPassword(persistedPerson.getPassword());
       }
-      person.setId(id);
-      return this.personRepository.save(person);
+      if (!persistedPerson.getEmail().equals(updatePerson.getEmail()) && this.personRepository.existsByEmailIgnoreCase(updatePerson.getEmail())) {
+         throw new PersonAlreadyExistsException(updatePerson.getEmail());
+      }
+      updatePerson.setId(id);
+      return this.personRepository.save(updatePerson);
    }
 
    public void delete(Long id) {
@@ -85,7 +78,7 @@ public class PersonService implements UserDetailsService, UserDetailsPasswordSer
    }
 
    @Override
-   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+   public Person loadUserByUsername(String email) throws UsernameNotFoundException {
       Person person = this.findByEmail(email);
       if (person == null) {
          throw new UsernameNotFoundException("User not found for email = " + email);
@@ -94,14 +87,14 @@ public class PersonService implements UserDetailsService, UserDetailsPasswordSer
    }
 
    @Override
-   public UserDetails updatePassword(UserDetails user, String newPassword) {
+   public Person updatePassword(UserDetails user, String newPassword) {
       Person persistedPerson = this.findByEmail(user.getUsername());
       persistedPerson.setPassword(encoder().encode(newPassword));
       return this.update(persistedPerson.getId(), persistedPerson);
    }
 
    private BaseException generateNotFoundByIdException(Long id) {
-      return new BaseException("SC005", "Person not found for id = " + id);
+      return new PersonNotFoundException(id);
    }
 
    private void assumeExists(Long id) {

@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit my data</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
+</head>
+<body>
+<h3>Edit my data</h3>
+<div class="container">
+    <h4>Update my data</h4>
+    <div class="message error" th:if="${updateError}" th:text="${updateError}">{updateError}</div>
+    <form action="#" th:action="@{/self}" th:object="${data}" th:method="post">
+        <input type="email" th:name="email" th:value="${person.username}" placeholder="E-mail">
+        <input th:name="firstName" th:value="${person.firstName}" placeholder="First name">
+        <input th:name="lastName" th:value="${person.lastName}" placeholder="Last name">
+        <input type="tel" th:name="phoneNumber" th:value="${person.phoneNumber}" placeholder="Phone number">
+        <button type="submit">Save</button>
+    </form>
+</div>
+<div class="container">
+    <h4>Update password</h4>
+    <div class="message error" th:if="${passwordError}" th:text="${passwordError}">{passwordError}</div>
+    <form action="#" th:action="@{/self/password}" th:object="${password}" th:method="post">
+        <input type="password" th:field="*{old}" placeholder="Old password">
+        <input type="password" th:field="*{updated}" placeholder="New password">
+        <input type="password" th:field="*{confirm}" placeholder="Confirm new password">
+        <button type="submit">Update</button>
+    </form>
+</div>
+<div class="footer">
+    <p>
+        Return to <a href="#" th:href="@{/}">start page...</a>
+    </p>
+</div>
+
+</body>
+</html>

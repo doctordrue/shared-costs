@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.doctordrue.sharedcosts.data.entities.Participation;
 import org.doctordrue.sharedcosts.data.repositories.ParticipationRepository;
 import org.doctordrue.sharedcosts.exceptions.BaseException;
+import org.doctordrue.sharedcosts.exceptions.participation.ParticipationNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,6 +66,6 @@ public class ParticipationService {
    }
 
    private BaseException generateNotFoundByIdException(Long id) {
-      return new BaseException("SC200", "Stake not found for id = " + id);
+      return new ParticipationNotFoundException(id);
    }
 }
