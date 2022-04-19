@@ -13,10 +13,13 @@ import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.entities.Currency;
 import org.doctordrue.sharedcosts.data.entities.Group;
 import org.doctordrue.sharedcosts.data.entities.Person;
+import org.doctordrue.sharedcosts.exceptions.group.BaseGroupServiceException;
+import org.doctordrue.sharedcosts.exceptions.group.UnableToDeleteParticipantException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 /**
@@ -67,13 +71,13 @@ public class GroupWebController {
 
    @PostMapping("/{id}/participants/add")
    public RedirectView addParticipant(@PathVariable("id") Long id, @ModelAttribute("participant") Person participant) {
-      this.groupService.addParticipant(id, participant.getId());
+      this.groupService.addParticipant(id, participant.getEmail());
       return new RedirectView("/groups/" + id);
    }
 
    @PostMapping("/{id}/participants/delete")
    public RedirectView deleteParticipant(@PathVariable("id") Long id, @ModelAttribute("participant") Person participant) {
-      this.groupService.deleteParticipant(id, participant.getId());
+      this.groupService.deleteParticipant(id, participant.getEmail());
       return new RedirectView("/groups/" + id);
    }
 
@@ -104,6 +108,15 @@ public class GroupWebController {
          this.groupService.delete(id);
       } else {
          this.groupService.deleteRecursively(id);
+      }
+      return new RedirectView("/groups");
+   }
+
+   @ExceptionHandler(BaseGroupServiceException.class)
+   public RedirectView handle(RedirectAttributes attributes, BaseGroupServiceException exception) {
+      if (exception instanceof UnableToDeleteParticipantException) {
+         attributes.addFlashAttribute("participantsError", exception.getLocalizedMessage());
+         return new RedirectView("/groups/" + ((UnableToDeleteParticipantException) exception).getGroupId());
       }
       return new RedirectView("/groups");
    }

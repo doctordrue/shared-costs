@@ -56,6 +56,7 @@
 </div>
 <div class="container">
     <h4>Participants</h4>
+    <div class="message error" th:if="${participantsError}" th:text="${participantsError}">{error}</div>
     <table>
         <tr>
             <th>Name</th>
@@ -65,7 +66,7 @@
             <form th:action="@{/groups/{id}/participants/delete(id=${group.id})}" th:method="post" th:object="${participant}">
                 <td>
                     <input disabled readonly th:value="*{fullName}">
-                    <input hidden th:value="*{id}" th:name="id">
+                    <input hidden th:value="*{email}" th:name="email">
                 </td>
                 <td>
                     <button type="submit">Delete</button>
@@ -76,8 +77,8 @@
         <tr>
             <form th:unless="${candidates.empty}" th:action="@{/groups/{id}/participants/add(id=${group.id})}" th:method="post" th:object="${participant}">
                 <td>
-                    <select th:field="*{id}">
-                        <option th:each="candidate : ${candidates}" th:text="${candidate.fullName}" th:value="${candidate.id}">{firstName} {lastName}</option>
+                    <select th:field="*{email}">
+                        <option th:each="candidate : ${candidates}" th:text="${candidate.fullName}" th:value="${candidate.email}">{firstName} {lastName}</option>
                     </select>
                 </td>
                 <td>

@@ -1,6 +1,7 @@
 package org.doctordrue.sharedcosts.business.services.dataaccess;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.doctordrue.sharedcosts.data.entities.Cost;
@@ -9,8 +10,12 @@ import org.doctordrue.sharedcosts.data.entities.Person;
 import org.doctordrue.sharedcosts.data.repositories.GroupRepository;
 import org.doctordrue.sharedcosts.exceptions.BaseException;
 import org.doctordrue.sharedcosts.exceptions.group.GroupNotFoundException;
+import org.doctordrue.sharedcosts.exceptions.group.UnableToDeleteParticipantException;
+import org.doctordrue.sharedcosts.exceptions.people.PersonNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
  **/
 @Service
 public class GroupService {
-
    @Autowired
    private GroupRepository groupRepository;
    @Autowired
@@ -28,6 +32,7 @@ public class GroupService {
    @Autowired
    private PersonService personService;
 
+   @PostFilter("hasRole('ADMIN') or filterObject.isParticipated(principal.username)")
    public List<Group> findAll() {
       return this.groupRepository.findAll();
    }
@@ -59,17 +64,33 @@ public class GroupService {
       return this.groupRepository.save(group);
    }
 
-   public Group addParticipant(Long id, Long personId) {
+   public Group addParticipant(Long id, String username) {
       Group persistedGroup = this.findById(id);
-      Person person = this.personService.findById(personId);
+      Person person = this.personService.findByEmail(username);
+      if (person == null) {
+         throw new PersonNotFoundException(username);
+      }
       persistedGroup.getParticipants().add(person);
       return this.groupRepository.save(persistedGroup);
    }
 
-   public Group deleteParticipant(Long id, Long personId) {
+   @PreAuthorize("hasRole('ADMIN') or authentication.principal.username.equals(#username)")
+   public Group deleteParticipant(Long id, String username) {
       Group persistedGroup = this.findById(id);
-      persistedGroup.getParticipants().removeIf(p -> p.getId().equals(personId));
-      return this.groupRepository.save(persistedGroup);
+      Person persistedPerson = this.personService.findByEmail(username);
+      if (canDelete(persistedGroup, username)) {
+         persistedGroup.getParticipants().removeIf(persistedPerson::equals);
+         return this.groupRepository.save(persistedGroup);
+      } else {
+         throw new UnableToDeleteParticipantException(persistedGroup.getId(), persistedPerson);
+      }
+   }
+
+   private boolean canDelete(Group group, String username) {
+      return group.getCosts().stream()
+              .noneMatch(c ->
+                      c.getPayments().stream().anyMatch(p -> Objects.equals(p.getPerson().getUsername(), username)) ||
+                              c.getParticipations().stream().anyMatch(p -> Objects.equals(p.getPerson().getUsername(), username)));
    }
 
    public List<Person> findPeopleToParticipateIn(Group group) {
