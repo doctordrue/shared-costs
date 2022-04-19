@@ -11,6 +11,11 @@ public class PersonNotFoundException extends BasePersonServiceException {
       setParameter("id", id);
    }
 
+   public PersonNotFoundException(String username) {
+      super(PeopleError.NOT_FOUND_BY_USERNAME);
+      setParameter("username", username);
+   }
+
    @Override
    public String getMessage() {
       return super.getMessage();

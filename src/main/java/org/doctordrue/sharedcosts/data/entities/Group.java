@@ -121,4 +121,8 @@ public class Group {
       this.costs = costs;
       return this;
    }
+
+   public boolean isParticipated(String username) {
+      return this.participants.stream().anyMatch(p -> p.getEmail().equals(username));
+   }
 }

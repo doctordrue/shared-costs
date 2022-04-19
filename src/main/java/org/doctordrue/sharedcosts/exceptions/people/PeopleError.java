@@ -8,6 +8,7 @@ import org.doctordrue.sharedcosts.exceptions.IErrorMessage;
  **/
 public enum PeopleError implements IErrorMessage {
    NOT_FOUND_BY_ID("PRSN-001", "Person not found for id=${id}"),
+   NOT_FOUND_BY_USERNAME("PRSN-002", "Person not found for username=${username}"),
    ALREADY_EXISTS("PRSN-002", "Person already exists: ${username}"),
    PASSWORD_NOT_ACCEPTED("PRSN-003", "Current password is not accepted"),
    PASSWORD_NOT_CONFIRMED("PRSN-004", "New password and confirmation is not equal");

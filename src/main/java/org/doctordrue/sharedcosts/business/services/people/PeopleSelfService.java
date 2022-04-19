@@ -42,12 +42,12 @@ public class PeopleSelfService {
       return this.personService.update(id, updatedPerson);
    }
 
-   @PreAuthorize("authentication.prinicipal.username.equals(#username)")
+   @PreAuthorize("authentication.principal.username.equals(#username)")
    public Person load(String username) {
       return this.personService.loadUserByUsername(username);
    }
 
-   @PreAuthorize("authentication.prinicipal.username.equals(#username)")
+   @PreAuthorize("authentication.principal.username.equals(#username)")
    public Person passwordUpdate(String username, PasswordUpdateInputData password) {
       if (!password.getUpdated().equals(password.getConfirm())) {
          throw new PasswordNotConfirmedException();
