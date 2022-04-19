@@ -1,8 +1,8 @@
 # shared-costs
 Web application to calculate costs for some group of people who spends money together. Note that this is may pet-project to learn Spring
 
-h3. Deployment
-h4. Docker
+## Deployment
+### Docker
 1. Build an image using spring-boot gradle plugin task (Docker should be installed & run on your host):
 ```sh
 ./gradlew bootBuildImage 
