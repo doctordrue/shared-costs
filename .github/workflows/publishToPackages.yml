@@ -40,7 +40,7 @@ jobs:
         run: chmod +x gradlew
         
       - name: Execute Gradle build
-        run: ./gradlew bootBuildImage
+        run: ./gradlew bootBuildImage --imageName=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Push Docker image
-        run: docker push ${{ env.IMAGE_NAME }}
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
