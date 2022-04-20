@@ -2,8 +2,8 @@ services:
   back:
     image: docker.io/doctordrue/shared-costs:1.0-alpha
     ports:
-      - "80:8080"
-      - "5005:5005"
+      - "80:8080"   # Application exposed
+      - "5005:5005" # Java Remote debug
     depends_on:
       - db
     restart: always

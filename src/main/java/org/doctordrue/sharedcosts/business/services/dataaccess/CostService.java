@@ -8,6 +8,8 @@ import org.doctordrue.sharedcosts.data.repositories.CostRepository;
 import org.doctordrue.sharedcosts.exceptions.BaseException;
 import org.doctordrue.sharedcosts.exceptions.cost.CostNotFoundException;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,14 +30,17 @@ public class CostService {
       this.paymentService = paymentService;
    }
 
+   @PostFilter("hasRole('ADMIN') or filterObject.group.isParticipated(principal.username)")
    public List<Cost> findAll() {
       return this.costRepository.findAll(Sort.by("costDateTime"));
    }
 
+   @PostAuthorize("hasRole('ADMIN') or returnObject.group.isParticipated(principal.username)")
    public Cost findById(Long id) {
       return this.costRepository.findById(id).orElseThrow(() -> generateNotFoundByIdException(id));
    }
 
+   @PostFilter("hasRole('ADMIN') or filterObject.group.isParticipated(principal.username)")
    public List<Cost> findAllByGroupId(Long groupId) {
       return this.costRepository.findByGroupId(groupId);
    }
