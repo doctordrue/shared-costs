@@ -61,7 +61,7 @@ jobs:
         if: github.event_name == 'release'
         run: echo "Get version from Release"
         env: 
-          IMAGE_TAG: ${{ release.tag_name }}
+          IMAGE_TAG: ${{ github.event.release.tag_name }}
           
       - name: Print tag
         run: echo "Tag is $IMAGE_TAG"
@@ -74,10 +74,10 @@ jobs:
 
       - name: Push Docker image to github containers repo
         run: |
-          docker image tag ${{ env.IMAGE_NAME }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
+          docker image tag ${{ env.IMAGE_NAME }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ IMAGE_TAG }}
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         
       - name: Push Docker image to Docker Hub
         run: | 
-          docker image tag ${{ env.IMAGE_NAME }} docker.io/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
+          docker image tag ${{ env.IMAGE_NAME }} docker.io/${{ env.IMAGE_NAME }}:${{ IMAGE_TAG }}
           docker push docker.io/${{ env.IMAGE_NAME }}
