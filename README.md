@@ -13,5 +13,5 @@ docker compose up -d
 ```
 3. Stop application server
 ```
-docker down
+docker compose down
 ```
