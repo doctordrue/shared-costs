@@ -54,11 +54,11 @@ jobs:
         
       - name: Prepare image tag from Gradle project version
         if: github.event_name == 'workflow_dispatch'
-        run: echo ::set-output name=IMAGE_TAG::${{ steps.version.outputs.version }}
+        run: echo ::set-env name=IMAGE_TAG::${{ steps.version.outputs.version }}
       
       - name: Prepare image tag from GitHub Release
         if: github.event_name == 'release'
-        run: echo ::set-output name=IMAGE_TAG::${{ github.event.release.tag_name }}
+        run: echo ::set-env name=IMAGE_TAG::${{ github.event.release.tag_name }}
           
       - name: Print tag
         run: echo "Tag is $IMAGE_TAG"
