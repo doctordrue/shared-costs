@@ -49,7 +49,11 @@ jobs:
         run: ./gradlew bootBuildImage --imageName=${{ env.IMAGE_NAME }}
 
       - name: Push Docker image to github containers repo
-        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        run: |
+          docker image tag ${{ env.IMAGE_NAME }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         
       - name: Push Docker image to Docker Hub
-        run: docker push docker.io/${{ env.IMAGE_NAME }}
+        run: | 
+          docker image tag ${{ env.IMAGE_NAME }} docker.io/${{ env.IMAGE_NAME }}
+          docker push docker.io/${{ env.IMAGE_NAME }}
