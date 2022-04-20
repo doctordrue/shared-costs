@@ -53,15 +53,20 @@ jobs:
         run: 'echo version ${{ github.event.release.tag_name }}'
         
       - name: Prepare image tag from Gradle project version
+        id: tag-gradle
         if: github.event_name == 'workflow_dispatch'
-        run: echo ::set-env name=IMAGE_TAG::${{ steps.version.outputs.version }}
+        run: echo ::set-output name=name::${{ steps.version.outputs.version }}
       
       - name: Prepare image tag from GitHub Release
+        id: tag-release
         if: github.event_name == 'release'
-        run: echo ::set-env name=IMAGE_TAG::${{ github.event.release.tag_name }}
+        run: echo ::set-output name=name::${{ github.event.release.tag_name }}
           
       - name: Print tag
-        run: echo "Tag is $IMAGE_TAG"
+        id: tag
+        run: |
+          echo ::set-output name=IMAGE_TAG::${{ steps.tag-gradle.name == '' ? steps.tag-gradle.name : steps.tag-release.name }}
+          echo "Tag is ${{ step.tag.IMAGE_TAG}}"
       
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -71,10 +76,10 @@ jobs:
 
       - name: Push Docker image to github containers repo
         run: |
-          docker image tag ${{ env.IMAGE_NAME }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$IMAGE_TAG
+          docker image tag ${{ env.IMAGE_NAME }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ step.tag.IMAGE_TAG }}
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         
       - name: Push Docker image to Docker Hub
         run: | 
-          docker image tag ${{ env.IMAGE_NAME }} docker.io/${{ env.IMAGE_NAME }}:$IMAGE_TAG
+          docker image tag ${{ env.IMAGE_NAME }} docker.io/${{ env.IMAGE_NAME }}:${{ step.tag.IMAGE_TAG }}
           docker push docker.io/${{ env.IMAGE_NAME }}
