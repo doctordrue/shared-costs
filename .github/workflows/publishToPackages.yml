@@ -43,4 +43,4 @@ jobs:
         run: ./gradlew bootBuildImage
 
       - name: Push Docker image
-        run: docker push ${{IMAGE_NAME}}
+        run: docker push ${{ env.IMAGE_NAME }}
