@@ -25,6 +25,7 @@ public class CurrencyService {
    public List<Currency> findAll() {
       return this.currencyRepository.findAll(Sort.by("id"));
    }
+
    public Currency findById(Long id) {
       return this.currencyRepository.getById(id);
    }

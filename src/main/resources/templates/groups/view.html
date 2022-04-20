@@ -7,6 +7,7 @@
 </head>
 <body>
 <h3 th:text="${group.name}">{group name}</h3>
+<div class="message error" th:if="${error}" th:text="${error}">{error}</div>
 <div class="container">
     <form id="formcalculate" action="#" th:action="@{/debts/calculation(group_id=${group.id})}" th:method="get">
         <input form="formcalculate" hidden th:name="group_id" th:value="${group.id}">

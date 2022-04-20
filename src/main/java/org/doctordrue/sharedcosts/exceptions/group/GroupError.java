@@ -8,7 +8,7 @@ import org.doctordrue.sharedcosts.exceptions.IErrorMessage;
  **/
 public enum GroupError implements IErrorMessage {
    NOT_FOUND_BY_ID("GRPS-001", "Group is not found for id=${id}"),
-   CANNOT_DELETE_PARTICIPANT("GRPS-002", "Unable to remove ${fullname} from group participants");
+   PERSON_PARTICIPATED_IN_COSTS("GRPS-002", "Unable to remove ${fullname} from group participants list. Remove from following costs first: ${costs}");
 
    private final String code;
    private final String template;

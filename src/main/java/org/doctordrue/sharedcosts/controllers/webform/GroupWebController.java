@@ -3,9 +3,16 @@ package org.doctordrue.sharedcosts.controllers.webform;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.text.StringSubstitutor;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CurrencyService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.GroupService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.PersonService;
@@ -14,9 +21,10 @@ import org.doctordrue.sharedcosts.data.entities.Currency;
 import org.doctordrue.sharedcosts.data.entities.Group;
 import org.doctordrue.sharedcosts.data.entities.Person;
 import org.doctordrue.sharedcosts.exceptions.group.BaseGroupServiceException;
-import org.doctordrue.sharedcosts.exceptions.group.UnableToDeleteParticipantException;
+import org.doctordrue.sharedcosts.exceptions.group.ParticipantBusyInCostsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -38,6 +46,9 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 @RequestMapping("/groups")
 public class GroupWebController {
+
+   private static final String GROUP_VIEW_URI_REGEX = "/groups/(\\d+)";
+   private static final String ACCESS_TO_GROUP_DENIED_MESSAGE = "Access to group (id=${groupId}) denied! You should be an ADMIN or be in group participants to access.";
 
    @Autowired
    private GroupService groupService;
@@ -113,11 +124,32 @@ public class GroupWebController {
    }
 
    @ExceptionHandler(BaseGroupServiceException.class)
-   public RedirectView handle(RedirectAttributes attributes, BaseGroupServiceException exception) {
-      if (exception instanceof UnableToDeleteParticipantException) {
+   public RedirectView handleGroupServiceExceptions(RedirectAttributes attributes, BaseGroupServiceException exception) {
+      if (exception instanceof ParticipantBusyInCostsException) {
          attributes.addFlashAttribute("participantsError", exception.getLocalizedMessage());
-         return new RedirectView("/groups/" + ((UnableToDeleteParticipantException) exception).getGroupId());
+         return new RedirectView("/groups/" + ((ParticipantBusyInCostsException) exception).getGroupId());
       }
+      //TODO: handle other BaseGroupServiceException types here
+
+      return new RedirectView("/groups");
+   }
+
+   @ExceptionHandler({AccessDeniedException.class})
+   public RedirectView handleAccessDeniedException(RedirectAttributes attributes, Exception exception, HttpServletRequest request) {
+      String uri = request.getRequestURI();
+      String message = exception.getLocalizedMessage();
+      Map<String, Object> valueMap = new HashMap<>();
+      StringSubstitutor sub = new StringSubstitutor(valueMap);
+
+      Matcher groupViewMatcher = Pattern.compile(GROUP_VIEW_URI_REGEX).matcher(uri);
+      if (groupViewMatcher.matches()) {
+         int groupId = Integer.parseInt(groupViewMatcher.group(1));
+         valueMap.put("groupId", groupId);
+         message = sub.replace(ACCESS_TO_GROUP_DENIED_MESSAGE);
+      }
+      //TODO: here we can handle AccessDeniedException from other endpoints as well
+
+      attributes.addFlashAttribute("error", message);
       return new RedirectView("/groups");
    }
 
