@@ -9,5 +9,9 @@ Web application to calculate costs for some group of people who spends money tog
 ```
 2. Deploy application with Docker compose:
 ```
-docker-compose -d up
+docker compose up -d
+```
+3. Stop application server
+```
+docker down
 ```
