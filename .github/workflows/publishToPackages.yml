@@ -12,8 +12,6 @@ env:
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.version.outputs.version }}    
     permissions:
       contents: read
       packages: write
@@ -51,17 +49,16 @@ jobs:
       - name: Print version from gradle
         run: 'echo version ${{ steps.version.outputs.version }}'
         
+      - name: Print version from GitHub release
+        run: 'echo version ${{ github.event.release.tag_name }}'
+        
       - name: Prepare image tag from Gradle project version
         if: github.event_name == 'workflow_dispatch'
-        run: echo "Version from gradle"
-        env:
-          IMAGE_TAG: ${{ steps.version.outputs.version }}
+        run: echo ::set-output name=IMAGE_TAG::${{ steps.version.outputs.version }}
       
       - name: Prepare image tag from GitHub Release
         if: github.event_name == 'release'
-        run: echo "Get version from Release"
-        env: 
-          IMAGE_TAG: ${{ github.event.release.tag_name }}
+        run: echo ::set-output name=IMAGE_TAG::${{ github.event.release.tag_name }}
           
       - name: Print tag
         run: echo "Tag is $IMAGE_TAG"
