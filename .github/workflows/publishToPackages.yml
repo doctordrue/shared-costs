@@ -44,25 +44,29 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2.1.5
         
-      - uses: thecodemonkey/action-get-gradle-version@master
+      - name: Get version from gradle
+        uses: thecodemonkey/action-get-gradle-version@master
         id: version
       
-      - run: 'echo version ${{ steps.version.outputs.version }}' # <- access the version
+      - name: Print version
+        run: 'echo version ${{ steps.version.outputs.version }}'
       
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
         
-      - name: Execute Gradle build
-        run: ./gradlew bootBuildImage --imageName=${{ env.IMAGE_NAME }}
-        
       - name: Tag image from Gradle project version
+        run: echo "Version from Release: $IMAGE_TAG"
         env:
           IMAGE_TAG: ${{ steps.version.outputs.version }}
       
       - name: Tag image from Release
+        if: github.event_name == 'release'
+        run: echo "Version from Release: $IMAGE_TAG"
         env: 
           IMAGE_TAG: ${{ release.tag_name }}
-        if: github.event_name == 'release'
+        
+      - name: Execute Gradle build
+        run: ./gradlew bootBuildImage --imageName=${{ env.IMAGE_NAME }}
 
       - name: Push Docker image to github containers repo
         run: |
