@@ -79,7 +79,7 @@
                     <input required type="text" th:value="*{name}" th:name="name">
                 </td>
                 <td>
-                    <input disabled readonly th:value="*{person.firstName} + ' ' + *{person.lastName}">
+                    <input disabled readonly th:value="*{person.fullName}">
                     <input hidden th:value="*{person.id}" th:name="person.id">
                 </td>
                 <td>

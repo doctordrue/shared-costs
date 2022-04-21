@@ -11,7 +11,7 @@ import org.doctordrue.sharedcosts.data.entities.Group;
  * @author Andrey_Barantsev
  * 3/17/2022
  **/
-public class CostGroupBalance implements Serializable {
+public class GroupBalance implements Serializable {
 
    private Group group;
    private List<Money> paymentsBalance = new ArrayList<>();
@@ -22,7 +22,7 @@ public class CostGroupBalance implements Serializable {
       return group;
    }
 
-   public CostGroupBalance setCostGroup(Group group) {
+   public GroupBalance setCostGroup(Group group) {
       this.group = group;
       return this;
    }
@@ -31,7 +31,7 @@ public class CostGroupBalance implements Serializable {
       return debts;
    }
 
-   public CostGroupBalance setDebts(List<Debt> debts) {
+   public GroupBalance setDebts(List<Debt> debts) {
       this.debts = debts;
       return this;
    }
@@ -40,7 +40,7 @@ public class CostGroupBalance implements Serializable {
       return paymentsBalance;
    }
 
-   public CostGroupBalance setPaymentsBalance(List<Money> paymentsBalance) {
+   public GroupBalance setPaymentsBalance(List<Money> paymentsBalance) {
       this.paymentsBalance = paymentsBalance;
       return this;
    }
@@ -49,22 +49,22 @@ public class CostGroupBalance implements Serializable {
       return participationBalance;
    }
 
-   public CostGroupBalance setParticipationBalance(List<Money> participationBalance) {
+   public GroupBalance setParticipationBalance(List<Money> participationBalance) {
       this.participationBalance = participationBalance;
       return this;
    }
 
-   public CostGroupBalance addDebt(Debt debt) {
+   public GroupBalance addDebt(Debt debt) {
       this.debts.add(debt);
       return this;
    }
 
-   public CostGroupBalance addExcessPayment(Double amount, Currency currency) {
+   public GroupBalance addExcessPayment(Double amount, Currency currency) {
       this.paymentsBalance.add(new Money().setAmount(amount).setCurrency(currency));
       return this;
    }
 
-   public CostGroupBalance addExcessStake(Double amount, Currency currency) {
+   public GroupBalance addExcessParticipation(Double amount, Currency currency) {
       this.participationBalance.add(new Money().setAmount(amount).setCurrency(currency));
       return this;
    }

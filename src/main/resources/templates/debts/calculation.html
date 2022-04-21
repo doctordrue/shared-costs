@@ -19,7 +19,7 @@
         <span class="metric" th:text="|${balance.amount} ${balance.currency.shortName}|">{Amount}</span>
     </div>
 </div>
-<div class="container" th:if="${balance.debts}">
+<div th:unless="${balance.debts.empty}" class="container" th:if="${balance.debts}">
     <h4>Debts calculation</h4>
     <table>
         <tr>

@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
  **/
 @Service
 public class ParticipationService {
-
    @Autowired
    private ParticipationRepository participationRepository;
 

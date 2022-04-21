@@ -70,11 +70,10 @@ public class Currency {
    public boolean equals(Object o) {
       if (this == o)
          return true;
-      if (o == null || getClass() != o.getClass())
+      if (!(o instanceof Currency))
          return false;
 
       Currency currency = (Currency) o;
-
       return getId().equals(currency.getId());
    }
 
