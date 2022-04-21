@@ -36,10 +36,6 @@ jobs:
     
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2.1.5
-        
-    - name: Get version from gradle
-      uses: thecodemonkey/action-get-gradle-version@master
-      id: version
       
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -47,12 +43,8 @@ jobs:
     - name: Build with Gradle
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
-        arguments: bootBuildImage
-    
-    - name: Publish to ghcr.io
+        arguments: bootBuildImage --
+          
+    - name: Publish on docker.io
       run: |
           docker push --all-tags ${{ env.IMAGE_NAME }}
-          
-#    - name: Publish on docker.io
-#      run: |
-#          docker push --all-tags docker.io/${{ env.IMAGE_NAME }}
