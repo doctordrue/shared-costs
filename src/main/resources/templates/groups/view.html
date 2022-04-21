@@ -53,7 +53,7 @@
         </table>
     </form>
     <button form="formsave" type="submit">Save</button>
-    <button form="formcalculate" type="submit">Calculate</button>
+    <button form="formcalculate" type="submit">View balance</button>
 </div>
 <div class="container">
     <h4>Participants</h4>
@@ -168,6 +168,108 @@
     <!--    <p>-->
     <!--        <a href="#" th:href="@{/costs/process?group_id={group_id}(group_id=${group.id})}">Add cost with split stakes & payment</a>-->
     <!--    </p>-->
+</div>
+<div class="container">
+    <h4>Transactions</h4>
+    <table>
+        <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Amount</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="transaction: ${group.transactions}">
+            <form th:action="@{/groups/{group_id}/transactions/{id}/edit(group_id=${group.id},id=${transaction.id})}" method="post"
+                  th:object="${transaction}">
+                <input hidden th:value="*{group.id}" th:name="group.id">
+                <td>
+                    <input disabled readonly th:value="*{from.fullName}">
+                    <input hidden th:value="*{from.id}" th:name="from.id">
+                </td>
+                <td>
+                    <input disabled readonly th:value="*{to.fullName}">
+                    <input hidden th:value="*{to.id}" th:name="to.id">
+                </td>
+                <td>
+                    <input type="number" min="0.00" max="9999.99" step="0.01" th:value="*{amount}"
+                           th:name="amount">
+                    <label th:for="amount" th:text="*{currency.shortName}">{CUR}</label>
+                    <input hidden th:value="*{currency.id}" th:name="currency.id">
+                </td>
+                <td>
+                    <button type="submit">Save</button>
+                    <button type="submit"
+                            th:formaction="@{/groups/{group_id}/transactions/{id}/delete(group_id=${group.id},id=*{id})}">Delete
+                    </button>
+                </td>
+            </form>
+        </tr>
+        <tfoot>
+        <form action="#" th:action="@{/groups/{group_id}/transactions/add(group_id=${group.id})}" th:method="post" th:object="${new_transaction}">
+            <input hidden th:field="*{group.id}" th:value="${group.id}">
+            <td>
+                <select th:field="*{from.id}">
+                    <option th:each="person : ${group.participants}" th:value="${person.id}"
+                            th:text="${person.fullName}">{firstName} {lastName}
+                    </option>
+                </select>
+            </td>
+            <td>
+                <select th:field="*{to.id}">
+                    <option th:each="person : ${group.participants}" th:value="${person.id}"
+                            th:text="${person.fullName}">{firstName} {lastName}
+                    </option>
+                </select>
+            </td>
+            <td>
+                <input type="number" min="0.00" max="9999.99" step="0.01" th:field="*{amount}" placeholder="0.00">
+                <select th:name="currency.id">
+                    <option
+                            th:each="currency: ${currencies}"
+                            th:text="${currency.shortName}"
+                            th:value="${currency.id}">{CUR}
+                    </option>
+                </select>
+            </td>
+            <td>
+                <button type="submit">Add</button>
+            </td>
+        </form>
+        </tfoot>
+    </table>
+</div>
+<div th:unless="${balance.debts.empty}" class="container" th:if="${balance.debts}">
+    <h4>Debts</h4>
+    <table>
+        <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Amount</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="debt: ${balance.debts}">
+            <form action="#" th:action="@{/groups/{group_id}/transactions/add(group_id=${group.id})}" th:method="post" th:object="${new_transaction}">
+                <input hidden th:name="group.id" th:value="${group.id}">
+                <td>
+                    <input disabled readonly th:value="${debt.debtor.fullName}">
+                    <input hidden th:name="from.id" th:value="${debt.debtor.id}">
+                </td>
+                <td>
+                    <input disabled readonly th:value="${debt.creditor.fullName}">
+                    <input hidden th:name="to.id" th:value="${debt.creditor.id}">
+                </td>
+                <td>
+                    <input readonly type="number" min="0.00" max="9999.99" step="0.01"
+                           th:name="amount" th:value="${debt.amount}">
+                    <label th:for="amount" th:text="${debt.currency.shortName}">{CUR}</label>
+                    <input hidden th:name="currency.id" th:value="${debt.currency.id}">
+                </td>
+                <td>
+                    <button type="submit">Pay off</button>
+                </td>
+            </form>
+        </tr>
+    </table>
 </div>
 <div class="footer">
     <p>Return to <a href="#" th:href="@{/groups}">Groups...</a></p>

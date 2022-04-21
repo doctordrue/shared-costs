@@ -3,6 +3,7 @@ package org.doctordrue.sharedcosts.controllers.webform;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,9 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.text.StringSubstitutor;
+import org.doctordrue.sharedcosts.business.model.debt_calculation.Debt;
+import org.doctordrue.sharedcosts.business.model.debt_calculation.GroupBalance;
+import org.doctordrue.sharedcosts.business.services.calculation.DebtCalculationService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CurrencyService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.GroupService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.PersonService;
@@ -20,6 +24,7 @@ import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.entities.Currency;
 import org.doctordrue.sharedcosts.data.entities.Group;
 import org.doctordrue.sharedcosts.data.entities.Person;
+import org.doctordrue.sharedcosts.data.entities.Transaction;
 import org.doctordrue.sharedcosts.exceptions.group.BaseGroupServiceException;
 import org.doctordrue.sharedcosts.exceptions.group.ParticipantBusyInCostsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +61,8 @@ public class GroupWebController {
    private CurrencyService currencyService;
    @Autowired
    private PersonService personService;
+   @Autowired
+   private DebtCalculationService debtCalculationService;
 
    @GetMapping
    public ModelAndView viewAll(Model model) {
@@ -71,9 +78,21 @@ public class GroupWebController {
       final Group group = this.groupService.findById(groupId);
       final List<Person> candidates = this.groupService.findPeopleToParticipateIn(group);
       final Cost newCost = new Cost().setGroup(group).setDatetime(LocalDateTime.now());
+      final Transaction newTransaction = new Transaction().setGroup(group);
+      final GroupBalance balance = this.debtCalculationService.calculateGroupBalance(groupId);
+      Debt biggestDebt = balance.getDebts().stream().max(Comparator.comparing(Debt::getAmount)).orElse(null);
+      if (biggestDebt != null) {
+         newTransaction.setFrom(biggestDebt.getDebtor());
+         newTransaction.setTo(biggestDebt.getCreditor());
+         newTransaction.setCurrency(biggestDebt.getCurrency());
+         newTransaction.setAmount(biggestDebt.getAmount());
+      }
       final List<Currency> currencies = this.currencyService.findAll();
+
       model.addAttribute("group", group);
+      model.addAttribute("balance", balance);
       model.addAttribute("new_cost", newCost);
+      model.addAttribute("new_transaction", newTransaction);
       model.addAttribute("currencies", currencies);
       model.addAttribute("candidates", candidates);
       model.addAttribute("participant", new Person());

@@ -57,7 +57,10 @@ public class Group {
 
    @OneToMany(mappedBy = "group")
    @OrderBy("datetime DESC")
-   private List<Cost> costs = new ArrayList<>();
+   private final List<Cost> costs = new ArrayList<>();
+
+   @OneToMany(mappedBy = "group")
+   private final List<Transaction> transactions = new ArrayList<>();
 
    public Long getId() {
       return id;
@@ -117,9 +120,8 @@ public class Group {
       return costs;
    }
 
-   public Group setCosts(List<Cost> costs) {
-      this.costs = costs;
-      return this;
+   public List<Transaction> getTransactions() {
+      return transactions;
    }
 
    public boolean isParticipated(String username) {

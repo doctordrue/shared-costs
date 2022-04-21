@@ -10,19 +10,16 @@ import org.doctordrue.sharedcosts.data.entities.Currency;
  * 3/17/2022
  **/
 public class Money implements Serializable {
-
    private Currency currency;
    private Double amount;
 
    public Currency getCurrency() {
       return currency;
    }
-
    public Money setCurrency(Currency currency) {
       this.currency = currency;
       return this;
    }
-
    public Double getAmount() {
       return amount;
    }

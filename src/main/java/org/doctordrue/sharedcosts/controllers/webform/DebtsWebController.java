@@ -2,7 +2,7 @@ package org.doctordrue.sharedcosts.controllers.webform;
 
 import java.util.List;
 
-import org.doctordrue.sharedcosts.business.model.debt_calculation.CostGroupBalance;
+import org.doctordrue.sharedcosts.business.model.debt_calculation.GroupBalance;
 import org.doctordrue.sharedcosts.business.services.calculation.DebtCalculationService;
 import org.doctordrue.sharedcosts.data.entities.IOwnedAmount;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class DebtsWebController {
 
    @GetMapping("calculation")
    public ModelAndView calculate(@RequestParam("group_id") Long groupId, Model model) {
-      CostGroupBalance balance = this.debtCalculationService.findAllForCostGroup(groupId);
+      GroupBalance balance = this.debtCalculationService.calculateGroupBalance(groupId);
       List<IOwnedAmount> participationTotals = this.debtCalculationService.findParticipationTotal(groupId);
       List<IOwnedAmount> paymentTotals = this.debtCalculationService.findPaymentTotal(groupId);
       model.addAttribute("balance", balance);

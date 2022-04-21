@@ -1,6 +1,6 @@
 package org.doctordrue.sharedcosts.controllers.rest.business;
 
-import org.doctordrue.sharedcosts.business.model.debt_calculation.CostGroupBalance;
+import org.doctordrue.sharedcosts.business.model.debt_calculation.GroupBalance;
 import org.doctordrue.sharedcosts.business.services.calculation.DebtCalculationService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +22,8 @@ public class DebtController {
    }
 
    @GetMapping(params = {"group_id"})
-   public CostGroupBalance findDebtsForGroup(@RequestParam(name = "group_id", required = true) Long groupId) {
-      return this.debtCalculationService.findAllForCostGroup(groupId);
+   public GroupBalance findDebtsForGroup(@RequestParam(name = "group_id", required = true) Long groupId) {
+      return this.debtCalculationService.calculateGroupBalance(groupId);
    }
 
 }
