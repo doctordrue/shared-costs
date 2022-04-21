@@ -1,6 +1,6 @@
 services:
   back:
-    image: docker.io/doctordrue/shared-costs:1.0-alpha
+    image: doctordrue/shared-costs
     ports:
       - "80:8080"   # Application exposed
       - "5005:5005" # Java Remote debug
@@ -15,14 +15,7 @@ services:
     volumes:
       - pg_sharedcosts:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
-#  dbadmin:
-#    depends_on:
-#      - db
-#    image: adminer
-#    restart: always
-#    ports:
-#      - 8080:8080
+#      - "5432:5432" # for debug pupose
 
 volumes:
   pg_sharedcosts:

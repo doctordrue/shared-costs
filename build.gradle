@@ -32,7 +32,9 @@ tasks.named('test') {
 }
 
 tasks.named("bootBuildImage") {
-    imageName = "docker.io/doctordrue/${project.name}:${project.version}"
+    imageName = "doctordrue/${project.name}:${project.version}"
+    tags = ["doctordrue/${project.name}:latest"]
+    pullPolicy = "IF_NOT_PRESENT"
     builder = 'paketobuildpacks/builder:tiny'
     buildpacks = ["gcr.io/paketo-buildpacks/azul-zulu", "gcr.io/paketo-buildpacks/java"]
     environment = [
