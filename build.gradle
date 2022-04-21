@@ -46,11 +46,6 @@ tasks.named("bootBuildImage") {
     verboseLogging = false
 }
 
-task bootBuildImageAndRun {
-    group 'application'
-    description 'Build Spring Boot docker image & run using docker-compose file'
-}
-
 flyway {
     driver = 'org.postgresql.Driver'
     url = "jdbc:postgresql://localhost:5432/postgres"
