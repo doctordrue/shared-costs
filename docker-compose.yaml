@@ -14,7 +14,7 @@ services:
     restart: always
     volumes:
       - pg_sharedcosts:/var/lib/postgresql/data
-    ports:
+#    ports:
 #      - "5432:5432" # for debug pupose
 
 volumes:
