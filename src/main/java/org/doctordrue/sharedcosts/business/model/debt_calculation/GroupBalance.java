@@ -2,7 +2,11 @@ package org.doctordrue.sharedcosts.business.model.debt_calculation;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.doctordrue.sharedcosts.data.entities.Currency;
 import org.doctordrue.sharedcosts.data.entities.Group;
@@ -14,8 +18,9 @@ import org.doctordrue.sharedcosts.data.entities.Group;
 public class GroupBalance implements Serializable {
 
    private Group group;
-   private List<Money> paymentsBalance = new ArrayList<>();
-   private List<Money> participationBalance = new ArrayList<>();
+   private final Map<Currency, Double> costTotals = new HashMap<>();
+   private final Map<Currency, Double> paymentsBalance = new HashMap<>();
+   private final Map<Currency, Double> participationBalance = new HashMap<>();
    private List<Debt> debts = new ArrayList<>();
 
    public Group getCostGroup() {
@@ -36,21 +41,26 @@ public class GroupBalance implements Serializable {
       return this;
    }
 
-   public List<Money> getPaymentsBalance() {
-      return paymentsBalance;
+   public Set<Money> getPaymentsBalance() {
+      return this.toMoneySet(paymentsBalance);
    }
 
-   public GroupBalance setPaymentsBalance(List<Money> paymentsBalance) {
-      this.paymentsBalance = paymentsBalance;
-      return this;
+   private Set<Money> toMoneySet(Map<Currency, Double> map) {
+      return map.entrySet().stream()
+              .map(e -> new Money().setCurrency(e.getKey()).setAmount(e.getValue()))
+              .collect(Collectors.toSet());
    }
 
-   public List<Money> getParticipationBalance() {
-      return participationBalance;
+   public Set<Money> getParticipationBalance() {
+      return this.toMoneySet(participationBalance);
    }
 
-   public GroupBalance setParticipationBalance(List<Money> participationBalance) {
-      this.participationBalance = participationBalance;
+   public Set<Money> getCostTotals() {
+      return this.toMoneySet(costTotals);
+   }
+
+   public GroupBalance addCost(Currency currency, Double amount) {
+      costTotals.merge(currency, amount, Double::sum);
       return this;
    }
 
@@ -59,13 +69,13 @@ public class GroupBalance implements Serializable {
       return this;
    }
 
-   public GroupBalance addExcessPayment(Double amount, Currency currency) {
-      this.paymentsBalance.add(new Money().setAmount(amount).setCurrency(currency));
+   public GroupBalance addUnpaid(Double amount, Currency currency) {
+      this.paymentsBalance.merge(currency, amount, Double::sum);
       return this;
    }
 
-   public GroupBalance addExcessParticipation(Double amount, Currency currency) {
-      this.participationBalance.add(new Money().setAmount(amount).setCurrency(currency));
+   public GroupBalance addUnallocated(Double amount, Currency currency) {
+      this.participationBalance.merge(currency, amount, Double::sum);
       return this;
    }
 }

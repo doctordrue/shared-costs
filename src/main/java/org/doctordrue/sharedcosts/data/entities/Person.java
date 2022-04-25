@@ -186,7 +186,7 @@ public class Person implements UserDetails {
    public boolean equals(Object o) {
       if (this == o)
          return true;
-      if (o == null || getClass() != o.getClass())
+      if (!(o instanceof Person))
          return false;
 
       Person person = (Person) o;

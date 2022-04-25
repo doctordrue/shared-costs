@@ -1,8 +1,11 @@
 package org.doctordrue.sharedcosts.controllers.webform;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+import org.doctordrue.sharedcosts.business.model.debt_calculation.Total;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostService;
 import org.doctordrue.sharedcosts.business.services.processing.CostProcessingService;
 import org.doctordrue.sharedcosts.data.entities.Cost;
@@ -37,6 +40,13 @@ public class CostWebController {
    @GetMapping("/{id}")
    public ModelAndView view(@PathVariable("id") Long id, Model model) {
       Cost cost = this.costService.findById(id);
+      List<Total> participationTotals = cost.getParticipations().stream()
+              .collect(Collectors.toMap(Participation::getPerson, Participation::getAmount, Double::sum))
+              .entrySet().stream()
+              .map(e -> new Total().setPerson(e.getKey())
+                      .setCurrency(cost.getCurrency())
+                      .setAmount(e.getValue()))
+              .collect(Collectors.toList());
       double participationLeft = cost.getTotal() - cost.getParticipations().stream()
               .mapToDouble(Participation::getAmount)
               .sum();
@@ -55,6 +65,7 @@ public class CostWebController {
       model.addAttribute("cost", cost);
       model.addAttribute("new_payment", newPayment);
       model.addAttribute("new_participation", newParticipation);
+      model.addAttribute("participation_totals", participationTotals);
       return new ModelAndView("/costs/view", model.asMap());
    }
 

@@ -73,22 +73,25 @@ public class DebtCalculationService {
 
          double totalCost = costs.stream().mapToDouble(Cost::getTotal).sum();
          System.out.println(currency.getShortName() + ": " + totalCost);
-
+         // Prepare costs total
+         costs.forEach(c -> result.addCost(c.getCurrency(), c.getTotal()));
+         // Prepare payments balance
          List<Payment> payments = costs.stream()
                  .flatMap(cost -> cost.getPayments().stream())
                  .collect(Collectors.toList());
          final double totalPayments = payments.stream().mapToDouble(Payment::getAmount).sum();
          System.out.println("Payment total: " + totalPayments);
          if (totalPayments != totalCost) {
-            result.addExcessPayment(totalPayments - totalCost, currency);
+            result.addUnpaid(totalCost - totalPayments, currency);
          }
+         // Prepare participations balance
          List<Participation> participations = costs.stream()
                  .flatMap(cost -> cost.getParticipations().stream())
                  .collect(Collectors.toList());
          final double totalParticipation = participations.stream().mapToDouble(Participation::getAmount).sum();
          System.out.println("Participation total: " + totalParticipation);
          if (totalCost != totalParticipation) {
-            result.addExcessParticipation(totalParticipation - totalCost, currency);
+            result.addUnallocated(totalCost - totalParticipation, currency);
          }
 
          // find creditors credits & debtors debts and transferred amounts
