@@ -32,7 +32,7 @@
             <tr>
                 <td>Timestamp</td>
                 <td>
-                    <input required type="datetime-local" th:value="${cost.datetime}" th:name="datetime">
+                    <input required type="datetime-local" th:value="${#temporals.format(cost.datetime, 'yyyy-MM-dd''T''HH:mm')}" th:name="datetime">
                 </td>
             </tr>
         </table>
@@ -59,6 +59,20 @@
         <h4>Paticipation:</h4>
         <span class="metric" th:text="|${#aggregates.sum(cost.participations.![amount])} ${cost.currency.shortName}|"></span>
     </div>
+</div>
+
+<div class="container">
+    <h4>Total participation</h4>
+    <table>
+        <tr>
+            <th>Person</th>
+            <th>Amount</th>
+        </tr>
+        <tr th:each="participation_total : ${participation_totals}">
+            <td th:text="${participation_total.person.fullName}">{Full Name}</td>
+            <td th:text="|${participation_total.amount} ${cost.currency.shortName}|">{Amount}</td>
+        </tr>
+    </table>
 </div>
 
 <div class="container">

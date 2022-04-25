@@ -39,12 +39,13 @@ div.centered {
 
 .dashboard {
     text-align: center;
+    display: table;
     background-color: cornflowerblue;
 }
 
 .panel {
     text-align: center;
-    display: inline-block;
+    display: table-cell;
     margin: 10px;
     width: 120px;
     color: darkslategrey;
@@ -89,6 +90,12 @@ div.login-container + .footer {
 
 .warning {
     color: darkorange;
+    background-color: linen;
+    border-color: bisque;
+}
+
+.info {
+    color: green;
     background-color: linen;
     border-color: bisque;
 }

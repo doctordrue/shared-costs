@@ -43,17 +43,34 @@
                     <input form="formsave" type="date" th:field="${group.endDate}">
                 </td>
             </tr>
-            <tfoot>
-            <tr>
-                <td>Total</td>
-                <!-- TODO: group by currency-->
-                <td th:text="${#aggregates.sum(group.costs.![total])}"></td>
-            </tr>
-            </tfoot>
         </table>
     </form>
     <button form="formsave" type="submit">Save</button>
     <button form="formcalculate" type="submit">View balance</button>
+</div>
+<div class="container dashboard">
+    <div class="panel">
+        <h5>Total</h5>
+        <p class="metric info" th:each="total: ${balance.costTotals}" th:text="|${total.amount} ${total.currency.shortName}|">{amount} {cur}</p>
+    </div>
+    <div class="panel" th:unless="${balance.paymentsBalance.empty}">
+        <h5>To pay</h5>
+        <p class="metric"
+           th:each="payment: ${balance.paymentsBalance}"
+           th:classappend="${payment.amount > 0 ? 'error' : 'warning'}"
+           th:text="|${payment.amount} ${payment.currency.shortName}|">
+            {amount} {cur}
+        </p>
+    </div>
+    <div class="panel" th:unless="${balance.participationBalance.empty}">
+        <h5>To allocate</h5>
+        <p class="metric"
+           th:each="participation: ${balance.participationBalance}"
+           th:classappend="${participation.amount > 0 ? 'warning' : 'error'}"
+           th:text="|${participation.amount} ${participation.currency.shortName}|">
+            {amount} {cur}
+        </p>
+    </div>
 </div>
 <div class="container">
     <h4>Participants</h4>
