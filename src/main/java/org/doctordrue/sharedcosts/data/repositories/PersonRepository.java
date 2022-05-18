@@ -1,5 +1,6 @@
 package org.doctordrue.sharedcosts.data.repositories;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.doctordrue.sharedcosts.data.entities.Person;
@@ -18,5 +19,7 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
    boolean existsByEmailIgnoreCase(String email);
 
    Set<Person> findByGroupsId(Long id);
+
+   Optional<Person> findByTelegramId(Long telegramId);
 
 }

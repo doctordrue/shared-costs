@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,9 +16,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.doctordrue.sharedcosts.telegram.data.entities.TelegramChatSettings;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -33,6 +36,10 @@ public class Group {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
+   @OneToOne(fetch = FetchType.EAGER)
+   @JoinColumn(name = "telegram_chat_id")
+   private TelegramChatSettings telegramChatSettings;
+
    @Column(name = "name", nullable = false)
    private String name;
 
@@ -47,7 +54,7 @@ public class Group {
    @DateTimeFormat(pattern = "yyyy-MM-dd")
    private LocalDate endDate;
 
-   @ManyToMany
+   @ManyToMany(fetch = FetchType.EAGER)
    @JoinTable(
            name = "groups_participants",
            joinColumns = @JoinColumn(
@@ -61,6 +68,15 @@ public class Group {
 
    @OneToMany(mappedBy = "group")
    private final List<Transaction> transactions = new ArrayList<>();
+
+   public TelegramChatSettings getTelegramChatSettings() {
+      return telegramChatSettings;
+   }
+
+   public Group setTelegramChatSettings(TelegramChatSettings telegramChatSettings) {
+      this.telegramChatSettings = telegramChatSettings;
+      return this;
+   }
 
    public Long getId() {
       return id;
@@ -126,5 +142,9 @@ public class Group {
 
    public boolean isParticipated(String username) {
       return this.participants.stream().anyMatch(p -> p.getEmail().equals(username));
+   }
+
+   public boolean hasTelegramAssociated() {
+      return this.telegramChatSettings != null;
    }
 }

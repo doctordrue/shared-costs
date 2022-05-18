@@ -26,7 +26,7 @@
             <tr>
                 <td>Total</td>
                 <td>
-                    <input type="number" min="0.00" max="9999.99" step="0.01" th:value="${cost.total}" th:name="total">
+                    <input type="number" min="0.00" max="99999.99" step="0.01" th:value="${cost.total}" th:name="total">
                 </td>
             </tr>
             <tr>
@@ -97,7 +97,7 @@
                     <input hidden th:value="*{person.id}" th:name="person.id">
                 </td>
                 <td>
-                    <input type="number" min="0.00" max="9999.99" step="0.01" th:value="*{amount}" th:name="amount">
+                    <input type="number" min="0.00" max="99999.99" step="0.01" th:value="*{amount}" th:name="amount">
                     <label th:for="amount" th:text="${cost.currency.shortName}">{CUR}</label>
                 </td>
                 <td>
@@ -124,7 +124,7 @@
                     </select>
                 </td>
                 <td>
-                    <input type="number" min="0.00" max="9999.99" step="0.01" th:field="*{amount}">
+                    <input type="number" min="0.00" max="99999.99" step="0.01" th:field="*{amount}">
                     <label th:for="amount" th:text="${cost.currency.shortName}">{CUR}</label>
                 </td>
                 <td>
