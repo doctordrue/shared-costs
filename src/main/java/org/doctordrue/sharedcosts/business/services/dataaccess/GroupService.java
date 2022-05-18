@@ -66,6 +66,7 @@ public class GroupService {
       return this.groupRepository.save(group);
    }
 
+   @Transactional
    public Group addParticipant(Long id, String username) {
       Group persistedGroup = this.findById(id);
       Person person = this.personService.findByEmail(username);

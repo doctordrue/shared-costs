@@ -3,8 +3,6 @@ package org.doctordrue.sharedcosts.business.model.processing;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 /**
  * @author Andrey_Barantsev
  * 3/18/2022

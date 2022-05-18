@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,13 +27,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "persons")
 public class Person implements UserDetails {
+
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    @Column(name = "id", nullable = false)
    private Long id;
 
-   @Column(name="email", unique = true, nullable = false)
+   @Column(name = "email", unique = true, nullable = false)
    private String email;
+
+   @Column(name = "telegram_id", unique = true)
+   private Long telegramId;
 
    @Column(name = "password")
    private String password;
@@ -56,7 +61,7 @@ public class Person implements UserDetails {
    @Enumerated(EnumType.STRING)
    private RoleType role = RoleType.ANONYMOUS;
 
-   @ManyToMany(mappedBy = "participants")
+   @ManyToMany(mappedBy = "participants", fetch = FetchType.EAGER)
    private Set<Group> groups = new java.util.LinkedHashSet<>();
 
    public Set<Group> getGroups() {
@@ -69,6 +74,15 @@ public class Person implements UserDetails {
 
    public Long getId() {
       return id;
+   }
+
+   public Long getTelegramId() {
+      return telegramId;
+   }
+
+   public Person setTelegramId(Long telegramId) {
+      this.telegramId = telegramId;
+      return this;
    }
 
    public String getFirstName() {
@@ -194,6 +208,10 @@ public class Person implements UserDetails {
       if (!getId().equals(person.getId()))
          return false;
       return getEmail().equals(person.getEmail());
+   }
+
+   public boolean hasTelegramId() {
+      return this.telegramId != null;
    }
 
    @Override

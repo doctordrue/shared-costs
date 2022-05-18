@@ -1,6 +1,7 @@
 package org.doctordrue.sharedcosts.business.services.dataaccess;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.doctordrue.sharedcosts.data.entities.Person;
@@ -49,6 +50,10 @@ public class PersonService implements UserDetailsService, UserDetailsPasswordSer
 
    public Person findById(Long id) {
       return this.personRepository.findById(id).orElseThrow(() -> generateNotFoundByIdException(id));
+   }
+
+   public Optional<Person> findByTelegramId(Long telegramId) {
+      return this.personRepository.findByTelegramId(telegramId);
    }
 
    public Set<Person> findByGroupId(Long id) {

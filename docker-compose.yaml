@@ -1,12 +1,20 @@
 services:
+  # Application
   back:
     image: doctordrue/shared-costs
+    environment:
+      APP_DB_URL: jdbc:postgresql://db:5432/postgres
+      BOT_API_URL: https://api.telegram.org/bot
+      BOT_NAME: ${BOT_NAME}
+      BOT_TOKEN: ${BOT_TOKEN}
     ports:
       - "80:8080"   # Application exposed
       - "5005:5005" # Java Remote debug
     depends_on:
       - db
     restart: always
+
+  # Database
   db:
     image: postgres:latest
     environment:
@@ -14,8 +22,20 @@ services:
     restart: always
     volumes:
       - pg_sharedcosts:/var/lib/postgresql/data
+    ports:
+      - "5432:5432" # For debug purpose
+
+  # Telegram bot API server for dev purpose
+#  telegram-bot-api:
+#    build: ./Docker/telegram-bot-api
 #    ports:
-#      - "5432:5432" # for debug pupose
+#      - "8081:8081" # For debug purpose
+#    environment:
+#      TELEGRAM_API_ID: ${TELEGRAM_API_ID}
+#      TELEGRAM_API_HASH: ${TELEGRAM_API_HASH}
+#    volumes:
+#      - telegram-bot-api-data:/telegram-bot-api
 
 volumes:
   pg_sharedcosts:
+#  telegram-bot-api-data:

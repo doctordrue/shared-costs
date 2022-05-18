@@ -3,6 +3,7 @@ package org.doctordrue.sharedcosts;
 import org.doctordrue.sharedcosts.business.services.dataaccess.PersonService;
 import org.doctordrue.sharedcosts.data.entities.enums.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -22,12 +23,18 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebFormSecurityConfig extends WebSecurityConfigurerAdapter {
+
    @Autowired
    private PasswordEncoder encoder;
    @Autowired
    private PersonService personService;
+   @Value("${app.admin.username}")
+   private String adminUserName;
+   @Value("${app.admin.password}")
+   private String adminPassword;
+
    @Bean
-   public PersistentTokenRepository persistentTokenRepository(){
+   public PersistentTokenRepository persistentTokenRepository() {
       return new InMemoryTokenRepositoryImpl();
    }
 
@@ -63,13 +70,15 @@ public class WebFormSecurityConfig extends WebSecurityConfigurerAdapter {
 
    @Override
    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+      adminUserName = "admin@email.com";
+      adminPassword = "admin";
       auth
               .userDetailsService(personService)
               .passwordEncoder(encoder)
               .and()
               .inMemoryAuthentication()
-              .withUser("admin@email.com")
-              .password(encoder.encode("admin"))
+              .withUser(adminUserName)
+              .password(encoder.encode(adminPassword))
               .roles("ADMIN");
    }
 }
