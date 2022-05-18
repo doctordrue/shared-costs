@@ -1,5 +1,5 @@
 services:
-  # Application
+# Application
   back:
     image: doctordrue/shared-costs
     environment:
@@ -22,10 +22,10 @@ services:
     restart: always
     volumes:
       - pg_sharedcosts:/var/lib/postgresql/data
-    ports:
-      - "5432:5432" # For debug purpose
+#    ports:
+#      - "5432:5432" # For debug purpose
 
-  # Telegram bot API server for dev purpose
+# Telegram bot API server for dev purpose
 #  telegram-bot-api:
 #    build: ./Docker/telegram-bot-api
 #    ports:
