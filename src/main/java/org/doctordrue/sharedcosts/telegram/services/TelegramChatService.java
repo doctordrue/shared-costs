@@ -1,17 +1,12 @@
 package org.doctordrue.sharedcosts.telegram.services;
 
-import java.time.Duration;
-import java.util.Random;
-import java.util.Set;
+import java.util.Optional;
 
-import javax.validation.constraints.NotNull;
-
-import org.doctordrue.sharedcosts.telegram.data.entities.BotStatus;
-import org.doctordrue.sharedcosts.telegram.data.entities.TelegramChatSettings;
+import org.doctordrue.sharedcosts.business.services.dataaccess.GroupService;
+import org.doctordrue.sharedcosts.telegram.data.entities.TelegramGroupChatSettings;
 import org.doctordrue.sharedcosts.telegram.data.repositories.TelegramChatSettingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Andrey_Barantsev
@@ -19,46 +14,26 @@ import org.springframework.transaction.annotation.Transactional;
  **/
 @Service
 public class TelegramChatService {
-
+   @Autowired
+   private GroupService groupService;
    @Autowired
    private TelegramChatSettingsRepository telegramChatSettingsRepository;
 
-   public TelegramChatSettings getOrCreate(Long chatId) {
+   public TelegramGroupChatSettings getOrCreate(Long chatId) {
       return this.telegramChatSettingsRepository.findById(chatId)
-              .orElseGet(() -> this.telegramChatSettingsRepository.save(TelegramChatSettings.createDefault(chatId)));
+              .orElseGet(() -> this.telegramChatSettingsRepository.save(TelegramGroupChatSettings.createDefault(chatId)));
    }
 
-   public TelegramChatSettings update(TelegramChatSettings settings) {
+   public Optional<TelegramGroupChatSettings> findByChatId(Long chatId) {
+      return this.telegramChatSettingsRepository.findById(chatId);
+   }
+
+   public TelegramGroupChatSettings update(TelegramGroupChatSettings settings) {
       return this.telegramChatSettingsRepository.save(settings);
    }
 
-   public TelegramChatSettings updateBotStatus(Long chatId, @NotNull BotStatus status) {
-      TelegramChatSettings persistedSettings = this.getOrCreate(chatId);
-      persistedSettings.setBotStatus(status);
-      return this.update(persistedSettings);
-   }
-
-   @Transactional
-   public TelegramChatSettings addStickerSet(Long chatId, String stickerSetName) {
-      TelegramChatSettings persistedSettings = this.getOrCreate(chatId);
-      persistedSettings.addStickerSet(stickerSetName);
-      return this.telegramChatSettingsRepository.save(persistedSettings);
-   }
-
-   public String getRandomStickerSetName(Long chatId) {
-      final Set<String> stickerSetNames = this.getOrCreate(chatId).getStickerSetNames();
-      return stickerSetNames.stream().skip(new Random().nextInt(stickerSetNames.size())).findAny().orElse(null);
-   }
-
-   @Transactional
-   public Set<String> getStickerSetNames(Long chatId) {
-      return this.getOrCreate(chatId).getStickerSetNames();
-   }
-
-   public TelegramChatSettings setTimeout(Long chatId, Long timeoutSeconds) {
-      TelegramChatSettings settings = this.getOrCreate(chatId);
-      settings.setReplyDuration(Duration.ofSeconds(timeoutSeconds).abs());
-      return this.telegramChatSettingsRepository.save(settings);
+   public void remove(Long chatId) {
+      this.telegramChatSettingsRepository.deleteById(chatId);
    }
 
 }

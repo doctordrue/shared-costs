@@ -11,7 +11,7 @@
     <h4>Update my data</h4>
     <div class="message error" th:if="${updateError}" th:text="${updateError}">{updateError}</div>
     <form action="#" th:action="@{/self}" th:object="${data}" th:method="post">
-        <input type="email" th:name="email" th:value="${person.username}" placeholder="E-mail">
+        <input type="text" th:name="username" th:value="${person.username}" placeholder="username">
         <input th:name="firstName" th:value="${person.firstName}" placeholder="First name">
         <input th:name="lastName" th:value="${person.lastName}" placeholder="Last name">
         <input type="tel" th:name="phoneNumber" th:value="${person.phoneNumber}" placeholder="Phone number">

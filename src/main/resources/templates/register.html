@@ -10,7 +10,7 @@
 <div class="message error" th:if="${error}" th:text="${error}">{error}</div>
 <div class="container">
     <form action="#" th:action="@{/register}" th:method="post" th:object="${person}">
-        <input type="email" th:field="*{email}" placeholder="E-mail" required>
+        <input type="test" th:field="*{username}" placeholder="username" required>
         <input type="password" th:field="*{password}" placeholder="Password">
         <input type="text" th:field="*{firstName}" placeholder="First name">
         <input type="text" th:field="*{lastName}" placeholder="Last name">

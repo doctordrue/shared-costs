@@ -52,6 +52,7 @@ public class GroupService {
       return this.groupRepository.save(group);
    }
 
+   @Transactional
    public Group update(Long id, Group group) {
       assumeExists(id);
       Group persistedGroup = this.groupRepository.getById(id);
@@ -60,16 +61,13 @@ public class GroupService {
       if (group.getParticipants().isEmpty()) {
          group.setParticipants(persistedGroup.getParticipants());
       }
-//      if (group.getCosts().isEmpty()) {
-//         group.setCosts(persistedGroup.getCosts());
-//      }
       return this.groupRepository.save(group);
    }
 
    @Transactional
    public Group addParticipant(Long id, String username) {
       Group persistedGroup = this.findById(id);
-      Person person = this.personService.findByEmail(username);
+      Person person = this.personService.findByUsername(username);
       if (person == null) {
          throw new PersonNotFoundException(username);
       }
@@ -79,7 +77,7 @@ public class GroupService {
 
    public Group deleteParticipant(Long id, String username) {
       Group persistedGroup = this.findById(id);
-      Person persistedPerson = this.personService.findByEmail(username);
+      Person persistedPerson = this.personService.findByUsername(username);
       verifyParticipateRemoval(persistedGroup, persistedPerson);
       persistedGroup.getParticipants().removeIf(persistedPerson::equals);
       return this.groupRepository.save(persistedGroup);

@@ -84,7 +84,7 @@
             <form th:action="@{/groups/{id}/participants/delete(id=${group.id})}" th:method="post" th:object="${participant}">
                 <td>
                     <input disabled readonly th:value="*{fullName}">
-                    <input hidden th:value="*{email}" th:name="email">
+                    <input hidden th:value="*{username}" th:name="username">
                 </td>
                 <td>
                     <button type="submit">Delete</button>
@@ -95,8 +95,8 @@
         <tr>
             <form th:unless="${candidates.empty}" th:action="@{/groups/{id}/participants/add(id=${group.id})}" th:method="post" th:object="${participant}">
                 <td>
-                    <select th:field="*{email}">
-                        <option th:each="candidate : ${candidates}" th:text="${candidate.fullName}" th:value="${candidate.email}">{firstName} {lastName}</option>
+                    <select th:field="*{username}">
+                        <option th:each="candidate : ${candidates}" th:text="${candidate.fullName}" th:value="${candidate.username}">{firstName} {lastName}</option>
                     </select>
                 </td>
                 <td>

@@ -13,13 +13,12 @@ import org.springframework.stereotype.Repository;
  **/
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
-
-   Person findByEmailAllIgnoreCase(String email);
-
-   boolean existsByEmailIgnoreCase(String email);
-
+   Person findByUsernameAllIgnoreCase(String username);
+   boolean existsByUsernameIgnoreCase(String username);
    Set<Person> findByGroupsId(Long id);
-
    Optional<Person> findByTelegramId(Long telegramId);
+
+   Optional<Person> findByUsername(String username);
+
 
 }

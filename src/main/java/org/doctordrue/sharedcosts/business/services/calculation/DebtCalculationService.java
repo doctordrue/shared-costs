@@ -23,6 +23,7 @@ import org.doctordrue.sharedcosts.data.entities.Person;
 import org.doctordrue.sharedcosts.data.entities.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Andrey_Barantsev
@@ -44,7 +45,7 @@ public class DebtCalculationService {
       return this.findTotals(this.groupService.findById(groupId), Cost::getPayments);
    }
 
-   private List<IOwnedAmount> findTotals(Group group, Function<Cost, List<? extends IOwnedAmount>> function) {
+   private List<IOwnedAmount> findTotals(Group group, Function<Cost, Set<? extends IOwnedAmount>> function) {
       return group.getCosts().stream()
               .flatMap(c -> function.apply(c).stream())
               .map(Total::of)
@@ -57,10 +58,11 @@ public class DebtCalculationService {
               .collect(Collectors.toList());
    }
 
+   @Transactional
    public GroupBalance calculateGroupBalance(Long groupId) {
       final Group group = this.groupService.findById(groupId);
-      final List<Cost> allCosts = group.getCosts();
-      final List<Transaction> allTransactions = group.getTransactions();
+      final Set<Cost> allCosts = group.getCosts();
+      final Set<Transaction> allTransactions = group.getTransactions();
 
       GroupBalance result = new GroupBalance();
       result.setCostGroup(group);

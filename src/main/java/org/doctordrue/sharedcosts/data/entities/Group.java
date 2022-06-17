@@ -1,9 +1,8 @@
 package org.doctordrue.sharedcosts.data.entities;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -16,11 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import org.doctordrue.sharedcosts.telegram.data.entities.TelegramChatSettings;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -35,10 +32,6 @@ public class Group {
    @Column(name = "id", nullable = false)
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
-
-   @OneToOne(fetch = FetchType.EAGER)
-   @JoinColumn(name = "telegram_chat_id")
-   private TelegramChatSettings telegramChatSettings;
 
    @Column(name = "name", nullable = false)
    private String name;
@@ -62,21 +55,12 @@ public class Group {
                    referencedColumnName = "id"))
    private Set<Person> participants = new LinkedHashSet<>();
 
-   @OneToMany(mappedBy = "group")
+   @OneToMany(mappedBy = "group", fetch = FetchType.EAGER)
    @OrderBy("datetime DESC")
-   private final List<Cost> costs = new ArrayList<>();
+   private final Set<Cost> costs = new HashSet<>();
 
-   @OneToMany(mappedBy = "group")
-   private final List<Transaction> transactions = new ArrayList<>();
-
-   public TelegramChatSettings getTelegramChatSettings() {
-      return telegramChatSettings;
-   }
-
-   public Group setTelegramChatSettings(TelegramChatSettings telegramChatSettings) {
-      this.telegramChatSettings = telegramChatSettings;
-      return this;
-   }
+   @OneToMany(mappedBy = "group", fetch = FetchType.EAGER)
+   private final Set<Transaction> transactions = new HashSet<>();
 
    public Long getId() {
       return id;
@@ -132,19 +116,15 @@ public class Group {
       return this;
    }
 
-   public List<Cost> getCosts() {
+   public Set<Cost> getCosts() {
       return costs;
    }
 
-   public List<Transaction> getTransactions() {
+   public Set<Transaction> getTransactions() {
       return transactions;
    }
 
    public boolean isParticipated(String username) {
-      return this.participants.stream().anyMatch(p -> p.getEmail().equals(username));
-   }
-
-   public boolean hasTelegramAssociated() {
-      return this.telegramChatSettings != null;
+      return this.participants.stream().anyMatch(p -> p.getUsername().equals(username));
    }
 }

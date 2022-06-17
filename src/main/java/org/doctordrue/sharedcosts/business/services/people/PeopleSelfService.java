@@ -31,10 +31,10 @@ public class PeopleSelfService {
               .setEnabled(currentPerson.isEnabled())
               .setLocked(!currentPerson.isAccountNonLocked())
               .setRole(currentPerson.getRole())
-              .setEmail(currentPerson.getEmail());
+              .setUsername(currentPerson.getUsername());
       Long id = currentPerson.getId();
       if (data.getEmail() != null) {
-         updatedPerson.setEmail(data.getEmail());
+         updatedPerson.setUsername(data.getEmail());
       }
       updatedPerson.setPhoneNumber(data.getPhoneNumber())
               .setFirstName(data.getFirstName())
@@ -60,7 +60,7 @@ public class PeopleSelfService {
    }
 
    public boolean register(Person person) {
-      Person persistedPerson = this.personService.findByEmail(person.getEmail());
+      Person persistedPerson = this.personService.findByUsername(person.getUsername());
       if (persistedPerson != null) {
          return false;
       }

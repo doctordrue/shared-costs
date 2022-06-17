@@ -38,7 +38,7 @@ public class RegisterController {
          return this.viewRegister(model);
       }
       if (!this.peopleSelfService.register(person)) {
-         model.addAttribute("error", "User with e-mail " + person.getEmail() + " already exists. Please change!");
+         model.addAttribute("error", "User with e-mail " + person.getUsername() + " already exists. Please change!");
          return this.viewRegister(model);
       }
       return new ModelAndView(new RedirectView("/login"), model.asMap());

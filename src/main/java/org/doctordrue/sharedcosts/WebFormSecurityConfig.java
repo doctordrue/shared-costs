@@ -56,7 +56,7 @@ public class WebFormSecurityConfig extends WebSecurityConfigurerAdapter {
               .and()
               .formLogin()
               .loginPage("/login")
-              .usernameParameter("email")
+              .usernameParameter("username")
               .passwordParameter("password")
               .defaultSuccessUrl("/", true)
               .permitAll()
@@ -70,8 +70,6 @@ public class WebFormSecurityConfig extends WebSecurityConfigurerAdapter {
 
    @Override
    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-      adminUserName = "admin@email.com";
-      adminPassword = "admin";
       auth
               .userDetailsService(personService)
               .passwordEncoder(encoder)
