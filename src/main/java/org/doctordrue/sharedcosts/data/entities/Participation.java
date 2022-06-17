@@ -2,7 +2,6 @@ package org.doctordrue.sharedcosts.data.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,10 +27,10 @@ public class Participation implements IOwnedAmount {
    @Column(name = "amount", nullable = false)
    private Double amount;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @ManyToOne(optional = false)
    private Cost cost;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @ManyToOne(optional = false)
    private Person person;
 
    public Long getId() {

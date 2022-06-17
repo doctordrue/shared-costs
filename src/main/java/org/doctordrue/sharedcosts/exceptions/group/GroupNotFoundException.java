@@ -15,4 +15,9 @@ public class GroupNotFoundException extends BaseGroupServiceException {
       super(GroupError.NOT_FOUND_BY_ID, cause);
       setParameter("id", id);
    }
+
+   public GroupNotFoundException(String name) {
+      super(GroupError.NOT_FOUND_BY_NAME);
+      setParameter("name", name);
+   }
 }

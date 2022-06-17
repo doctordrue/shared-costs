@@ -1,6 +1,7 @@
 package org.doctordrue.sharedcosts.business.services.dataaccess;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.doctordrue.sharedcosts.data.entities.Currency;
 import org.doctordrue.sharedcosts.data.repositories.CurrencyRepository;
@@ -34,6 +35,10 @@ public class CurrencyService {
       Currency probe = new Currency();
       probe.setShortName(currencyType);
       return this.currencyRepository.findOne(Example.of(probe)).orElseThrow(() -> new CurrencyNotFoundException(currencyType));
+   }
+
+   public Optional<Currency> find(String shortName) {
+      return this.currencyRepository.findByShortNameIgnoreCase(shortName);
    }
 
    public Currency create(Currency currency) {
