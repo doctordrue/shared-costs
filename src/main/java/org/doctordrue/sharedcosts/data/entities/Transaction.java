@@ -2,7 +2,6 @@ package org.doctordrue.sharedcosts.data.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,19 +17,19 @@ public class Transaction {
    @Column(name = "id", nullable = false)
    private Long id;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @ManyToOne(optional = false)
    private Person from;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @ManyToOne(optional = false)
    private Person to;
 
    @Column(name = "amount", nullable = false)
    private Double amount;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @ManyToOne(optional = false)
    private Currency currency;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @ManyToOne(optional = false)
    private Group group;
 
    public Long getId() {
@@ -84,5 +83,22 @@ public class Transaction {
    public Transaction setGroup(Group group) {
       this.group = group;
       return this;
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
+      if (o == null || getClass() != o.getClass())
+         return false;
+
+      Transaction that = (Transaction) o;
+
+      return getId().equals(that.getId());
+   }
+
+   @Override
+   public int hashCode() {
+      return getId().hashCode();
    }
 }

@@ -1,7 +1,7 @@
 package org.doctordrue.sharedcosts.data.entities;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 import java.util.StringJoiner;
 
 import javax.persistence.Column;
@@ -40,19 +40,19 @@ public class Cost {
    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
    private LocalDateTime datetime;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @ManyToOne(optional = false)
    private Group group;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @ManyToOne(optional = false)
    private Currency currency;
 
-   @OneToMany(mappedBy = "cost")
+   @OneToMany(mappedBy = "cost", fetch = FetchType.EAGER)
    @OrderBy("id")
-   private List<Payment> payments;
+   private Set<Payment> payments;
 
-   @OneToMany(mappedBy = "cost")
+   @OneToMany(mappedBy = "cost", fetch = FetchType.EAGER)
    @OrderBy("id")
-   private List<Participation> participations;
+   private Set<Participation> participations;
 
    public Long getId() {
       return id;
@@ -108,20 +108,20 @@ public class Cost {
       return this;
    }
 
-   public List<Payment> getPayments() {
+   public Set<Payment> getPayments() {
       return payments;
    }
 
-   public Cost setPayments(List<Payment> payments) {
+   public Cost setPayments(Set<Payment> payments) {
       this.payments = payments;
       return this;
    }
 
-   public List<Participation> getParticipations() {
+   public Set<Participation> getParticipations() {
       return participations;
    }
 
-   public Cost setParticipations(List<Participation> participations) {
+   public Cost setParticipations(Set<Participation> participations) {
       this.participations = participations;
       return this;
    }

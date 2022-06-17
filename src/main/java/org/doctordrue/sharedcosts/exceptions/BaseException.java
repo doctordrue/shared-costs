@@ -3,6 +3,7 @@ package org.doctordrue.sharedcosts.exceptions;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 
 /**
@@ -33,7 +34,7 @@ public abstract class BaseException extends RuntimeException {
    @Override
    public String getMessage() {
       StringSubstitutor sub = new StringSubstitutor(this.parameters);
-      String message = this.code + ": " + sub.replace(this.template);
+      String message = StringUtils.isNotBlank(this.code) ? this.code + ": " + sub.replace(this.template) : sub.replace(this.template);
       if (this.getCause() != null) {
          message += " caused by " + this.getCause().toString();
       }

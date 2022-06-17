@@ -2,6 +2,7 @@ package org.doctordrue.sharedcosts.business.services.dataaccess;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.repositories.CostRepository;
@@ -32,7 +33,7 @@ public class CostService {
 
    @PostFilter("hasRole('ADMIN') or filterObject.group.isParticipated(principal.username)")
    public List<Cost> findAll() {
-      return this.costRepository.findAll(Sort.by("costDateTime"));
+      return this.costRepository.findAll(Sort.by("datetime"));
    }
 
    @PostAuthorize("hasRole('ADMIN') or returnObject.group.isParticipated(principal.username)")
@@ -43,6 +44,14 @@ public class CostService {
    @PostFilter("hasRole('ADMIN') or filterObject.group.isParticipated(principal.username)")
    public List<Cost> findAllByGroupId(Long groupId) {
       return this.costRepository.findByGroupId(groupId);
+   }
+
+   public Optional<Cost> findByName(String name) {
+      return this.costRepository.findByName(name);
+   }
+
+   public boolean existsByName(String name) {
+      return this.costRepository.existsByName(name);
    }
 
    public Cost create(Cost cost) {
