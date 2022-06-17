@@ -12,7 +12,7 @@
 </div>
 <div class="container">
     <form action="#" th:action="@{/persons/{id}/edit(id=${person.id})}" th:method="post" th:object="${person}">
-        <input type="email" th:field="*{email}" placeholder="E-mail" required>
+        <input type="text" th:field="*{username}" placeholder="username" required>
         <input type="password" th:field="*{password}" alt="Password is read-only" hidden>
         <input type="text" th:field="*{firstName}" placeholder="First name">
         <input type="text" th:field="*{lastName}" placeholder="Last name">

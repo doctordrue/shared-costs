@@ -67,10 +67,10 @@ public class PersonWebController {
       String tempPassword = PasswordGeneratorUtil.generate();
       person.setPassword(tempPassword);
       if (!this.peopleSelfService.register(person)) {
-         model.addFlashAttribute("error", "User with e-mail " + person.getEmail() + " already exists. Please change!");
+         model.addFlashAttribute("error", "User with e-mail " + person.getUsername() + " already exists. Please change!");
          return new RedirectView("/persons");
       }
-      model.addFlashAttribute("message", String.format("User '%s' added. Password generated: %s", person.getEmail(), tempPassword));
+      model.addFlashAttribute("message", String.format("User '%s' added. Password generated: %s", person.getUsername(), tempPassword));
       return new RedirectView("/persons");
    }
 

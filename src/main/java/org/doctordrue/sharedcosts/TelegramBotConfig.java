@@ -2,23 +2,18 @@ package org.doctordrue.sharedcosts;
 
 import org.apache.commons.lang3.StringUtils;
 import org.doctordrue.sharedcosts.telegram.SharedCostsBot;
-import org.doctordrue.sharedcosts.telegram.bot.commands.AddMeCommand;
-import org.doctordrue.sharedcosts.telegram.bot.commands.AddStickerPackCommand;
-import org.doctordrue.sharedcosts.telegram.bot.commands.CancelCommand;
-import org.doctordrue.sharedcosts.telegram.bot.commands.InitCommand;
-import org.doctordrue.sharedcosts.telegram.bot.commands.SetTimeoutCommand;
-import org.doctordrue.sharedcosts.telegram.bot.commands.StartCommand;
-import org.doctordrue.sharedcosts.telegram.bot.commands.StickerPackCommand;
-import org.doctordrue.sharedcosts.telegram.bot.commands.StickerPacksCommand;
-import org.doctordrue.sharedcosts.telegram.bot.processors.NonCommandProcessor;
-import org.doctordrue.sharedcosts.telegram.bot.processors.other.ReplyToBotMentionProcessor;
-import org.doctordrue.sharedcosts.telegram.bot.processors.other.StickerReplyProcessor;
+import org.doctordrue.sharedcosts.telegram.handlers.commands.groupchat.AddMeCommand;
+import org.doctordrue.sharedcosts.telegram.handlers.commands.groupchat.DebtsCommand;
+import org.doctordrue.sharedcosts.telegram.handlers.commands.groupchat.InitCommand;
+import org.doctordrue.sharedcosts.telegram.handlers.commands.groupchat.RemoveCommand;
+import org.doctordrue.sharedcosts.telegram.handlers.commands.userchat.StartCommand;
+import org.doctordrue.sharedcosts.telegram.handlers.commands.userchat.StopCommand;
+import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.UserChatNonCommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
-import org.telegram.telegrambots.extensions.bots.commandbot.commands.helpCommand.HelpCommand;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
@@ -33,26 +28,19 @@ public class TelegramBotConfig {
    @Value("${telegram.api.url}")
    private String url;
    @Autowired
-   private StartCommand startCommand;
-   @Autowired
    private AddMeCommand addMeCommand;
-   @Autowired
-   private SetTimeoutCommand setTimeoutCommand;
-   @Autowired
-   private StickerPacksCommand stickerPacksCommand;
-   @Autowired
-   private StickerPackCommand stickerPackCommand;
-   @Autowired
-   private AddStickerPackCommand addStickerPackCommand;
-   @Autowired
-   private NonCommandProcessor nonCommandProcessor;
-   @Autowired
-   private StickerReplyProcessor stickerReplyProcessor;
    @Autowired
    private InitCommand initCommand;
    @Autowired
-   private CancelCommand cancelCommand;
-
+   private DebtsCommand debtsCommand;
+   @Autowired
+   private RemoveCommand removeCommand;
+   @Autowired
+   private StartCommand startCommand;
+   @Autowired
+   private StopCommand stopCommand;
+   @Autowired
+   private UserChatNonCommandHandler handler;
    @Bean
    public DefaultBotOptions defaultBotOptions() {
       DefaultBotOptions options = new DefaultBotOptions();
@@ -69,18 +57,19 @@ public class TelegramBotConfig {
 
    @Bean
    public SharedCostsBot sharedCostsBot() {
-      SharedCostsBot bot = new SharedCostsBot(defaultBotOptions(), this.nonCommandProcessor);
-      bot.register(this.startCommand);
-//      bot.register(this.initCommand);
+      SharedCostsBot bot = new SharedCostsBot(defaultBotOptions());
+
+      /* Costs related commands */
+      bot.register(this.initCommand);
       bot.register(this.addMeCommand);
-      bot.register(this.setTimeoutCommand);
-      bot.register(this.stickerPacksCommand);
-      bot.register(this.stickerPackCommand);
-      bot.register(this.addStickerPackCommand);
-      bot.register(this.cancelCommand);
-      bot.register(new HelpCommand());
-      bot.registerNonCommandProcessor(this.stickerReplyProcessor);
-      bot.registerNonCommandProcessor(new ReplyToBotMentionProcessor());
+      bot.register(this.debtsCommand);
+      bot.register(this.removeCommand);
+
+      /* User chat commands */
+      bot.register(this.startCommand);
+      bot.register(this.stopCommand);
+      bot.register(this.handler);
+
       return bot;
    }
 }

@@ -26,7 +26,7 @@
             <form action="#" th:action="@{/persons/{id}/edit(id=${person.id})}" th:method="post">
                 <td>
                     <input hidden th:value="${person.id}" th:name="id">
-                    <input readonly th:value="${person.email}" th:name="email">
+                    <input readonly th:value="${person.username}" th:name="username">
                 </td>
                 <td>
                     <input type="text" th:value="${person.firstName}" th:name="firstName">
@@ -61,7 +61,7 @@
         <tr>
             <form action="#" th:action="@{/persons/add}" th:method="post" th:object="${new_person}">
                 <td>
-                    <input required type="email" th:field="*{email}" placeholder="e-mail">
+                    <input required type="text" th:field="*{username}" placeholder="username">
                 </td>
                 <td>
                     <input type="text" th:field="*{firstName}" placeholder="Name">

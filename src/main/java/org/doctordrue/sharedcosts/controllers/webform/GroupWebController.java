@@ -101,19 +101,19 @@ public class GroupWebController {
 
    @PostMapping("/{id}/participants/add")
    public RedirectView addParticipant(@PathVariable("id") Long id, @ModelAttribute("participant") Person participant) {
-      this.groupService.addParticipant(id, participant.getEmail());
+      this.groupService.addParticipant(id, participant.getUsername());
       return new RedirectView("/groups/" + id);
    }
 
    @PostMapping("/{id}/participants/delete")
    public RedirectView deleteParticipant(@PathVariable("id") Long id, @ModelAttribute("participant") Person participant) {
-      this.groupService.deleteParticipant(id, participant.getEmail());
+      this.groupService.deleteParticipant(id, participant.getUsername());
       return new RedirectView("/groups/" + id);
    }
 
    @PostMapping("/add")
    public RedirectView add(@ModelAttribute("group") Group group, Principal principal) {
-      Person person = this.personService.findByEmail(principal.getName());
+      Person person = this.personService.findByUsername(principal.getName());
       Group persistedGroup = this.groupService.create(group);
       if (person != null) {
          this.addParticipant(persistedGroup.getId(), person);

@@ -16,9 +16,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.StringUtils;
 import org.doctordrue.sharedcosts.data.entities.enums.RoleType;
+import org.doctordrue.sharedcosts.utils.PasswordGeneratorUtil;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.telegram.telegrambots.meta.api.objects.User;
 
 /**
  * @author Andrey_Barantsev
@@ -33,8 +36,8 @@ public class Person implements UserDetails {
    @Column(name = "id", nullable = false)
    private Long id;
 
-   @Column(name = "email", unique = true, nullable = false)
-   private String email;
+   @Column(name = "username", unique = true, nullable = false)
+   private String username;
 
    @Column(name = "telegram_id", unique = true)
    private Long telegramId;
@@ -117,12 +120,8 @@ public class Person implements UserDetails {
       return this;
    }
 
-   public String getEmail() {
-      return email;
-   }
-
-   public Person setEmail(String email) {
-      this.email = email;
+   public Person setUsername(String username) {
+      this.username = username;
       return this;
    }
 
@@ -132,7 +131,7 @@ public class Person implements UserDetails {
 
    @Override
    public String getUsername() {
-      return getEmail();
+      return this.username;
    }
 
    public Person setPassword(String password) {
@@ -168,7 +167,37 @@ public class Person implements UserDetails {
    }
 
    public String getFullName() {
-      return String.format("%s %s", this.getFirstName(), this.getLastName());
+      StringBuilder builder = new StringBuilder();
+      if (StringUtils.isNotBlank(this.firstName)) {
+         builder.append(firstName);
+      }
+      if (StringUtils.isNotBlank(this.lastName)) {
+         if (builder.length() > 0) {
+            builder.append(" ");
+         }
+         builder.append(this.lastName);
+      }
+      if (builder.length() == 0) {
+         builder.append(this.username);
+      }
+      return builder.toString();
+   }
+
+   public String getShortFullName() {
+      StringBuilder builder = new StringBuilder();
+      if (StringUtils.isNotBlank(this.firstName)) {
+         builder.append(firstName);
+      }
+      if (StringUtils.isNotBlank(this.lastName)) {
+         if (builder.length() > 0) {
+            builder.append(" ");
+         }
+         builder.append(this.lastName.substring(0, 1).toUpperCase()).append(".");
+      }
+      if (builder.length() == 0) {
+         builder.append(this.username);
+      }
+      return builder.toString();
    }
 
    @Override
@@ -207,17 +236,28 @@ public class Person implements UserDetails {
 
       if (!getId().equals(person.getId()))
          return false;
-      return getEmail().equals(person.getEmail());
+      return getUsername().equals(person.getUsername());
    }
 
    public boolean hasTelegramId() {
       return this.telegramId != null;
    }
 
+   public static Person fromTelegram(User user) {
+      String identifier = StringUtils.isNotBlank(user.getUserName()) ? user.getUserName() : user.getId().toString();
+      String tempPassword = PasswordGeneratorUtil.generate();
+      return new Person().setRole(RoleType.USER)
+              .setUsername(identifier)
+              .setFirstName(user.getFirstName())
+              .setLastName(user.getLastName())
+              .setTelegramId(user.getId())
+              .setPassword(tempPassword);
+   }
+
    @Override
    public int hashCode() {
       int result = getId().hashCode();
-      result = 31 * result + getEmail().hashCode();
+      result = 31 * result + getUsername().hashCode();
       return result;
    }
 
@@ -225,11 +265,11 @@ public class Person implements UserDetails {
    public String toString() {
       return new StringJoiner(", ", Person.class.getSimpleName() + "[", "]")
               .add("id=" + id)
-              .add("email='" + email + "'")
+              .add("email='" + username + "'")
               .add("firstName='" + firstName + "'")
               .add("lastName='" + lastName + "'")
               .add("phoneNumber='" + phoneNumber + "'")
-              .add("email='" + email + "'")
+              .add("email='" + username + "'")
               .add("isEnabled=" + enabled)
               .add("isLocked=" + locked)
               .toString();

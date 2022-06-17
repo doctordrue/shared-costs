@@ -4,8 +4,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.doctordrue.sharedcosts.data.entities.enums.RoleType;
-import org.doctordrue.sharedcosts.telegram.bot.processors.NonCommandProcessor;
-import org.doctordrue.sharedcosts.telegram.bot.processors.other.INonCommandUpdateProcessor;
+import org.doctordrue.sharedcosts.telegram.data.entities.UserChatSession;
+import org.doctordrue.sharedcosts.telegram.session.userchat.UserChatState;
+import org.doctordrue.telegram.bot.common.handlers.message.noncommand.handler.BaseNonCommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 /**
@@ -22,7 +24,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
  **/
 public class SharedCostsBot extends TelegramLongPollingCommandBot {
 
-   @Value("${telegram.bot.name}")
+   @Value("${telegram.bot.username}")
    private String botUserName;
    @Value("${telegram.bot.token}")
    private String botToken;
@@ -33,15 +35,14 @@ public class SharedCostsBot extends TelegramLongPollingCommandBot {
    @Autowired
    private PasswordEncoder encoder;
 
-   private final NonCommandProcessor nonCommandProcessor;
+   private BaseNonCommandHandler<Chat, UserChatState, UserChatSession> processor;
 
-   public SharedCostsBot(DefaultBotOptions options, NonCommandProcessor nonCommandProcessor) {
+   public SharedCostsBot(DefaultBotOptions options) {
       super(options);
-      this.nonCommandProcessor = nonCommandProcessor;
    }
 
-   public void registerNonCommandProcessor(INonCommandUpdateProcessor processor) {
-      this.nonCommandProcessor.register(processor);
+   public void register(BaseNonCommandHandler<Chat, UserChatState, UserChatSession> processor) {
+      this.processor = processor;
    }
 
    @Override
@@ -50,7 +51,9 @@ public class SharedCostsBot extends TelegramLongPollingCommandBot {
    }
 
    public void processNonCommandUpdate(Update update) {
-      this.nonCommandProcessor.execute(this, update);
+      if (this.processor != null) {
+         this.processor.processUpdate(this, update);
+      }
    }
 
    @Override

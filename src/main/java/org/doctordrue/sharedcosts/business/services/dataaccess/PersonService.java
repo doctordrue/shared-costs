@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.doctordrue.sharedcosts.data.entities.Person;
 import org.doctordrue.sharedcosts.data.repositories.PersonRepository;
 import org.doctordrue.sharedcosts.exceptions.BaseException;
@@ -19,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.User;
 
 /**
  * @author Andrey_Barantsev
@@ -44,8 +46,8 @@ public class PersonService implements UserDetailsService, UserDetailsPasswordSer
       return this.personRepository.findAllById(ids);
    }
 
-   public Person findByEmail(String email) {
-      return this.personRepository.findByEmailAllIgnoreCase(email);
+   public Person findByUsername(String email) {
+      return this.personRepository.findByUsernameAllIgnoreCase(email);
    }
 
    public Person findById(Long id) {
@@ -54,6 +56,10 @@ public class PersonService implements UserDetailsService, UserDetailsPasswordSer
 
    public Optional<Person> findByTelegramId(Long telegramId) {
       return this.personRepository.findByTelegramId(telegramId);
+   }
+
+   public Optional<Person> find(String username) {
+      return this.personRepository.findByUsername(username);
    }
 
    public Set<Person> findByGroupId(Long id) {
@@ -70,8 +76,8 @@ public class PersonService implements UserDetailsService, UserDetailsPasswordSer
       if (updatePerson.getPassword() == null) {
          updatePerson.setPassword(persistedPerson.getPassword());
       }
-      if (!persistedPerson.getEmail().equals(updatePerson.getEmail()) && this.personRepository.existsByEmailIgnoreCase(updatePerson.getEmail())) {
-         throw new PersonAlreadyExistsException(updatePerson.getEmail());
+      if (!persistedPerson.getUsername().equals(updatePerson.getUsername()) && this.personRepository.existsByUsernameIgnoreCase(updatePerson.getUsername())) {
+         throw new PersonAlreadyExistsException(updatePerson.getUsername());
       }
       updatePerson.setId(id);
       return this.personRepository.save(updatePerson);
@@ -83,19 +89,33 @@ public class PersonService implements UserDetailsService, UserDetailsPasswordSer
    }
 
    @Override
-   public Person loadUserByUsername(String email) throws UsernameNotFoundException {
-      Person person = this.findByEmail(email);
+   public Person loadUserByUsername(String username) throws UsernameNotFoundException {
+      Person person = this.findByUsername(username);
       if (person == null) {
-         throw new UsernameNotFoundException("User not found for email = " + email);
+         throw new UsernameNotFoundException("User not found for username = " + username);
       }
       return person;
    }
 
    @Override
    public Person updatePassword(UserDetails user, String newPassword) {
-      Person persistedPerson = this.findByEmail(user.getUsername());
+      Person persistedPerson = this.findByUsername(user.getUsername());
       persistedPerson.setPassword(encoder().encode(newPassword));
       return this.update(persistedPerson.getId(), persistedPerson);
+   }
+
+   public Person addTelegramUser(User user) {
+      String identity = StringUtils.isEmpty(user.getUserName()) ? user.getId().toString() : user.getUserName();
+      Person persistedPerson = this.findByUsername(identity);
+      if (persistedPerson != null) {
+         if (persistedPerson.hasTelegramId()) {
+            throw new PersonAlreadyExistsException(identity);
+         }
+         persistedPerson.setTelegramId(user.getId());
+      } else {
+         persistedPerson = Person.fromTelegram(user);
+      }
+      return this.personRepository.save(persistedPerson);
    }
 
    private BaseException generateNotFoundByIdException(Long id) {
