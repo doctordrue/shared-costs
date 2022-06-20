@@ -23,7 +23,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
  **/
 public class KeyboardGeneratorUtils {
 
-   private static final String TRANSACTION_ITEM_TEMPLATE = "[%s] %s%s %s -> %s";
+   private static final String TRANSACTION_ITEM_TEMPLATE = "[%s] %s %s: %s -> %s";
 
    public static ReplyKeyboardRemove removeKeyboard() {
       return ReplyKeyboardRemove.builder().removeKeyboard(true).build();

@@ -78,4 +78,20 @@ public class GroupBalance implements Serializable {
       this.participationBalance.merge(currency, amount, Double::sum);
       return this;
    }
+
+   public String toTelegramString() {
+      StringBuilder sb = new StringBuilder("Информация о группе " + this.getCostGroup().getName()).append("\n");
+      sb.append("*Суммарные расходы:*\n");
+      this.getCostTotals().forEach(b -> sb.append(" - ").append(b.getAmount()).append(" ").append(b.getCurrency().getShortName()).append("\n"));
+      sb.append("*Всего оплачено:*\n");
+      this.getPaymentsBalance().forEach(b -> sb.append(" - ").append(b.getAmount()).append(" ").append(b.getCurrency().getShortName()).append("\n"));
+      sb.append("*Всего распределено:*\n");
+      this.getParticipationBalance().forEach(b -> sb.append(" - ").append(b.getAmount()).append(" ").append(b.getCurrency().getShortName()).append("\n"));
+      sb.append("*Долги:*\n");
+      this.getDebts().forEach(d -> sb.append("- ").append(String.format("[%s](tg://user?id=%s) ", d.getDebtor().getFullName(), d.getDebtor().getTelegramId()))
+              .append(" должен ").append(String.format("[%s](tg://user?id=%s) ", d.getCreditor().getFullName(), d.getCreditor().getTelegramId()))
+              .append(String.format("%.2f %s\n", d.getAmount(), d.getCurrency().getShortName())));
+      sb.append("*Хотите что-то еще?*");
+      return sb.toString();
+   }
 }
