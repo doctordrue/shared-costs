@@ -7,6 +7,7 @@ import org.doctordrue.sharedcosts.telegram.services.TelegramChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -41,15 +42,7 @@ public class DebtsCommand extends BotCommand {
             if (balance.getDebts().isEmpty()) {
                builder.text("Никто никому ничего не должен");
             } else {
-               StringBuilder stringBuilder = new StringBuilder();
-               balance.getDebts().forEach(d -> stringBuilder
-                       .append(d.getDebtor().getFullName())
-                       .append(" должен ")
-                       .append(d.getCreditor().getFullName())
-                       .append(" ")
-                       .append(d.getAmount())
-                       .append(d.getCurrency().getShortName()));
-               builder.text(stringBuilder.toString());
+               builder.parseMode(ParseMode.MARKDOWN).text(balance.toTelegramString());
             }
          }
       } else {

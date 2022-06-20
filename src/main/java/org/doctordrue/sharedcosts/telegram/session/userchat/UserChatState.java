@@ -2,6 +2,7 @@ package org.doctordrue.sharedcosts.telegram.session.userchat;
 
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.CostAction;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.GroupAction;
+import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.TransactionAction;
 import org.doctordrue.telegram.bot.api.keyboards.KeyboardOption;
 import org.doctordrue.telegram.bot.api.session.IBotState;
 
@@ -18,7 +19,10 @@ public enum UserChatState implements IBotState {
    NEW_COST_SELECTING_CURRENCY("В какой валюте?"),
    SELECTING_COST("Ожидание выбора статьи расходов"),
    NEW_TRANSACTION_SELECTING_CURRENCY("В какой валюте?"),
+   NEW_TRANSACTION_AWAITING_AMOUNT("Сколько получили?"),
+   NEW_TRANSACTION_SELECTING_FROM("От кого получили?"),
    SELECTING_TRANSACTION("Выберите транзакцию для редактирования"),
+   WORKING_WITH_TRANSACTION("Что делаем?", TransactionAction.class),
 
    WORKING_WITH_COST("Что хотите сделать?", CostAction.class),
 

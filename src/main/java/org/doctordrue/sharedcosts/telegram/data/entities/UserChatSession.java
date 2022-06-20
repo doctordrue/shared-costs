@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.entities.Currency;
 import org.doctordrue.sharedcosts.data.entities.Group;
-import org.doctordrue.sharedcosts.data.entities.Payment;
+import org.doctordrue.sharedcosts.data.entities.Transaction;
 import org.doctordrue.sharedcosts.telegram.session.userchat.UserChatState;
 import org.doctordrue.telegram.bot.api.session.IBotSession;
 import org.telegram.telegrambots.meta.api.objects.Chat;
@@ -44,19 +44,55 @@ public class UserChatSession implements IBotSession<UserChatState> {
    @JoinColumn(name = "selected_cost_id")
    private Cost selectedCost;
 
-   @ManyToOne
-   @JoinColumn(name = "selected_payment_id")
-   private Payment selectedPayment;
-
    @Column(name = "temp_payment_amount")
    private Double tempPaymentAmount;
 
-   public Payment getSelectedPayment() {
-      return selectedPayment;
+   @Column(name = "temp_participation_name")
+   private String tempParticipationName;
+
+   @Column(name = "temp_participation_amount")
+   private Double tempParticipationAmount;
+
+   @Column(name = "temp_transaction_amount")
+   private Double tempTransactionAmount;
+
+   @ManyToOne
+   @JoinColumn(name = "selected_transaction_id")
+   private Transaction selectedTransaction;
+
+   public Transaction getSelectedTransaction() {
+      return selectedTransaction;
    }
 
-   public UserChatSession setSelectedPayment(Payment selectedPayment) {
-      this.selectedPayment = selectedPayment;
+   public UserChatSession setSelectedTransaction(Transaction selectedTransaction) {
+      this.selectedTransaction = selectedTransaction;
+      return this;
+   }
+
+   public Double getTempTransactionAmount() {
+      return tempTransactionAmount;
+   }
+
+   public UserChatSession setTempTransactionAmount(Double tempTransactionAmount) {
+      this.tempTransactionAmount = tempTransactionAmount;
+      return this;
+   }
+
+   public Double getTempParticipationAmount() {
+      return tempParticipationAmount;
+   }
+
+   public UserChatSession setTempParticipationAmount(Double tempParticipationAmount) {
+      this.tempParticipationAmount = tempParticipationAmount;
+      return this;
+   }
+
+   public String getTempParticipationName() {
+      return tempParticipationName;
+   }
+
+   public UserChatSession setTempParticipationName(String tempParticipationName) {
+      this.tempParticipationName = tempParticipationName;
       return this;
    }
 

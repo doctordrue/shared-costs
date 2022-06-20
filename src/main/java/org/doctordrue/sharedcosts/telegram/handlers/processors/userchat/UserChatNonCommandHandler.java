@@ -7,8 +7,16 @@ import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_pr
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.SelectingCostProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.SelectingNewCostCurrencyProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.WorkingWithCostAnswerProcessor;
+import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.participation.AwaitingNewParticipationNameProcessor;
+import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.participation.AwaitingNewParticipationPriceProcessor;
+import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.participation.SelectingNewParticipationWhoProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.payment.AwaitingNewPaymentAmountProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.payment.SelectingNewPaymentWhoProcessor;
+import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.transaction.AwaitingNewTransactionAmountProcessor;
+import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.transaction.SelectingNewTransactionCurrencyProcessor;
+import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.transaction.SelectingNewTransactionFromProcessor;
+import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.transaction.SelectingTransactionProcessor;
+import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.transaction.WorkingWithTransactionAnswerProcessor;
 import org.doctordrue.sharedcosts.telegram.session.userchat.UserChatSessionWorker;
 import org.doctordrue.sharedcosts.telegram.session.userchat.UserChatState;
 import org.doctordrue.telegram.bot.common.handlers.message.noncommand.handler.BaseNonCommandHandler;
@@ -33,7 +41,15 @@ public class UserChatNonCommandHandler extends BaseNonCommandHandler<Chat, UserC
                                     SelectingCostProcessor selectingCostProcessor,
                                     WorkingWithCostAnswerProcessor workingWithCostProcessor,
                                     AwaitingNewPaymentAmountProcessor awaitingNewPaymentAmountProcessor,
-                                    SelectingNewPaymentWhoProcessor selectingNewPaymentWhoProcessor) {
+                                    SelectingNewPaymentWhoProcessor selectingNewPaymentWhoProcessor,
+                                    AwaitingNewParticipationNameProcessor awaitingNewParticipationNameProcessor,
+                                    AwaitingNewParticipationPriceProcessor awaitingNewParticipationPriceProcessor,
+                                    SelectingNewParticipationWhoProcessor selectingNewParticipationWhoProcessor,
+                                    SelectingNewTransactionCurrencyProcessor selectingNewTransactionCurrencyProcessor,
+                                    AwaitingNewTransactionAmountProcessor awaitingNewTransactionAmountProcessor,
+                                    SelectingNewTransactionFromProcessor selectingNewTransactionFromProcessor,
+                                    SelectingTransactionProcessor selectingTransactionProcessor,
+                                    WorkingWithTransactionAnswerProcessor workingWithTransactionAnswerProcessor) {
       super(sessionWorker);
       this.registerProcessor(UserChatState.SELECTING_GROUP, selectingGroupProcessor);
       this.registerProcessor(UserChatState.WORKING_WITH_GROUP, workingWithGroupProcessor);
@@ -43,6 +59,15 @@ public class UserChatNonCommandHandler extends BaseNonCommandHandler<Chat, UserC
       this.registerProcessor(UserChatState.WORKING_WITH_COST, workingWithCostProcessor);
       this.registerProcessor(UserChatState.NEW_PAYMENT_AWAITING_AMOUNT, awaitingNewPaymentAmountProcessor);
       this.registerProcessor(UserChatState.NEW_PAYMENT_SELECTING_WHO, selectingNewPaymentWhoProcessor);
+      this.registerProcessor(UserChatState.NEW_PARTICIPATION_AWAITING_NAME, awaitingNewParticipationNameProcessor);
+      this.registerProcessor(UserChatState.NEW_PARTICIPATION_AWAITING_PRICE, awaitingNewParticipationPriceProcessor);
+      this.registerProcessor(UserChatState.NEW_PARTICIPATION_AWAITING_WHO, selectingNewParticipationWhoProcessor);
+      this.registerProcessor(UserChatState.NEW_TRANSACTION_SELECTING_CURRENCY, selectingNewTransactionCurrencyProcessor);
+      this.registerProcessor(UserChatState.NEW_TRANSACTION_AWAITING_AMOUNT, awaitingNewTransactionAmountProcessor);
+      this.registerProcessor(UserChatState.NEW_TRANSACTION_SELECTING_FROM, selectingNewTransactionFromProcessor);
+      this.registerProcessor(UserChatState.SELECTING_TRANSACTION, selectingTransactionProcessor);
+      this.registerProcessor(UserChatState.WORKING_WITH_TRANSACTION, workingWithTransactionAnswerProcessor);
+
    }
 
    @Override

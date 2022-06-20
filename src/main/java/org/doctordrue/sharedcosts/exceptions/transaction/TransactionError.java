@@ -7,7 +7,8 @@ import org.doctordrue.sharedcosts.exceptions.IErrorMessage;
  * 4/21/2022
  **/
 public enum TransactionError implements IErrorMessage {
-   NOT_FOUND_BY_ID("TRNS-001", "Transaction id={transactionId} is no found");
+   NOT_FOUND_BY_ID("TRNS-001", "Transaction id={transactionId} is no found"),
+   NOT_FOUND_BY_TEXT(null, "Не могу найти такую транзакцию");
 
    TransactionError(String code, String template) {
       this.code = code;

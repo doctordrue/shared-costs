@@ -2,8 +2,8 @@ package org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_p
 
 import java.util.Optional;
 
-import org.doctordrue.sharedcosts.business.services.dataaccess.PaymentService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.PersonService;
+import org.doctordrue.sharedcosts.business.services.processing.PaymentsProcessingService;
 import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.entities.Payment;
 import org.doctordrue.sharedcosts.data.entities.Person;
@@ -22,14 +22,11 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
  **/
 @Component
 public class SelectingNewPaymentWhoProcessor extends BaseStaticKeyboardReplyUserChatProcessor<CostAction> {
-
-   private static final String SUCCESS_MESSAGE = "{fullName} оплатил {paymentAmount} {currencyShortName} за {costName} (создана запись '{paymentName}')";
-   private static final String USER_MOT_FOUND_MESSAGE = "В группе не найден участник {userName}";
    private static final UserChatState TARGET_STATE = UserChatState.WORKING_WITH_COST;
    private final PersonService personService;
-   private final PaymentService paymentService;
+   private final PaymentsProcessingService paymentService;
 
-   public SelectingNewPaymentWhoProcessor(UserChatSessionWorker sessionWorker, PersonService personService, PaymentService paymentService) {
+   public SelectingNewPaymentWhoProcessor(UserChatSessionWorker sessionWorker, PersonService personService, PaymentsProcessingService paymentService) {
       super(sessionWorker, TARGET_STATE, CostAction.class);
       this.personService = personService;
       this.paymentService = paymentService;
@@ -53,9 +50,8 @@ public class SelectingNewPaymentWhoProcessor extends BaseStaticKeyboardReplyUser
                     .setPerson(person)
                     .setCost(cost);
 
-            Payment persistedPayment = this.paymentService.create(payment);
-            this.updateSession(update, s -> s.setTempPaymentAmount(null)
-                    .setSelectedPayment(persistedPayment));
+            this.paymentService.processNew(payment, true);
+            this.updateSession(update, s -> s.setTempPaymentAmount(null));
             return true;
          }
       }
@@ -64,7 +60,6 @@ public class SelectingNewPaymentWhoProcessor extends BaseStaticKeyboardReplyUser
 
    @Override
    protected String getExpectedInputMessage(UserChatSession session) {
-
       return String.format("Оплата для '%s' создана. Что будем делать дальше?", session.getSelectedCost().getName());
    }
 

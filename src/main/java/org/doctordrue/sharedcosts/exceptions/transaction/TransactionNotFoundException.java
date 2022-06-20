@@ -11,4 +11,8 @@ public class TransactionNotFoundException extends BaseTransactionServiceExceptio
       setParameter("transactionId", id);
    }
 
+   public TransactionNotFoundException() {
+      super(TransactionError.NOT_FOUND_BY_TEXT);
+   }
+
 }

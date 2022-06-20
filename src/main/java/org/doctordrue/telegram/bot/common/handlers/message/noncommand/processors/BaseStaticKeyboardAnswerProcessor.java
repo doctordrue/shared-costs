@@ -9,7 +9,7 @@ import org.doctordrue.telegram.bot.api.keyboards.exceptions.OptionNotFoundExcept
 import org.doctordrue.telegram.bot.api.session.IBotSession;
 import org.doctordrue.telegram.bot.api.session.IBotState;
 import org.doctordrue.telegram.bot.api.session.SessionWorker;
-import org.doctordrue.telegram.bot.common.handlers.message.noncommand.processors.exceptions.MessageTypeNotSupported;
+import org.doctordrue.telegram.bot.common.handlers.message.noncommand.processors.exceptions.MessageTypeNotSupportedException;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 /**
@@ -40,6 +40,6 @@ public abstract class BaseStaticKeyboardAnswerProcessor<Key, State extends IBotS
          }
          throw new OptionNotFoundException(text, this.getState(update));
       }
-      throw new MessageTypeNotSupported(this.getState(update));
+      throw new MessageTypeNotSupportedException();
    }
 }
