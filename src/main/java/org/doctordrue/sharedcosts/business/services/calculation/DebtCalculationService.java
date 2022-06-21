@@ -1,5 +1,6 @@
 package org.doctordrue.sharedcosts.business.services.calculation;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,6 @@ import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.entities.Currency;
 import org.doctordrue.sharedcosts.data.entities.Group;
 import org.doctordrue.sharedcosts.data.entities.IOwnedAmount;
-import org.doctordrue.sharedcosts.data.entities.Participation;
 import org.doctordrue.sharedcosts.data.entities.Payment;
 import org.doctordrue.sharedcosts.data.entities.Person;
 import org.doctordrue.sharedcosts.data.entities.Transaction;
@@ -38,14 +38,14 @@ public class DebtCalculationService {
    private PersonService personService;
 
    public List<IOwnedAmount> findParticipationTotal(Long groupId) {
-      return this.findTotals(this.groupService.findById(groupId), Cost::getParticipations);
+      return this.findTotals(this.groupService.findById(groupId), Cost::getParticipationsTotals);
    }
 
    public List<IOwnedAmount> findPaymentTotal(Long groupId) {
       return this.findTotals(this.groupService.findById(groupId), Cost::getPayments);
    }
 
-   private List<IOwnedAmount> findTotals(Group group, Function<Cost, Set<? extends IOwnedAmount>> function) {
+   private List<IOwnedAmount> findTotals(Group group, Function<Cost, Collection<? extends IOwnedAmount>> function) {
       return group.getCosts().stream()
               .flatMap(c -> function.apply(c).stream())
               .map(Total::of)
@@ -87,10 +87,10 @@ public class DebtCalculationService {
             result.addUnpaid(totalCost - totalPayments, currency);
          }
          // Prepare participations balance
-         List<Participation> participations = costs.stream()
-                 .flatMap(cost -> cost.getParticipations().stream())
+         List<Total> participations = costs.stream()
+                 .flatMap(cost -> cost.getParticipationsTotals().stream())
                  .collect(Collectors.toList());
-         final double totalParticipation = participations.stream().mapToDouble(Participation::getAmount).sum();
+         final double totalParticipation = participations.stream().mapToDouble(Total::getAmount).sum();
          System.out.println("Participation total: " + totalParticipation);
          if (totalCost != totalParticipation) {
             result.addUnallocated(totalCost - totalParticipation, currency);
@@ -98,15 +98,14 @@ public class DebtCalculationService {
 
          // find creditors credits & debtors debts and transferred amounts
          Map<Person, Double> paymentsMap = payments.stream().collect(Collectors.toMap(Payment::getPerson, Payment::getAmount, Double::sum));
-         Map<Person, Double> participationMap = participations.stream().collect(Collectors.toMap(Participation::getPerson, Participation::getAmount, Double::sum));
+         Map<Person, Double> participationMap = participations.stream().collect(Collectors.toMap(Total::getPerson, Total::getAmount, Double::sum));
          Map<Person, Double> transferredFromMap = transactions.stream().collect(Collectors.toMap(Transaction::getFrom, Transaction::getAmount, Double::sum));
          Map<Person, Double> transferredToMap = transactions.stream().collect(Collectors.toMap(Transaction::getTo, Transaction::getAmount, Double::sum));
 
          final Set<Person> participants = costs.stream()
                  .flatMap(cost -> Stream.concat(
-                         cost.getParticipations().stream().map(Participation::getPerson),
+                         cost.getParticipations().stream().flatMap(p -> p.getPeople().stream()),
                          cost.getPayments().stream().map(Payment::getPerson)))
-                 .distinct()
                  .collect(Collectors.toSet());
          participants.addAll(transferredFromMap.keySet());
          participants.addAll(transferredToMap.keySet());

@@ -152,8 +152,15 @@
                     <input required type="text" th:value="*{name}" th:name="name">
                 </td>
                 <td>
-                    <input disabled readonly th:value="*{person.fullName}">
-                    <input hidden th:value="*{person.id}" th:name="person.id">
+                    <select th:name="people" multiple disabled th:size="*{people.size}">
+                        <option th:each="participant : *{people}"
+                                th:value="${participant.id}"
+                                th:text="${participant.fullName}">{Full Name}
+                        </option>
+                    </select>
+                    <input hidden th:each="participant, itemStat : *{people}"
+                           th:name="people"
+                           th:value="${participant.id}">
                 </td>
                 <td>
                     <input type="number" min="0.00" step="0.01" th:value="*{amount}" th:name="amount">
@@ -181,9 +188,10 @@
                     <input required type="text" th:field="*{name}" placeholder="Paid item name">
                 </td>
                 <td>
-                    <select th:field="*{person.id}">
-                        <option th:each="person : ${cost.group.participants}" th:value="${person.id}"
-                                th:text="${person.fullName}">{firstName} {lastName}
+                    <select th:name="people" th:size="${cost.group.participants.size}" multiple>
+                        <option th:each="participant : ${cost.group.participants}"
+                                th:value="${participant.id}"
+                                th:text="${participant.fullName}">{Full Name}
                         </option>
                     </select>
                 </td>

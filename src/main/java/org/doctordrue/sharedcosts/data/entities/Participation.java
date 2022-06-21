@@ -1,12 +1,20 @@
 package org.doctordrue.sharedcosts.data.entities;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.doctordrue.sharedcosts.business.model.debt_calculation.Total;
 
 /**
  * @author Andrey_Barantsev
@@ -14,7 +22,7 @@ import javax.persistence.Table;
  **/
 @Entity
 @Table(name = "participation")
-public class Participation implements IOwnedAmount {
+public class Participation implements ISharedAmount<Total> {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +38,9 @@ public class Participation implements IOwnedAmount {
    @ManyToOne(optional = false)
    private Cost cost;
 
-   @ManyToOne(optional = false)
-   private Person person;
+   @ManyToMany
+   @JoinTable(name = "person_participation")
+   private Set<Person> people;
 
    public Long getId() {
       return id;
@@ -69,17 +78,33 @@ public class Participation implements IOwnedAmount {
       return this;
    }
 
-   public Person getPerson() {
-      return person;
-   }
-
    @Override
    public Currency getCurrency() {
       return this.getCost().getCurrency();
    }
 
-   public Participation setPerson(Person person) {
-      this.person = person;
+   @Override
+   public Set<Person> getPeople() {
+      return people;
+   }
+
+   @Override
+   public List<Total> getFlatAmounts() {
+      double singleAmount = this.amount / this.people.size();
+      return this.getPeople().stream().map(p -> new Total()
+                      .setCurrency(this.getCurrency())
+                      .setAmount(singleAmount)
+                      .setPerson(p))
+              .collect(Collectors.toList());
+   }
+
+   public Participation setPeople(Set<Person> people) {
+      this.people = people;
+      return this;
+   }
+
+   public Participation addPerson(Person person) {
+      this.people.add(person);
       return this;
    }
 }

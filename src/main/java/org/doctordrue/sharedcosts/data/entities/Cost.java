@@ -1,8 +1,10 @@
 package org.doctordrue.sharedcosts.data.entities;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.doctordrue.sharedcosts.business.model.debt_calculation.Total;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -124,6 +127,10 @@ public class Cost {
    public Cost setParticipations(Set<Participation> participations) {
       this.participations = participations;
       return this;
+   }
+
+   public List<Total> getParticipationsTotals() {
+      return this.getParticipations().stream().flatMap(p -> p.getFlatAmounts().stream()).collect(Collectors.toList());
    }
 
    @Override

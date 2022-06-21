@@ -4,18 +4,21 @@ import java.io.Serializable;
 import java.util.StringJoiner;
 
 import org.doctordrue.sharedcosts.data.entities.Currency;
+import org.doctordrue.sharedcosts.data.entities.IMoneyAmount;
 
 /**
  * @author Andrey_Barantsev
  * 3/17/2022
  **/
-public class Money implements Serializable {
+public class Money implements Serializable, IMoneyAmount {
+
    private Currency currency;
    private Double amount;
 
    public Currency getCurrency() {
       return currency;
    }
+
    public Money setCurrency(Currency currency) {
       this.currency = currency;
       return this;
