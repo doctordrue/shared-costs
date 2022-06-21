@@ -2,9 +2,9 @@ package org.doctordrue.sharedcosts.business.services.processing;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.doctordrue.sharedcosts.business.model.processing.CostProcessingResult;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CurrencyService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.GroupService;
@@ -50,16 +50,11 @@ public class CostProcessingService {
       return this.costService.create(cost);
    }
 
-   public List<Participation> splitCostParticipation(Cost cost, List<Person> persons) {
-      double participationAmount = cost.getTotal() / persons.size();
-      List<Participation> participations = persons.stream()
-              .map(person -> new Participation()
-                      .setName(String.format("%s, 1/%s", cost.getName(), persons.size()))
-                      .setCost(cost)
-                      .setPerson(person)
-                      .setAmount(participationAmount))
-              .collect(Collectors.toList());
-      return this.participationService.create(participations);
+   public Participation splitCostParticipation(Cost cost, Set<Person> persons) {
+      Participation participation = new Participation().setCost(cost)
+              .setName(cost.getName())
+              .setAmount(cost.getTotal()).setPeople(persons);
+      return this.participationService.create(participation);
    }
 
    public List<Payment> splitCostPayment(Cost cost,
@@ -73,27 +68,6 @@ public class CostProcessingService {
                       .setCost(cost))
               .collect(Collectors.toList());
       return this.paymentService.create(payments);
-   }
-
-   public CostProcessingResult processCost(String costName,
-                                           Long costGroupId,
-                                           String currencyShortName,
-                                           double amount,
-                                           List<Long> stakeholdersIds, List<Long> payersIds,
-                                           LocalDateTime timestamp) {
-      if (timestamp == null) {
-         timestamp = LocalDateTime.now();
-      }
-      Group group = this.groupService.findById(costGroupId);
-      Currency currency = this.currencyService.findByShortName(currencyShortName);
-      Cost cost = this.addCost(costName, group, currency, amount, timestamp);
-      List<Person> stakeholders = this.personService.findByIds(stakeholdersIds);
-      List<Person> payers = this.personService.findByIds(payersIds);
-      List<Participation> participations = this.splitCostParticipation(cost, stakeholders);
-      List<Payment> payments = this.splitCostPayment(cost, payers);
-      return new CostProcessingResult().setCost(cost)
-              .setStakes(participations)
-              .setPayments(payments);
    }
 
    public void updateCostTotalFromPayments(Long costId) {

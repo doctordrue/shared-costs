@@ -78,15 +78,15 @@ public class GroupService {
    public Group deleteParticipant(Long id, String username) {
       Group persistedGroup = this.findById(id);
       Person persistedPerson = this.personService.findByUsername(username);
-      verifyParticipateRemoval(persistedGroup, persistedPerson);
+      verifyParticipantRemoval(persistedGroup, persistedPerson);
       persistedGroup.getParticipants().removeIf(persistedPerson::equals);
       return this.groupRepository.save(persistedGroup);
    }
 
-   private void verifyParticipateRemoval(Group group, Person participant) {
+   private void verifyParticipantRemoval(Group group, Person participant) {
       List<Cost> costs = group.getCosts().stream()
               .filter(c -> c.getPayments().stream().anyMatch(p -> Objects.equals(p.getPerson().getUsername(), participant.getUsername())) ||
-                      c.getParticipations().stream().anyMatch(p -> Objects.equals(p.getPerson().getUsername(), participant.getUsername())))
+                      c.getParticipations().stream().flatMap(p -> p.getPeople().stream()).anyMatch(p -> Objects.equals(p.getUsername(), participant.getUsername())))
               .collect(Collectors.toList());
       if (!costs.isEmpty()) {
          throw new ParticipantBusyInCostsException(group.getId(), participant, costs);

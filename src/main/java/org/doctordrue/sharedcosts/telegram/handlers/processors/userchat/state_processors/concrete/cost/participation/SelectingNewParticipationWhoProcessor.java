@@ -48,7 +48,7 @@ public class SelectingNewParticipationWhoProcessor extends BaseStaticKeyboardRep
             Participation participation = new Participation()
                     .setName(name)
                     .setAmount(price)
-                    .setPerson(person)
+                    .addPerson(person)
                     .setCost(cost);
             this.participationProcessingService.processNew(participation, false);
             this.updateSession(update, s -> s.setTempParticipationAmount(null)

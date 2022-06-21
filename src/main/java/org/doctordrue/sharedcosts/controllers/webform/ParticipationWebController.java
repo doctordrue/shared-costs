@@ -1,5 +1,7 @@
 package org.doctordrue.sharedcosts.controllers.webform;
 
+import java.util.Set;
+
 import org.doctordrue.sharedcosts.business.model.webform.processing.SplitInputData;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostService;
 import org.doctordrue.sharedcosts.business.services.processing.ParticipationProcessingService;
@@ -49,17 +51,12 @@ public class ParticipationWebController {
       int size = split.getPeople().size();
       String name = split.getName();
       double amount = split.getAmount();
-      if (size > 1) {
-         name = String.format("1/%s %s", size, name);
-         amount = Math.round(100 * amount / size) / 100d;
-      }
-      for (Person person : split.getPeople()) {
-         Participation participation = new Participation().setName(name)
-                 .setAmount(amount)
-                 .setPerson(person)
-                 .setCost(cost);
-         this.participationProcessingService.processNew(participation, updateCost);
-      }
+      Set<Person> people = split.getPeople();
+      Participation participation = new Participation().setName(name)
+              .setAmount(amount)
+              .setPeople(people)
+              .setCost(cost);
+      this.participationProcessingService.processNew(participation, updateCost);
       return new RedirectView("/costs/" + costId);
    }
 

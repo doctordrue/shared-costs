@@ -40,8 +40,8 @@ public class CostWebController {
    @GetMapping("/{id}")
    public ModelAndView view(@PathVariable("id") Long id, Model model) {
       Cost cost = this.costService.findById(id);
-      List<Total> participationTotals = cost.getParticipations().stream()
-              .collect(Collectors.toMap(Participation::getPerson, Participation::getAmount, Double::sum))
+      List<Total> participationTotals = cost.getParticipationsTotals().stream()
+              .collect(Collectors.toMap(Total::getPerson, Total::getAmount, Double::sum))
               .entrySet().stream()
               .map(e -> new Total().setPerson(e.getKey())
                       .setCurrency(cost.getCurrency())

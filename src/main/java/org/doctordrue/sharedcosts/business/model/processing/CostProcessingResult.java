@@ -34,11 +34,11 @@ public class CostProcessingResult {
       return this;
    }
 
-   public List<Participation> getStakes() {
+   public List<Participation> getParticipations() {
       return participations;
    }
 
-   public CostProcessingResult setStakes(List<Participation> participations) {
+   public CostProcessingResult setParticipations(List<Participation> participations) {
       this.participations = participations;
       return this;
    }
