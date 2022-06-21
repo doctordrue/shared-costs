@@ -2,6 +2,8 @@ package org.doctordrue.sharedcosts.telegram.session.userchat;
 
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.CostAction;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.GroupAction;
+import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.ParticipationAction;
+import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.PaymentAction;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.TransactionAction;
 import org.doctordrue.telegram.bot.api.keyboards.KeyboardOption;
 import org.doctordrue.telegram.bot.api.session.IBotState;
@@ -11,29 +13,31 @@ import org.doctordrue.telegram.bot.api.session.IBotState;
  * 5/24/2022
  **/
 public enum UserChatState implements IBotState {
-   BEFORE_START("Работа не начата"),
-   SELECTING_GROUP("Ожидание выбора группы совместных расходов"),
+   BEFORE_START("Наберите /start для начала работы"),
+   SELECTING_GROUP("Выберите группу"),
 
-   WORKING_WITH_GROUP("Группа совместных расходов выбрана", GroupAction.class),
+   WORKING_WITH_GROUP("Что хотите делать с выбранной группой?", GroupAction.class),
    NEW_COST_AWAITING_NAME("Где потратили?"),
    NEW_COST_SELECTING_CURRENCY("В какой валюте?"),
-   SELECTING_COST("Ожидание выбора статьи расходов"),
+   SELECTING_COST("Выберите чек"),
    NEW_TRANSACTION_SELECTING_CURRENCY("В какой валюте?"),
    NEW_TRANSACTION_AWAITING_AMOUNT("Сколько получили?"),
    NEW_TRANSACTION_SELECTING_FROM("От кого получили?"),
-   SELECTING_TRANSACTION("Выберите транзакцию для редактирования"),
-   WORKING_WITH_TRANSACTION("Что делаем?", TransactionAction.class),
+   SELECTING_TRANSACTION("Выберите перевод для редактирования"),
+   WORKING_WITH_TRANSACTION("Что хотите сделать с выбранным переводом?", TransactionAction.class),
 
-   WORKING_WITH_COST("Что хотите сделать?", CostAction.class),
+   WORKING_WITH_COST("Что хотите сделать с выбранным чеком?", CostAction.class),
 
-   SELECTING_PAYMENT("Какую оплату хотите отредактировать?"),
+   SELECTING_PAYMENT("Выберите оплату"),
    NEW_PAYMENT_AWAITING_AMOUNT("Сколько заплатили?"),
    NEW_PAYMENT_SELECTING_WHO("Кто платил?"),
+   WORKING_WITH_PAYMENT("Что хотите сделать с выбранной оплатой?", PaymentAction.class),
 
-   SELECTING_PARTICIPATION("Какое наименование хотите отредактировать?"),
+   SELECTING_PARTICIPATION("Какую позицию хотите отредактировать?"),
    NEW_PARTICIPATION_AWAITING_NAME("Какое наименование?"),
    NEW_PARTICIPATION_AWAITING_PRICE("Сколько стоит?"),
-   NEW_PARTICIPATION_AWAITING_WHO("Кто это заказывал?");
+   NEW_PARTICIPATION_AWAITING_WHO("Кто это заказывал?"),
+   WORKING_WITH_PARTICIPATION("Что хотите сделать с выбранной позицией?", ParticipationAction.class);
 
    private final String message;
    private final Class<? extends Enum<? extends KeyboardOption<UserChatState>>> onStateKeyboard;
