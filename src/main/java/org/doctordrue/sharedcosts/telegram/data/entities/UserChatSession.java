@@ -56,8 +56,8 @@ public class UserChatSession implements IBotSession<UserChatState> {
    @Column(name = "temp_transaction_amount")
    private Double tempTransactionAmount;
 
-   @ManyToOne
-   @JoinColumn(name = "selected_transaction_id")
+   @ManyToOne(optional = true)
+   @JoinColumn(name = "selected_transaction_id", nullable = true)
    private Transaction selectedTransaction;
 
    public Transaction getSelectedTransaction() {
