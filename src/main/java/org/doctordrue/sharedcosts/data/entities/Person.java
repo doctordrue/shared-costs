@@ -274,4 +274,8 @@ public class Person implements UserDetails {
               .add("isLocked=" + locked)
               .toString();
    }
+
+   public String toTelegramString() {
+      return this.hasTelegramId() ? String.format("[%s](tg://user?id=%s)", this.getShortFullName(), this.getTelegramId()) : this.getShortFullName();
+   }
 }

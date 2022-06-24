@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  * @author Andrey_Barantsev
  * 6/8/2022
  **/
-public abstract class BaseNonCommandHandler<Key, State extends IBotState, Session extends IBotSession<State>> extends BaseStateUpdateHandler<Key, State, Session> implements IUpdateHandler {
+public abstract class BaseNonCommandHandler<Key, State extends IBotState<Session>, Session extends IBotSession<State>> extends BaseStateUpdateHandler<Key, State, Session> implements IUpdateHandler {
 
    private final Map<State, BaseStateUpdateHandler<Key, State, Session>> processorsMap = new HashMap<>();
 

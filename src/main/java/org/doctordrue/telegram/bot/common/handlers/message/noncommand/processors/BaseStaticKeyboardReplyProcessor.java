@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
  * @author Andrey_Barantsev
  * 6/10/2022
  **/
-public abstract class BaseStaticKeyboardReplyProcessor<Key, State extends IBotState, Session extends IBotSession<State>, Keyboard extends Enum<? extends KeyboardOption<State>>>
+public abstract class BaseStaticKeyboardReplyProcessor<Key, State extends IBotState<Session>, Session extends IBotSession<State>, Keyboard extends Enum<? extends KeyboardOption<State>>>
         extends BaseKeyboardReplyProcessor<Key, State, Session> {
 
    private final Class<Keyboard> replyKeyboardEnum;

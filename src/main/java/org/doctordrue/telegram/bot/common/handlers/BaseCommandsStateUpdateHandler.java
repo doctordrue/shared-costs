@@ -26,7 +26,7 @@ import org.telegram.telegrambots.meta.generics.TelegramBot;
  * @author Andrey_Barantsev
  * 5/18/2022
  **/
-public abstract class BaseCommandsStateUpdateHandler<Key, State extends IBotState, Session extends IBotSession<State>> extends BaseStateUpdateHandler<Key, State, Session> implements IMessageUpdateHandler, ICommandRegistry {
+public abstract class BaseCommandsStateUpdateHandler<Key, State extends IBotState<Session>, Session extends IBotSession<State>> extends BaseStateUpdateHandler<Key, State, Session> implements IMessageUpdateHandler, ICommandRegistry {
 
    private final CommandRegistry commandRegistry;
 

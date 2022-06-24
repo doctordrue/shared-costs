@@ -13,7 +13,8 @@ public enum CostAction implements KeyboardOption<UserChatState> {
    ADD_PARTICIPATION("Поучаствовать", UserChatState.NEW_PARTICIPATION_AWAITING_NAME),
    EDIT_PARTICIPATION("Поменять существующее участие", UserChatState.SELECTING_PARTICIPATION),
    VIEW("Показать информацию о чеке", UserChatState.WORKING_WITH_COST),
-   REMOVE("Удалить чек", UserChatState.WORKING_WITH_GROUP);
+   REMOVE("Удалить чек", UserChatState.WORKING_WITH_GROUP),
+   RETURN("Назад к выбору чека", UserChatState.SELECTING_COST);
 
    private final String option;
    private final UserChatState targetState;

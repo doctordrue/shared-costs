@@ -158,4 +158,15 @@ public class Cost {
               .add("datetime=" + datetime)
               .toString();
    }
+
+   public String toTelegramString() {
+      StringBuilder sb = new StringBuilder();
+      sb.append(String.format("_'%1$s'_ от *%2$td %2$tB %2$tY*:\n", this.getName(), this.getDatetime()))
+              .append("Сумма: ").append(String.format("%.2f ", this.getTotal())).append(this.getCurrency().getShortName()).append("\n");
+      if (!this.getPayments().isEmpty()) {
+         sb.append("Оплачено:\n");
+         this.getPayments().forEach(p -> sb.append(String.format("%.2f ", p.getAmount())).append(p.getCurrency().getShortName()).append(" - ").append(p.getPerson().getFullName()));
+      }
+      return sb.toString();
+   }
 }

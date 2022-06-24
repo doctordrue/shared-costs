@@ -1,7 +1,5 @@
 package org.doctordrue.sharedcosts.data.entities;
 
-import java.util.StringJoiner;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -84,11 +82,6 @@ public class Currency {
 
    @Override
    public String toString() {
-      return new StringJoiner(", ", Currency.class.getSimpleName() + "[", "]")
-              .add("id=" + id)
-              .add("shortName=" + shortName)
-              .add("fullName='" + fullName + "'")
-              .add("rate=" + rate)
-              .toString();
+      return this.getShortName();
    }
 }

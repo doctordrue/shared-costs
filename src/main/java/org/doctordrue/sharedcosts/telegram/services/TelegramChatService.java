@@ -28,6 +28,10 @@ public class TelegramChatService {
       return this.telegramChatSettingsRepository.findById(chatId);
    }
 
+   public Optional<TelegramGroupChatSettings> findByGroupId(Long groupId) {
+      return this.telegramChatSettingsRepository.findByGroup_Id(groupId);
+   }
+
    public TelegramGroupChatSettings update(TelegramGroupChatSettings settings) {
       return this.telegramChatSettingsRepository.save(settings);
    }

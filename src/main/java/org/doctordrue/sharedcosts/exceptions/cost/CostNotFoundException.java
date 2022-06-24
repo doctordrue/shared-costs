@@ -11,6 +11,11 @@ public class CostNotFoundException extends BaseCostServiceException {
       setParameter("id", id);
    }
 
+   public CostNotFoundException(String name) {
+      super(CostError.NOT_FOUND_BY_NAME);
+      setParameter("name", name);
+   }
+
    public CostNotFoundException(Long id, Throwable cause) {
       super(CostError.NOT_FOUND_BY_ID, cause);
       setParameter("id", id);

@@ -6,8 +6,9 @@ package org.doctordrue.telegram.bot.api.session;
  * @author Andrey_Barantsev
  * 5/18/2022
  **/
-public interface IBotState {
+public interface IBotState<Session extends IBotSession<? extends IBotState<Session>>> {
 
    String getMessage();
 
+   StateReactionFunction<Session> getOnStateReaction();
 }

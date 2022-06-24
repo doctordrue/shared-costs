@@ -80,18 +80,25 @@ public class GroupBalance implements Serializable {
    }
 
    public String toTelegramString() {
-      StringBuilder sb = new StringBuilder("Информация о группе " + this.getCostGroup().getName()).append("\n");
+      StringBuilder sb = new StringBuilder("Информация о группе _" + this.getCostGroup().getName()).append("_\n");
       sb.append("*Суммарные расходы:*\n");
       this.getCostTotals().forEach(b -> sb.append(" - ").append(b.getAmount()).append(" ").append(b.getCurrency().getShortName()).append("\n"));
-      sb.append("*Всего оплачено:*\n");
-      this.getPaymentsBalance().forEach(b -> sb.append(" - ").append(b.getAmount()).append(" ").append(b.getCurrency().getShortName()).append("\n"));
-      sb.append("*Всего распределено:*\n");
-      this.getParticipationBalance().forEach(b -> sb.append(" - ").append(b.getAmount()).append(" ").append(b.getCurrency().getShortName()).append("\n"));
-      sb.append("*Долги:*\n");
-      this.getDebts().forEach(d -> sb.append("- ").append(String.format("[%s](tg://user?id=%s) ", d.getDebtor().getFullName(), d.getDebtor().getTelegramId()))
-              .append(" должен ").append(String.format("[%s](tg://user?id=%s) ", d.getCreditor().getFullName(), d.getCreditor().getTelegramId()))
-              .append(String.format("%.2f %s\n", d.getAmount(), d.getCurrency().getShortName())));
-      sb.append("*Хотите что-то еще?*");
+      if (!this.getPaymentsBalance().isEmpty()) {
+         sb.append("Не оплачено:*\n");
+         this.getPaymentsBalance().forEach(b -> sb.append(" - ").append(b.getAmount()).append(" ").append(b.getCurrency().getShortName()).append("\n"));
+      }
+      if (!this.getParticipationBalance().isEmpty()) {
+         sb.append("*Оплачено но не распределено по позициям:*\n");
+         this.getParticipationBalance().forEach(b -> sb.append(" - ").append(b.getAmount()).append(" ").append(b.getCurrency().getShortName()).append("\n"));
+      }
+      if (this.getDebts().isEmpty()) {
+         sb.append("Никто никому ничего не должен\n");
+      } else {
+         sb.append("*Долги:*\n");
+         this.getDebts().forEach(d -> sb.append("- ").append(String.format("[%s](tg://user?id=%s) ", d.getDebtor().getFullName(), d.getDebtor().getTelegramId()))
+                 .append(" должен ").append(String.format("[%s](tg://user?id=%s) ", d.getCreditor().getFullName(), d.getCreditor().getTelegramId()))
+                 .append(String.format("%.2f %s\n", d.getAmount(), d.getCurrency().getShortName())));
+      }
       return sb.toString();
    }
 }

@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
  * @author Andrey_Barantsev
  * 5/19/2022
  **/
-public abstract class BaseStateUpdateHandler<Key, State extends IBotState, Session extends IBotSession<State>> implements IUpdateHandler {
+public abstract class BaseStateUpdateHandler<Key, State extends IBotState<Session>, Session extends IBotSession<State>> implements IUpdateHandler {
 
    private final SessionWorker<Key, State, Session> sessionWorker;
 
@@ -30,6 +30,14 @@ public abstract class BaseStateUpdateHandler<Key, State extends IBotState, Sessi
 
    public void updateSession(Update update, UnaryOperator<Session> updater) {
       this.sessionWorker.updateSession(this.getSessionKey(update), updater);
+   }
+
+   public void updateSession(Key key, UnaryOperator<Session> updater) {
+      this.sessionWorker.updateSession(key, updater);
+   }
+
+   public void updateSession(Session session, UnaryOperator<Session> updater) {
+      this.sessionWorker.getSessionHolder().persist(updater.apply(session));
    }
 
    public Session getSession(Update update) {

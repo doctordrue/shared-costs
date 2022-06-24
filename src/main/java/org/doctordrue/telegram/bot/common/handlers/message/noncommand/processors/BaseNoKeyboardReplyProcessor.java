@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRem
  * @author Andrey_Barantsev
  * 6/10/2022
  **/
-public abstract class BaseNoKeyboardReplyProcessor<Key, State extends IBotState, Session extends IBotSession<State>> extends BaseKeyboardReplyProcessor<Key, State, Session> {
+public abstract class BaseNoKeyboardReplyProcessor<Key, State extends IBotState<Session>, Session extends IBotSession<State>> extends BaseKeyboardReplyProcessor<Key, State, Session> {
 
    /**
     * @param sessionWorker

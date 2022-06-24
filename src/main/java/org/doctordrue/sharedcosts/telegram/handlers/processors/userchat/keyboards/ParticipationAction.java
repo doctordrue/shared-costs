@@ -9,7 +9,8 @@ import org.doctordrue.telegram.bot.api.keyboards.KeyboardOption;
  **/
 public enum ParticipationAction implements KeyboardOption<UserChatState> {
    VIEW("Посмотреть информацию о позиции", UserChatState.WORKING_WITH_PARTICIPATION),
-   REMOVE("Удалить позицию", UserChatState.WORKING_WITH_COST);
+   REMOVE("Удалить позицию", UserChatState.WORKING_WITH_COST),
+   RETURN("Назад к выбору позиции", UserChatState.SELECTING_PARTICIPATION);
    private final String option;
    private final UserChatState targetState;
 

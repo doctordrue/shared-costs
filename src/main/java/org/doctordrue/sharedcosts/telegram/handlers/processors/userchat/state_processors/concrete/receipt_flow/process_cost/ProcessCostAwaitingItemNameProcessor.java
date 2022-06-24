@@ -1,4 +1,4 @@
-package org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.participation;
+package org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.receipt_flow.process_cost;
 
 import org.doctordrue.sharedcosts.exceptions.BaseException;
 import org.doctordrue.sharedcosts.telegram.data.entities.UserChatSession;
@@ -10,24 +10,23 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 /**
  * @author Andrey_Barantsev
- * 6/17/2022
+ * 6/24/2022
  **/
 @Component
-public class AwaitingNewParticipationNameProcessor extends BaseSingleStateUserChatProcessor {
+public class ProcessCostAwaitingItemNameProcessor extends BaseSingleStateUserChatProcessor {
 
-   public AwaitingNewParticipationNameProcessor(UserChatSessionWorker sessionWorker) {
-      super(sessionWorker, UserChatState.NEW_PARTICIPATION_AWAITING_PRICE);
+   public ProcessCostAwaitingItemNameProcessor(UserChatSessionWorker sessionWorker) {
+      super(sessionWorker, UserChatState.PROCESS_COST_AWAITING_ITEM_PRICE);
    }
 
    @Override
    protected String onSuccessMessage(UserChatSession session) {
-      String template = "Создаем позицию '%s' в чеке '%s'";
-      return String.format(template, session.getTempParticipationName(), session.getSelectedCost().getName());
+      return null;
    }
 
    @Override
    protected void verifyMessage(Message message, UserChatSession session) throws BaseException {
-      String text = message.getText();
-      this.updateSession(session, s -> s.setTempParticipationName(text));
+      String name = message.getText();
+      this.updateSession(session, s -> s.setTempParticipationName(name));
    }
 }
