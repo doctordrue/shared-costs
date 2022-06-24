@@ -8,15 +8,13 @@ import org.doctordrue.telegram.bot.api.keyboards.KeyboardOption;
  * 6/8/2022
  **/
 public enum GroupAction implements KeyboardOption<UserChatState> {
-   CREATE_COST("Я хочу добавить новый чек", UserChatState.NEW_COST_AWAITING_NAME),
-   EDIT_COST("Я хочу отредактировать добавленный чек", UserChatState.SELECTING_COST),
+   CREATE_COST("Добавить новый чек", UserChatState.NEW_COST_AWAITING_NAME),
+   PROCESS_COST("Ввести чек и позиции", UserChatState.PROCESS_COST_AWAITING_NAME),
+   EDIT_COST("Отредактировать чек", UserChatState.SELECTING_COST),
    ADD_TRANSACTION("Я получил деньги от участника группы", UserChatState.NEW_TRANSACTION_SELECTING_CURRENCY),
    EDIT_TRANSACTION("Я хочу отредактировать денежный перевод между участниками группы", UserChatState.SELECTING_TRANSACTION),
-   SHOW_INFO("Я хочу посмотреть информацию", UserChatState.WORKING_WITH_GROUP);
-
-   GroupAction(String option) {
-      this(option, null);
-   }
+   SHOW_INFO("Посмотреть баланс группы", UserChatState.WORKING_WITH_GROUP),
+   RETURN("Назад к выбору группы", UserChatState.SELECTING_GROUP);
 
    GroupAction(String option, UserChatState targetState) {
       this.option = option;

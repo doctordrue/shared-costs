@@ -9,7 +9,8 @@ import org.doctordrue.telegram.bot.api.keyboards.KeyboardOption;
  **/
 public enum PaymentAction implements KeyboardOption<UserChatState> {
    VIEW("Посмотреть информацию об оплате", UserChatState.WORKING_WITH_PAYMENT),
-   REMOVE("Удалить оплату", UserChatState.WORKING_WITH_COST);
+   REMOVE("Удалить оплату", UserChatState.WORKING_WITH_COST),
+   RETURN("Назад к выбору оплаты", UserChatState.SELECTING_PAYMENT);
 
    private final String option;
    private final UserChatState targetState;

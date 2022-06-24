@@ -16,7 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
  * @author Andrey_Barantsev
  * 6/10/2022
  **/
-public abstract class BaseStaticKeyboardAnswerProcessor<Key, State extends IBotState, Session extends IBotSession<State>, Option extends Enum<? extends KeyboardOption<UserChatState>>>
+public abstract class BaseStaticKeyboardAnswerProcessor<Key, State extends IBotState<Session>, Session extends IBotSession<State>, Option extends Enum<? extends KeyboardOption<UserChatState>>>
         extends BaseUpdateProcessor<Key, State, Session> {
 
    private final Class<Option> answerOnKeyboardEnum;

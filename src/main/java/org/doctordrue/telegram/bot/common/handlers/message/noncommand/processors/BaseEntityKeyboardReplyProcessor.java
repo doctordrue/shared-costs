@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
  * @author Andrey_Barantsev
  * 6/16/2022
  **/
-public abstract class BaseEntityKeyboardReplyProcessor<Key, State extends IBotState, Session extends IBotSession<State>, Entity> extends BaseKeyboardReplyProcessor<Key, State, Session> {
+public abstract class BaseEntityKeyboardReplyProcessor<Key, State extends IBotState<Session>, Session extends IBotSession<State>, Entity> extends BaseKeyboardReplyProcessor<Key, State, Session> {
 
    public BaseEntityKeyboardReplyProcessor(SessionWorker<Key, State, Session> sessionWorker, State targetState) {
       super(sessionWorker, targetState);

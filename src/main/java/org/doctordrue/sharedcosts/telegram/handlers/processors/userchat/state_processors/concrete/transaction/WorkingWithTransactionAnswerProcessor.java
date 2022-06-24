@@ -28,18 +28,15 @@ public class WorkingWithTransactionAnswerProcessor extends BaseStaticKeyboardAns
 
    @Override
    protected void onStateChange(AbsSender absSender, UserChatState newState, Update update) {
-      SendMessage.SendMessageBuilder builder = SendMessage.builder().chatId(update.getMessage().getChatId().toString());
-      builder.replyMarkup(KeyboardGeneratorUtils.removeKeyboard()).text(newState.getMessage());
       Transaction selectedTransaction = this.getSession(update).getSelectedTransaction();
       if (newState == UserChatState.WORKING_WITH_GROUP) {
-         // remove action was selected
+         // remove action selected
+         SendMessage.SendMessageBuilder builder = SendMessage.builder().chatId(update.getMessage().getChatId().toString());
+         builder.replyMarkup(KeyboardGeneratorUtils.removeKeyboard()).text(newState.getMessage());
          this.updateSession(update, s -> s.setSelectedTransaction(null));
          this.transactionService.delete(selectedTransaction.getId());
          builder.text("Перевод удален. Что делаем дальше?");
+         sendMessage(absSender, builder);
       }
-      if (newState.getOnStateKeyboard() != null) {
-         builder.replyMarkup(KeyboardGeneratorUtils.generateStaticKeyboard(newState.getOnStateKeyboard()));
-      }
-      sendMessage(absSender, builder);
    }
 }

@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
  * @author Andrey_Barantsev
  * 6/15/2022
  **/
-public abstract class BaseKeyboardReplyProcessor<Key, State extends IBotState, Session extends IBotSession<State>> extends BaseSingleStateUpdateProcessor<Key, State, Session> {
+public abstract class BaseKeyboardReplyProcessor<Key, State extends IBotState<Session>, Session extends IBotSession<State>> extends BaseSingleStateUpdateProcessor<Key, State, Session> {
 
    /**
     * @param sessionWorker
@@ -25,7 +25,7 @@ public abstract class BaseKeyboardReplyProcessor<Key, State extends IBotState, S
    }
 
    @Override
-   protected final void onExpectedInput(AbsSender sender, Update update) {
+   protected void onExpectedInput(AbsSender sender, Update update) {
       Chat chat = update.getMessage().getChat();
       sendMessage(sender, SendMessage.builder().chatId(chat.getId().toString())
               .replyMarkup(getKeyboard(getSession(update)))

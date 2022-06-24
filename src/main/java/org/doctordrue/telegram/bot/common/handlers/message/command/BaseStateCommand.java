@@ -20,7 +20,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  * @author Andrey_Barantsev
  * 5/23/2022
  **/
-public abstract class BaseStateCommand<Key, State extends IBotState, Session extends IBotSession<State>> extends BotCommand implements IStateBotCommand<Key, State>, SessionWorker<Key, State, Session> {
+public abstract class BaseStateCommand<Key, State extends IBotState<Session>, Session extends IBotSession<State>> extends BotCommand implements IStateBotCommand<Key, State>, SessionWorker<Key, State, Session> {
 
    private final Predicate<State> expectedStatePredicate;
    private final State successState;
@@ -57,6 +57,10 @@ public abstract class BaseStateCommand<Key, State extends IBotState, Session ext
          } else {
             onAnotherState(absSender, user, chat);
          }
+         // TODO: to be moved to main process update cycle as we need to react on any update received including non-command updates
+         // show on state reaction
+         Session session = this.getSessionHolder().getSession(sessionKey);
+         sendMessage(absSender, this.getState(sessionKey).getOnStateReaction().apply(session));
       } else {
          onNonCompliantMessage(absSender, user, chat);
       }
@@ -69,8 +73,12 @@ public abstract class BaseStateCommand<Key, State extends IBotState, Session ext
     * @param builder
     */
    protected void sendMessage(AbsSender sender, SendMessage.SendMessageBuilder builder) {
+      sendMessage(sender, builder.build());
+   }
+
+   protected void sendMessage(AbsSender sender, SendMessage sendMessage) {
       try {
-         sender.execute(builder.build());
+         sender.execute(sendMessage);
       } catch (TelegramApiException e) {
          throw new RuntimeException(e);
       }

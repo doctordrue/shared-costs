@@ -7,7 +7,9 @@ import org.doctordrue.sharedcosts.exceptions.IErrorMessage;
  * 4/15/2022
  **/
 public enum CostError implements IErrorMessage {
-   NOT_FOUND_BY_ID("COST-001", "Cost not found for id=${id}");
+   NOT_FOUND_BY_ID("COST-001", "Cost not found for id=${id}"),
+   NOT_FOUND_BY_NAME(null, "Чек с именем '{name} не найден'"),
+   ALREADY_EXIST(null, "Чек с именем ${name} уже есть в системе. Используйте другое название");
 
    private final String code;
    private final String template;

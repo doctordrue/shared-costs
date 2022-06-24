@@ -1,10 +1,14 @@
 package org.doctordrue.sharedcosts.telegram.handlers.commands.userchat;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.doctordrue.sharedcosts.business.services.dataaccess.CurrencyService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.PersonService;
+import org.doctordrue.sharedcosts.data.entities.Currency;
 import org.doctordrue.sharedcosts.data.entities.Person;
 import org.doctordrue.sharedcosts.telegram.handlers.commands.BaseUserChatCommand;
 import org.doctordrue.sharedcosts.telegram.session.userchat.UserChatState;
-import org.doctordrue.sharedcosts.telegram.utils.KeyboardGeneratorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -23,6 +27,8 @@ public class StartCommand extends BaseUserChatCommand {
 
    @Autowired
    private PersonService personService;
+   @Autowired
+   private CurrencyService currencyService;
 
    public StartCommand() {
       super("start", "Начинает работу с группами совместных расходов",
@@ -35,10 +41,8 @@ public class StartCommand extends BaseUserChatCommand {
       Person person = this.personService
               .findByTelegramId(user.getId())
               .orElseGet(() -> this.personService.addTelegramUser(user));
-      SendMessage.SendMessageBuilder builder = SendMessage.builder()
-              .chatId(chat.getId().toString())
-              .replyMarkup(KeyboardGeneratorUtils.selectGroupsKeyboard(person.getGroups())).text("Выберите группу");
-      sendMessage(absSender, builder);
+      Set<Currency> currencies = new LinkedHashSet<>(this.currencyService.findAll());
+      this.updateSession(chat, s -> s.setAvailableGroups(new LinkedHashSet<>(person.getGroups())).setAvailableCurrencies(currencies));
    }
 
    @Override

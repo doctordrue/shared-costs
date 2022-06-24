@@ -1,17 +1,25 @@
 package org.doctordrue.sharedcosts.telegram.data.entities;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.doctordrue.sharedcosts.data.entities.Cost;
 import org.doctordrue.sharedcosts.data.entities.Currency;
 import org.doctordrue.sharedcosts.data.entities.Group;
+import org.doctordrue.sharedcosts.data.entities.Participation;
+import org.doctordrue.sharedcosts.data.entities.Person;
 import org.doctordrue.sharedcosts.data.entities.Transaction;
 import org.doctordrue.sharedcosts.telegram.session.userchat.UserChatState;
 import org.doctordrue.telegram.bot.api.session.IBotSession;
@@ -40,7 +48,7 @@ public class UserChatSession implements IBotSession<UserChatState> {
    @Column(name = "temp_cost_name")
    private String tempCostName;
 
-   @ManyToOne
+   @ManyToOne(optional = true)
    @JoinColumn(name = "selected_cost_id")
    private Cost selectedCost;
 
@@ -59,6 +67,58 @@ public class UserChatSession implements IBotSession<UserChatState> {
    @ManyToOne(optional = true)
    @JoinColumn(name = "selected_transaction_id", nullable = true)
    private Transaction selectedTransaction;
+
+   @ManyToOne
+   @JoinColumn(name = "selected_participation_id")
+   private Participation selectedParticipation;
+
+   @ManyToMany(fetch = FetchType.EAGER)
+   @JoinTable(name = "user_chat_session_currencies")
+   private Set<Currency> availableCurrencies = new LinkedHashSet<>();
+
+   @ManyToMany(fetch = FetchType.EAGER)
+   @JoinTable(name = "user_chat_session_groups")
+   private Set<Group> availableGroups = new LinkedHashSet<>();
+
+   @ManyToOne
+   @JoinColumn(name = "temp_cost_payer_id")
+   private Person tempCostPayer;
+
+   public Person getTempCostPayer() {
+      return tempCostPayer;
+   }
+
+   public UserChatSession setTempCostPayer(Person tempCostPayer) {
+      this.tempCostPayer = tempCostPayer;
+      return this;
+   }
+
+   public Participation getSelectedParticipation() {
+      return selectedParticipation;
+   }
+
+   public UserChatSession setSelectedParticipation(Participation selectedParticipation) {
+      this.selectedParticipation = selectedParticipation;
+      return this;
+   }
+
+   public Set<Group> getAvailableGroups() {
+      return availableGroups;
+   }
+
+   public UserChatSession setAvailableGroups(Set<Group> availableGroups) {
+      this.availableGroups = availableGroups;
+      return this;
+   }
+
+   public Set<Currency> getAvailableCurrencies() {
+      return availableCurrencies;
+   }
+
+   public UserChatSession setAvailableCurrencies(Set<Currency> availableCurrencies) {
+      this.availableCurrencies = availableCurrencies;
+      return this;
+   }
 
    public Transaction getSelectedTransaction() {
       return selectedTransaction;

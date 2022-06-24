@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
  * @param <Key>   bot session key
  * @param <State> bot state
  */
-public abstract class BaseSingleStateUpdateProcessor<Key, State extends IBotState, Session extends IBotSession<State>> extends BaseUpdateProcessor<Key, State, Session> {
+public abstract class BaseSingleStateUpdateProcessor<Key, State extends IBotState<Session>, Session extends IBotSession<State>> extends BaseUpdateProcessor<Key, State, Session> {
 
    private final State targetState;
 

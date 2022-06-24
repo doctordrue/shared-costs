@@ -1,5 +1,6 @@
 package org.doctordrue.sharedcosts.data.entities;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,7 +41,7 @@ public class Participation implements ISharedAmount<Total> {
 
    @ManyToMany
    @JoinTable(name = "person_participation")
-   private Set<Person> people;
+   private Set<Person> people = new HashSet<>();
 
    public Long getId() {
       return id;
@@ -106,5 +107,11 @@ public class Participation implements ISharedAmount<Total> {
    public Participation addPerson(Person person) {
       this.people.add(person);
       return this;
+   }
+
+   public Set<Person> getPotentialParticipants() {
+      return this.getCost().getGroup().getParticipants().stream()
+              .filter(p -> !this.getPeople().contains(p))
+              .collect(Collectors.toSet());
    }
 }

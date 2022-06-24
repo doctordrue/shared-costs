@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  * @author Andrey_Barantsev
  * 6/8/2022
  **/
-public abstract class BaseUpdateProcessor<Key, State extends IBotState, Session extends IBotSession<State>> extends BaseStateUpdateHandler<Key, State, Session> {
+public abstract class BaseUpdateProcessor<Key, State extends IBotState<Session>, Session extends IBotSession<State>> extends BaseStateUpdateHandler<Key, State, Session> {
 
    public BaseUpdateProcessor(SessionWorker<Key, State, Session> sessionWorker) {
       super(sessionWorker);
@@ -27,8 +27,12 @@ public abstract class BaseUpdateProcessor<Key, State extends IBotState, Session 
     * @param builder {@link org.telegram.telegrambots.meta.api.methods.send.SendMessage.SendMessageBuilder} builder of message to send
     */
    protected void sendMessage(AbsSender sender, SendMessage.SendMessageBuilder builder) {
+      sendMessage(sender, builder.build());
+   }
+
+   protected void sendMessage(AbsSender sender, SendMessage sendMessage) {
       try {
-         sender.execute(builder.build());
+         sender.execute(sendMessage);
       } catch (TelegramApiException e) {
          throw new RuntimeException(e);
       }
@@ -40,6 +44,7 @@ public abstract class BaseUpdateProcessor<Key, State extends IBotState, Session 
 
       // new flow - to manage non-expected states by throwing exceptions
       try {
+         // verify user input to calculate new bot state
          newState = calculateNewState(update);
          if (newState != null) {
             this.setState(update, newState);
@@ -55,6 +60,9 @@ public abstract class BaseUpdateProcessor<Key, State extends IBotState, Session 
             // to support old flow
             onNonExpectedInput(absSender, update);
          }
+         // TODO: to be moved to main process update cycle as we need to react on any update received including /command updates
+         // show on state reaction
+         sendMessage(absSender, this.getState(update).getOnStateReaction().apply(this.getSession(update)));
       }
 
    }

@@ -5,19 +5,19 @@ import org.doctordrue.telegram.bot.api.keyboards.KeyboardOption;
 
 /**
  * @author Andrey_Barantsev
- * 6/20/2022
+ * 6/23/2022
  **/
-public enum TransactionAction implements KeyboardOption<UserChatState> {
-   REMOVE("Удалить", UserChatState.WORKING_WITH_GROUP),
-   RETURN("Назад к выбору перевода", UserChatState.SELECTING_TRANSACTION);
+public enum ItemParticipantsAction implements KeyboardOption<UserChatState> {
+   ADD_MORE("Добавить участника", UserChatState.ALLOCATE_ITEMS_SELECTING_PARTICIPANT),
+   FINISH("К следующей позици в чеке", UserChatState.ALLOCATE_ITEMS_SELECTING_ITEM);
 
-   private final String option;
-   private final UserChatState targetState;
-
-   TransactionAction(String option, UserChatState targetState) {
+   ItemParticipantsAction(String option, UserChatState targetState) {
       this.option = option;
       this.targetState = targetState;
    }
+
+   private final String option;
+   private final UserChatState targetState;
 
    @Override
    public String getOption() {

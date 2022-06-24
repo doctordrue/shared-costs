@@ -36,8 +36,8 @@ public class UserChatNonCommandHandler extends BaseNonCommandHandler<Chat, UserC
    public UserChatNonCommandHandler(UserChatSessionWorker sessionWorker,
                                     WorkingWithGroupAnswerProcessor workingWithGroupProcessor,
                                     SelectingGroupProcessor selectingGroupProcessor,
-                                    SelectingNewCostCurrencyProcessor selectingNewCostCurrencyProcessor,
                                     AwaitingNewCostNameProcessor awaitingNewCostNameProcessor,
+                                    SelectingNewCostCurrencyProcessor selectingNewCostCurrencyProcessor,
                                     SelectingCostProcessor selectingCostProcessor,
                                     WorkingWithCostAnswerProcessor workingWithCostProcessor,
                                     AwaitingNewPaymentAmountProcessor awaitingNewPaymentAmountProcessor,
@@ -53,8 +53,8 @@ public class UserChatNonCommandHandler extends BaseNonCommandHandler<Chat, UserC
       super(sessionWorker);
       this.registerProcessor(UserChatState.SELECTING_GROUP, selectingGroupProcessor);
       this.registerProcessor(UserChatState.WORKING_WITH_GROUP, workingWithGroupProcessor);
-      this.registerProcessor(UserChatState.NEW_COST_SELECTING_CURRENCY, selectingNewCostCurrencyProcessor);
       this.registerProcessor(UserChatState.NEW_COST_AWAITING_NAME, awaitingNewCostNameProcessor);
+      this.registerProcessor(UserChatState.NEW_COST_SELECTING_CURRENCY, selectingNewCostCurrencyProcessor);
       this.registerProcessor(UserChatState.SELECTING_COST, selectingCostProcessor);
       this.registerProcessor(UserChatState.WORKING_WITH_COST, workingWithCostProcessor);
       this.registerProcessor(UserChatState.NEW_PAYMENT_AWAITING_AMOUNT, awaitingNewPaymentAmountProcessor);
