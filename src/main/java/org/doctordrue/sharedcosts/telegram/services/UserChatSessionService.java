@@ -4,6 +4,7 @@ import org.doctordrue.sharedcosts.telegram.data.entities.UserChatSession;
 import org.doctordrue.sharedcosts.telegram.data.repositories.UserChatSessionRepository;
 import org.doctordrue.telegram.bot.api.session.ISessionHolder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 
@@ -12,6 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Chat;
  * 5/24/2022
  **/
 @Service
+@Profile("telegram")
 public class UserChatSessionService implements ISessionHolder<Chat, UserChatSession> {
 
    @Autowired

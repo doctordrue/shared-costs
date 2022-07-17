@@ -6,6 +6,7 @@ import org.doctordrue.sharedcosts.business.services.dataaccess.GroupService;
 import org.doctordrue.sharedcosts.telegram.data.entities.TelegramGroupChatSettings;
 import org.doctordrue.sharedcosts.telegram.data.repositories.TelegramChatSettingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
  * 5/13/2022
  **/
 @Service
+@Profile("telegram")
 public class TelegramChatService {
    @Autowired
    private GroupService groupService;
