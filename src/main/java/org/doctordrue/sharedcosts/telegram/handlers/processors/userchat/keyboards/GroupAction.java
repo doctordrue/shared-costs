@@ -8,7 +8,6 @@ import org.doctordrue.telegram.bot.api.keyboards.KeyboardOption;
  * 6/8/2022
  **/
 public enum GroupAction implements KeyboardOption<UserChatState> {
-   CREATE_COST("Добавить новый чек", UserChatState.NEW_COST_AWAITING_NAME),
    PROCESS_COST("Ввести чек и позиции", UserChatState.PROCESS_COST_AWAITING_NAME),
    EDIT_COST("Отредактировать чек", UserChatState.SELECTING_COST),
    ADD_TRANSACTION("Я получил деньги от участника группы", UserChatState.NEW_TRANSACTION_SELECTING_CURRENCY),

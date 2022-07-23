@@ -1,4 +1,4 @@
-package org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost;
+package org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.deprecated;
 
 import org.apache.commons.lang3.StringUtils;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostService;

@@ -1,21 +1,12 @@
 package org.doctordrue.sharedcosts.data.entities;
 
+import org.doctordrue.sharedcosts.business.model.debt_calculation.Total;
+
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import org.doctordrue.sharedcosts.business.model.debt_calculation.Total;
 
 /**
  * @author Andrey_Barantsev
@@ -39,7 +30,7 @@ public class Participation implements ISharedAmount<Total> {
    @ManyToOne(optional = false)
    private Cost cost;
 
-   @ManyToMany
+   @ManyToMany(fetch = FetchType.EAGER)
    @JoinTable(name = "person_participation")
    private Set<Person> people = new HashSet<>();
 
@@ -113,5 +104,19 @@ public class Participation implements ISharedAmount<Total> {
       return this.getCost().getGroup().getParticipants().stream()
               .filter(p -> !this.getPeople().contains(p))
               .collect(Collectors.toSet());
+   }
+
+   public String toTelegramString() {
+      StringBuilder sb = new StringBuilder();
+      sb.append(String.format("%s = %.2f %s: ", this.getName(), this.getAmount(), this.getCurrency()));
+      if (this.getPeople().isEmpty()) {
+         sb.append(" - не распределено!");
+      } else {
+         sb.append(this.getPeople()
+                 .stream()
+                 .map(Person::toTelegramString)
+                 .collect(Collectors.joining(", ")));
+      }
+      return sb.toString();
    }
 }
