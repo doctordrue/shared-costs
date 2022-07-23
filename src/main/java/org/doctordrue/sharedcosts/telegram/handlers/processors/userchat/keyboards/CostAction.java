@@ -8,21 +8,26 @@ import org.doctordrue.telegram.bot.api.keyboards.KeyboardOption;
  * 6/9/2022
  **/
 public enum CostAction implements KeyboardOption<UserChatState> {
-   ADD_PAYMENT("Оплатить", UserChatState.NEW_PAYMENT_AWAITING_AMOUNT),
-   EDIT_PAYMENT("Редактировать оплаченное", UserChatState.SELECTING_PAYMENT),
-   ADD_PARTICIPATION("Поучаствовать", UserChatState.NEW_PARTICIPATION_AWAITING_NAME),
-   EDIT_PARTICIPATION("Поменять существующее участие", UserChatState.SELECTING_PARTICIPATION),
-   VIEW("Показать информацию о чеке", UserChatState.WORKING_WITH_COST),
-   REMOVE("Удалить чек", UserChatState.WORKING_WITH_GROUP),
-   RETURN("Назад к выбору чека", UserChatState.SELECTING_COST);
+    ALLOCATE_ITEMS("Распределить позиции в чеке", UserChatState.ALLOCATE_ITEMS_SELECTING_ITEM),
 
-   private final String option;
-   private final UserChatState targetState;
+    VIEW("Показать информацию о чеке", UserChatState.WORKING_WITH_COST),
+    REMOVE("Удалить чек", UserChatState.WORKING_WITH_GROUP),
+    RETURN("Назад к выбору чека", UserChatState.SELECTING_COST),
 
-   CostAction(String option, UserChatState targetState) {
-      this.option = option;
-      this.targetState = targetState;
-   }
+//   ADD_PAYMENT("Оплатить", UserChatState.NEW_PAYMENT_AWAITING_AMOUNT),
+//   EDIT_PAYMENT("Редактировать оплаченное", UserChatState.SELECTING_PAYMENT),
+//   ADD_PARTICIPATION("Поучаствовать", UserChatState.NEW_PARTICIPATION_AWAITING_NAME),
+//   EDIT_PARTICIPATION("Поменять существующее участие", UserChatState.SELECTING_PARTICIPATION)
+    ;
+
+
+    private final String option;
+    private final UserChatState targetState;
+
+    CostAction(String option, UserChatState targetState) {
+        this.option = option;
+        this.targetState = targetState;
+    }
 
    @Override
    public String getOption() {

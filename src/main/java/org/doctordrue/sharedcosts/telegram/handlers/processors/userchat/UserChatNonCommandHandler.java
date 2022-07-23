@@ -3,7 +3,6 @@ package org.doctordrue.sharedcosts.telegram.handlers.processors.userchat;
 import org.doctordrue.sharedcosts.telegram.data.entities.UserChatSession;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.SelectingGroupProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.WorkingWithGroupAnswerProcessor;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.AwaitingNewCostNameProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.SelectingCostProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.SelectingNewCostCurrencyProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.WorkingWithCostAnswerProcessor;
@@ -12,17 +11,8 @@ import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_pr
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.participation.SelectingNewParticipationWhoProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.payment.AwaitingNewPaymentAmountProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.payment.SelectingNewPaymentWhoProcessor;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.receipt_flow.process_cost.ProcessCostActionProcessor;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.receipt_flow.process_cost.ProcessCostAwaitingItemNameProcessor;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.receipt_flow.process_cost.ProcessCostAwaitingItemPriceProcessor;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.receipt_flow.process_cost.ProcessCostAwaitingNameProcessor;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.receipt_flow.process_cost.ProcessCostSelectingCurrencyProcessor;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.receipt_flow.process_cost.ProcessCostSelectingPayerProcessor;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.transaction.AwaitingNewTransactionAmountProcessor;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.transaction.SelectingNewTransactionCurrencyProcessor;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.transaction.SelectingNewTransactionFromProcessor;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.transaction.SelectingTransactionProcessor;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.transaction.WorkingWithTransactionAnswerProcessor;
+import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.receipt_flow.process_cost.*;
+import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.transaction.*;
 import org.doctordrue.sharedcosts.telegram.session.userchat.UserChatSessionWorker;
 import org.doctordrue.sharedcosts.telegram.session.userchat.UserChatState;
 import org.doctordrue.telegram.bot.common.handlers.message.noncommand.handler.BaseNonCommandHandler;
@@ -42,7 +32,6 @@ public class UserChatNonCommandHandler extends BaseNonCommandHandler<Chat, UserC
    public UserChatNonCommandHandler(UserChatSessionWorker sessionWorker,
                                     WorkingWithGroupAnswerProcessor workingWithGroupProcessor,
                                     SelectingGroupProcessor selectingGroupProcessor,
-                                    AwaitingNewCostNameProcessor awaitingNewCostNameProcessor,
                                     SelectingNewCostCurrencyProcessor selectingNewCostCurrencyProcessor,
                                     SelectingCostProcessor selectingCostProcessor,
                                     WorkingWithCostAnswerProcessor workingWithCostProcessor,
@@ -65,7 +54,6 @@ public class UserChatNonCommandHandler extends BaseNonCommandHandler<Chat, UserC
       super(sessionWorker);
       this.registerProcessor(UserChatState.SELECTING_GROUP, selectingGroupProcessor);
       this.registerProcessor(UserChatState.WORKING_WITH_GROUP, workingWithGroupProcessor);
-      this.registerProcessor(UserChatState.NEW_COST_AWAITING_NAME, awaitingNewCostNameProcessor);
       this.registerProcessor(UserChatState.NEW_COST_SELECTING_CURRENCY, selectingNewCostCurrencyProcessor);
       this.registerProcessor(UserChatState.SELECTING_COST, selectingCostProcessor);
       this.registerProcessor(UserChatState.WORKING_WITH_COST, workingWithCostProcessor);

@@ -8,18 +8,18 @@ import org.doctordrue.telegram.bot.api.keyboards.KeyboardOption;
  * 6/23/2022
  **/
 public enum ItemParticipantsAction implements KeyboardOption<UserChatState> {
-   ADD_MORE("Добавить участника", UserChatState.ALLOCATE_ITEMS_SELECTING_PARTICIPANT),
-   FINISH("К следующей позици в чеке", UserChatState.ALLOCATE_ITEMS_SELECTING_ITEM);
+    ADD_MORE("Добавить участника", UserChatState.ALLOCATE_ITEMS_SELECTING_PARTICIPANT),
+    FINISH("К следующей позиции в чеке", UserChatState.ALLOCATE_ITEMS_SELECTING_ITEM);
 
-   ItemParticipantsAction(String option, UserChatState targetState) {
-      this.option = option;
-      this.targetState = targetState;
-   }
+    ItemParticipantsAction(String option, UserChatState targetState) {
+        this.option = option;
+        this.targetState = targetState;
+    }
 
-   private final String option;
-   private final UserChatState targetState;
+    private final String option;
+    private final UserChatState targetState;
 
-   @Override
+    @Override
    public String getOption() {
       return this.option;
    }

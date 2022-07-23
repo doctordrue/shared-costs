@@ -1,21 +1,15 @@
 package org.doctordrue.sharedcosts.telegram.session.userchat;
 
-import java.util.function.Function;
-
 import org.doctordrue.sharedcosts.telegram.data.entities.UserChatSession;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.CostAction;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.GroupAction;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.ItemParticipantsAction;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.ParticipationAction;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.PaymentAction;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.ProcessCostAction;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.TransactionAction;
+import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.keyboards.*;
 import org.doctordrue.sharedcosts.telegram.utils.KeyboardGeneratorUtils;
 import org.doctordrue.telegram.bot.api.keyboards.KeyboardOption;
 import org.doctordrue.telegram.bot.api.session.IBotState;
 import org.doctordrue.telegram.bot.api.session.StateReactionFunction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
+
+import java.util.function.Function;
 
 /**
  * @author Andrey_Barantsev
@@ -40,7 +34,7 @@ public enum UserChatState implements IBotState<UserChatSession> {
    // Process new receipt
    PROCESS_COST_AWAITING_NAME("Где потратили?"),
    PROCESS_COST_SELECTING_CURRENCY("В какой валюте?", s -> KeyboardGeneratorUtils.selectCurrencyKeyboard(s.getAvailableCurrencies())),
-   PROCESS_COST_SELECTING_ACTION("Что хотите сделать?", ProcessCostAction.class),
+   PROCESS_COST_SELECTING_ACTION("Что хотите сделать?", ProcessCostAction.class), //добавить в чек или завершить
    PROCESS_COST_SELECTING_PAYER("Кто платил?", s -> KeyboardGeneratorUtils.selectPersonKeyboard(s.getSelectedGroup().getParticipants())),
    PROCESS_COST_AWAITING_ITEM_NAME("Введите наименование"),
    PROCESS_COST_AWAITING_ITEM_PRICE("Введите цену"),

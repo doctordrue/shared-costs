@@ -1,24 +1,14 @@
 package org.doctordrue.sharedcosts.data.entities;
 
+import org.doctordrue.sharedcosts.business.model.debt_calculation.Total;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-
-import org.doctordrue.sharedcosts.business.model.debt_calculation.Total;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * @author Andrey_Barantsev
@@ -165,7 +155,14 @@ public class Cost {
               .append("Сумма: ").append(String.format("%.2f ", this.getTotal())).append(this.getCurrency().getShortName()).append("\n");
       if (!this.getPayments().isEmpty()) {
          sb.append("Оплачено:\n");
-         this.getPayments().forEach(p -> sb.append(String.format("%.2f ", p.getAmount())).append(p.getCurrency().getShortName()).append(" - ").append(p.getPerson().getFullName()));
+         this.getPayments().forEach(p -> sb.append(String.format("%.2f ", p.getAmount()))
+                 .append(p.getCurrency().getShortName()).append(" - ")
+                 .append(p.getPerson().toTelegramString())
+                 .append("\n"));
+      }
+      if (!this.getParticipations().isEmpty()) {
+         sb.append("Позиции в чеке:\n");
+         this.getParticipations().forEach(p -> sb.append(p.toTelegramString()).append("\n"));
       }
       return sb.toString();
    }
