@@ -1,8 +1,4 @@
-package org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
+package org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.deprecated;
 
 import org.doctordrue.sharedcosts.business.services.dataaccess.CostService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.CurrencyService;
@@ -18,11 +14,16 @@ import org.doctordrue.sharedcosts.telegram.session.userchat.UserChatState;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
 /**
  * @author Andrey_Barantsev
  * 6/9/2022
  **/
 @Component
+@Deprecated
 public class SelectingNewCostCurrencyProcessor extends BaseSingleStateUserChatProcessor {
 
    private static final UserChatState TARGET_STATE = UserChatState.WORKING_WITH_COST;

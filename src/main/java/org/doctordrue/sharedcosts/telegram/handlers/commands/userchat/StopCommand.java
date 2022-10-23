@@ -19,7 +19,7 @@ public class StopCommand extends BaseUserChatCommand {
 
    public StopCommand() {
       super("stop",
-              "Останавливает текущий процесс работы с группой совместных расходов",
+              "[ЛС] прекратить работу с группами",
               s -> s != UserChatState.BEFORE_START,
               UserChatState.BEFORE_START);
    }

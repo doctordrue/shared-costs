@@ -1,8 +1,5 @@
 package org.doctordrue.sharedcosts.telegram.handlers.commands.userchat;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.doctordrue.sharedcosts.business.services.dataaccess.CurrencyService;
 import org.doctordrue.sharedcosts.business.services.dataaccess.PersonService;
 import org.doctordrue.sharedcosts.data.entities.Currency;
@@ -15,6 +12,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Andrey_Barantsev
@@ -31,7 +31,7 @@ public class StartCommand extends BaseUserChatCommand {
    private CurrencyService currencyService;
 
    public StartCommand() {
-      super("start", "Начинает работу с группами совместных расходов",
+      super("start", "[ЛС] начать работу с группами",
               UserChatState.BEFORE_START,
               UserChatState.SELECTING_GROUP);
    }

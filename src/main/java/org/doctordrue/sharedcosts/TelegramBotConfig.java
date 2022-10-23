@@ -2,6 +2,7 @@ package org.doctordrue.sharedcosts;
 
 import org.apache.commons.lang3.StringUtils;
 import org.doctordrue.sharedcosts.telegram.SharedCostsBot;
+import org.doctordrue.sharedcosts.telegram.handlers.commands.MyHelpCommand;
 import org.doctordrue.sharedcosts.telegram.handlers.commands.groupchat.AddMeCommand;
 import org.doctordrue.sharedcosts.telegram.handlers.commands.groupchat.DebtsCommand;
 import org.doctordrue.sharedcosts.telegram.handlers.commands.groupchat.InitCommand;
@@ -40,7 +41,10 @@ public class TelegramBotConfig {
    @Autowired
    private StopCommand stopCommand;
    @Autowired
+   private MyHelpCommand helpCommand;
+   @Autowired
    private UserChatNonCommandHandler handler;
+
    @Bean
    public DefaultBotOptions defaultBotOptions() {
       DefaultBotOptions options = new DefaultBotOptions();
@@ -68,6 +72,7 @@ public class TelegramBotConfig {
       /* User chat commands */
       bot.register(this.startCommand);
       bot.register(this.stopCommand);
+      bot.register(this.helpCommand);
       bot.register(this.handler);
 
       return bot;
