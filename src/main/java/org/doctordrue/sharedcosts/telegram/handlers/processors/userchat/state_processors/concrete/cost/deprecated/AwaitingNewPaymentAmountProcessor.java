@@ -1,4 +1,4 @@
-package org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.payment;
+package org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.deprecated;
 
 import org.doctordrue.sharedcosts.exceptions.BaseException;
 import org.doctordrue.sharedcosts.exceptions.parse.MoneyFormatException;
@@ -14,6 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
  * 6/16/2022
  **/
 @Component
+@Deprecated
 public class AwaitingNewPaymentAmountProcessor extends BaseSingleStateUserChatProcessor {
 
    private static final String AMOUNT_REGEX = "^\\d+(\\.\\d{1,2})?$";

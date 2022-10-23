@@ -18,10 +18,13 @@ import java.util.function.Function;
 public enum UserChatState implements IBotState<UserChatSession> {
    BEFORE_START("Наберите /start для начала работы"),
    SELECTING_GROUP("Выберите группу", s -> KeyboardGeneratorUtils.selectGroupsKeyboard(s.getAvailableGroups())),
-
    WORKING_WITH_GROUP("Что хотите делать с выбранной группой?", GroupAction.class),
+
+   @Deprecated
    NEW_COST_AWAITING_NAME("Где потратили?"),
+   @Deprecated
    NEW_COST_SELECTING_CURRENCY("В какой валюте?", s -> KeyboardGeneratorUtils.selectCurrencyKeyboard(s.getAvailableCurrencies())),
+
    SELECTING_COST("Выберите чек", s -> KeyboardGeneratorUtils.selectCostKeyboard(s.getSelectedGroup().getCosts())),
    NEW_TRANSACTION_SELECTING_CURRENCY("В какой валюте?", s -> KeyboardGeneratorUtils.selectCurrencyKeyboard(s.getAvailableCurrencies())),
    NEW_TRANSACTION_AWAITING_AMOUNT("Сколько получили?"),
@@ -44,12 +47,15 @@ public enum UserChatState implements IBotState<UserChatSession> {
    ALLOCATE_ITEMS_SELECTING_PARTICIPANT("Кто заказывал?", s -> KeyboardGeneratorUtils.selectPersonKeyboard(s.getSelectedParticipation().getPotentialParticipants())),
    ALLOCATE_ITEMS_SELECTING_ACTION("Кто-то еще?", ItemParticipantsAction.class),
 
+   @Deprecated
    SELECTING_PAYMENT("Выберите оплату", s -> KeyboardGeneratorUtils.selectPaymentKeyboard(s.getSelectedCost().getPayments())),
+   @Deprecated
    NEW_PAYMENT_AWAITING_AMOUNT("Сколько заплатили?"),
    NEW_PAYMENT_SELECTING_WHO("Кто платил?", s -> KeyboardGeneratorUtils.selectPersonKeyboard(s.getSelectedGroup().getParticipants())),
    WORKING_WITH_PAYMENT("Что хотите сделать с выбранной оплатой?", PaymentAction.class),
-
+   @Deprecated
    SELECTING_PARTICIPATION("Какую позицию хотите отредактировать?", s -> KeyboardGeneratorUtils.selectParticipationKeyboard(s.getSelectedCost().getParticipations())),
+   @Deprecated
    NEW_PARTICIPATION_AWAITING_NAME("Какое наименование?"),
    NEW_PARTICIPATION_AWAITING_PRICE("Сколько стоит?"),
    NEW_PARTICIPATION_AWAITING_WHO("Кто это заказывал?", s -> KeyboardGeneratorUtils.selectPersonKeyboard(s.getSelectedGroup().getParticipants())),

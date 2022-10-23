@@ -1,4 +1,4 @@
-package org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.participation;
+package org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.deprecated;
 
 import org.doctordrue.sharedcosts.exceptions.BaseException;
 import org.doctordrue.sharedcosts.telegram.data.entities.UserChatSession;
@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
  * 6/17/2022
  **/
 @Component
+@Deprecated
 public class AwaitingNewParticipationNameProcessor extends BaseSingleStateUserChatProcessor {
 
    public AwaitingNewParticipationNameProcessor(UserChatSessionWorker sessionWorker) {

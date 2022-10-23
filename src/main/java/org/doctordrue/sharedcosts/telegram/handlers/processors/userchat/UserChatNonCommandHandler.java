@@ -4,12 +4,9 @@ import org.doctordrue.sharedcosts.telegram.data.entities.UserChatSession;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.SelectingGroupProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.WorkingWithGroupAnswerProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.SelectingCostProcessor;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.SelectingNewCostCurrencyProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.WorkingWithCostAnswerProcessor;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.participation.AwaitingNewParticipationNameProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.participation.AwaitingNewParticipationPriceProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.participation.SelectingNewParticipationWhoProcessor;
-import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.payment.AwaitingNewPaymentAmountProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.cost.payment.SelectingNewPaymentWhoProcessor;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.receipt_flow.process_cost.*;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.concrete.transaction.*;
@@ -32,12 +29,9 @@ public class UserChatNonCommandHandler extends BaseNonCommandHandler<Chat, UserC
    public UserChatNonCommandHandler(UserChatSessionWorker sessionWorker,
                                     WorkingWithGroupAnswerProcessor workingWithGroupProcessor,
                                     SelectingGroupProcessor selectingGroupProcessor,
-                                    SelectingNewCostCurrencyProcessor selectingNewCostCurrencyProcessor,
                                     SelectingCostProcessor selectingCostProcessor,
                                     WorkingWithCostAnswerProcessor workingWithCostProcessor,
-                                    AwaitingNewPaymentAmountProcessor awaitingNewPaymentAmountProcessor,
                                     SelectingNewPaymentWhoProcessor selectingNewPaymentWhoProcessor,
-                                    AwaitingNewParticipationNameProcessor awaitingNewParticipationNameProcessor,
                                     AwaitingNewParticipationPriceProcessor awaitingNewParticipationPriceProcessor,
                                     SelectingNewParticipationWhoProcessor selectingNewParticipationWhoProcessor,
                                     SelectingNewTransactionCurrencyProcessor selectingNewTransactionCurrencyProcessor,
@@ -54,12 +48,9 @@ public class UserChatNonCommandHandler extends BaseNonCommandHandler<Chat, UserC
       super(sessionWorker);
       this.registerProcessor(UserChatState.SELECTING_GROUP, selectingGroupProcessor);
       this.registerProcessor(UserChatState.WORKING_WITH_GROUP, workingWithGroupProcessor);
-      this.registerProcessor(UserChatState.NEW_COST_SELECTING_CURRENCY, selectingNewCostCurrencyProcessor);
       this.registerProcessor(UserChatState.SELECTING_COST, selectingCostProcessor);
       this.registerProcessor(UserChatState.WORKING_WITH_COST, workingWithCostProcessor);
-      this.registerProcessor(UserChatState.NEW_PAYMENT_AWAITING_AMOUNT, awaitingNewPaymentAmountProcessor);
       this.registerProcessor(UserChatState.NEW_PAYMENT_SELECTING_WHO, selectingNewPaymentWhoProcessor);
-      this.registerProcessor(UserChatState.NEW_PARTICIPATION_AWAITING_NAME, awaitingNewParticipationNameProcessor);
       this.registerProcessor(UserChatState.NEW_PARTICIPATION_AWAITING_PRICE, awaitingNewParticipationPriceProcessor);
       this.registerProcessor(UserChatState.NEW_PARTICIPATION_AWAITING_WHO, selectingNewParticipationWhoProcessor);
       this.registerProcessor(UserChatState.NEW_TRANSACTION_SELECTING_CURRENCY, selectingNewTransactionCurrencyProcessor);

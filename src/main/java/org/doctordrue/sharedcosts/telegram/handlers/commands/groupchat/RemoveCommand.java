@@ -1,52 +1,45 @@
 package org.doctordrue.sharedcosts.telegram.handlers.commands.groupchat;
 
-import java.util.Optional;
-
 import org.doctordrue.sharedcosts.telegram.data.entities.TelegramGroupChatSettings;
+import org.doctordrue.sharedcosts.telegram.handlers.commands.BaseGroupChatCommand;
 import org.doctordrue.sharedcosts.telegram.services.TelegramChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
-import org.telegram.telegrambots.meta.bots.AbsSender;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.util.Optional;
 
 /**
  * @author Andrey_Barantsev
  * 5/24/2022
  **/
 @Component
-public class RemoveCommand extends BotCommand {
+public class RemoveCommand extends BaseGroupChatCommand {
 
    @Autowired
    private TelegramChatService telegramChatService;
 
    public RemoveCommand() {
-      super("remove", "Удаляет привязку текущего чата к группе совместных расходов (сама группа останется на сервере)");
+      super("remove", "[чат группы] удалить привязку группы совместных расходов к чаты в Telegram");
    }
 
    @Override
-   public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
-      SendMessage.SendMessageBuilder builder = SendMessage.builder().chatId(chat.getId().toString()).disableNotification(true);
+   public void execute(SendMessage sendMessage, User user, Chat chat) {
+      sendMessage.disableNotification();
       Optional<TelegramGroupChatSettings> maybeSettings = this.telegramChatService.findByChatId(chat.getId());
       if (maybeSettings.isPresent()) {
          if (maybeSettings.get().hasGroupAssociated()) {
             // need to remove group association
             String groupName = maybeSettings.get().getGroup().getName();
             this.telegramChatService.remove(chat.getId());
-            builder.text("Чат успешно отвязан от группы совместных расходов " + groupName);
+            sendMessage.setText("Чат успешно отвязан от группы совместных расходов " + groupName);
          } else {
-            builder.text("Отсутствует привязка чата к группе совместных расходов");
+            sendMessage.setText("Отсутствует привязка чата к группе совместных расходов");
          }
       } else {
-         builder.text("Чат еще не был инициализирован");
-      }
-      try {
-         absSender.execute(builder.build());
-      } catch (TelegramApiException e) {
-         throw new RuntimeException(e);
+         sendMessage.setText("Чат еще не был инициализирован");
       }
    }
 }

@@ -1,22 +1,24 @@
 package org.doctordrue.sharedcosts.telegram.handlers.commands;
 
-import java.util.function.Predicate;
-
 import org.doctordrue.sharedcosts.telegram.data.entities.UserChatSession;
 import org.doctordrue.sharedcosts.telegram.services.UserChatSessionService;
 import org.doctordrue.sharedcosts.telegram.session.userchat.UserChatState;
 import org.doctordrue.telegram.bot.api.session.ISessionHolder;
 import org.doctordrue.telegram.bot.common.handlers.message.command.BaseStateCommand;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 
+import java.util.function.Predicate;
+
 /**
  * @author Andrey_Barantsev
  * 5/23/2022
  **/
+@Component
 public abstract class BaseUserChatCommand extends BaseStateCommand<Chat, UserChatState, UserChatSession> {
 
    private static final String NOT_IN_USER_CHAT_ERROR_MESSAGE = "Данная команда работает только в чате с ботом";

@@ -8,14 +8,13 @@ import org.doctordrue.sharedcosts.telegram.data.entities.UserChatSession;
 import org.doctordrue.sharedcosts.telegram.handlers.processors.userchat.state_processors.base.BaseSingleStateUserChatProcessor;
 import org.doctordrue.sharedcosts.telegram.session.userchat.UserChatSessionWorker;
 import org.doctordrue.sharedcosts.telegram.session.userchat.UserChatState;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 /**
  * @author Andrey_Barantsev
  * 6/9/2022
  **/
-@Component
+@Deprecated
 public class AwaitingNewCostNameProcessor extends BaseSingleStateUserChatProcessor {
 
    private static final UserChatState TARGET_STATE = UserChatState.NEW_COST_SELECTING_CURRENCY;

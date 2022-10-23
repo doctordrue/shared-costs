@@ -1,15 +1,6 @@
 package org.doctordrue.sharedcosts.telegram.utils;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import org.doctordrue.sharedcosts.data.entities.Cost;
-import org.doctordrue.sharedcosts.data.entities.Currency;
-import org.doctordrue.sharedcosts.data.entities.Group;
-import org.doctordrue.sharedcosts.data.entities.Participation;
-import org.doctordrue.sharedcosts.data.entities.Payment;
-import org.doctordrue.sharedcosts.data.entities.Person;
-import org.doctordrue.sharedcosts.data.entities.Transaction;
+import org.doctordrue.sharedcosts.data.entities.*;
 import org.doctordrue.telegram.bot.api.keyboards.KeyboardOption;
 import org.doctordrue.telegram.bot.api.session.IBotState;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -17,12 +8,14 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRem
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import java.util.Collection;
+import java.util.Collections;
+
 /**
  * @author Andrey_Barantsev
  * 5/24/2022
  **/
 public class KeyboardGeneratorUtils {
-
    private static final String TRANSACTION_ITEM_TEMPLATE = "[%s] %s %s: %s -> %s";
 
    public static ReplyKeyboardRemove removeKeyboard() {
