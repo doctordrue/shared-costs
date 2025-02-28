@@ -1,5 +1,5 @@
 # shared-costs
-Web application to calculate costs for some group of people who spends money together. Note that this is may pet-project to learn Spring
+Web application to calculate costs for some group of people who spends money together. Note that this is my pet-project to learn Spring
 
 ## Deployment
 ### Docker
